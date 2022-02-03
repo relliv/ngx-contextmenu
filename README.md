@@ -1,16 +1,22 @@
-# @perfectmemory/ngx-contextmenu
+# Angular library @perfectmemory/ngx-contextmenu
 
-[![Publish Package to npmjs](https://github.com/PerfectMemory/ngx-contextmenu/actions/workflows/publish.yml/badge.svg)](https://github.com/PerfectMemory/ngx-contextmenu/actions/workflows/publish.yml)
+[![Test](https://github.com/PerfectMemory/ngx-contextmenu/actions/workflows/test.yml/badge.svg)](https://github.com/PerfectMemory/ngx-contextmenu/actions/workflows/test.yml)
+[![Published to NPM](https://github.com/PerfectMemory/ngx-contextmenu/actions/workflows/publish.yml/badge.svg)](https://github.com/PerfectMemory/ngx-contextmenu/actions/workflows/publish.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-An Angular based context menu module inspired by [ui.bootstrap.contextMenu](https://github.com/Templarian/ui.bootstrap.contextMenu) and forked from original work of [Isaac Mann](https://github.com/isaacplmann/ngx-contextmenu.git).
-
-A context menu built with Angular (12) inspired by [ui.bootstrap.contextMenu](https://github.com/Templarian/ui.bootstrap.contextMenu).  Bootstrap classes are included in the markup, but there is no explicit dependency on Bootstrap. [Demo](https://isaacplmann.github.io/ngx-contextmenu/) [Stackblitz example](https://stackblitz.com/edit/ngx-contextmenu-example)
+An context menu component for Angular.
 
 ## Installation
 
 - Installation command
-  - `npm install @perfectmemory/ngx-contextmenu @angular/cdk`
-  - `yarn add @perfectmemory/ngx-contextmenu @angular/cdk`
+
+```sh
+npm install @perfectmemory/ngx-contextmenu @angular/cdk
+```
+
+```sh
+yarn add @perfectmemory/ngx-contextmenu @angular/cdk
+```
+
 - Import in your Angular main module
 
 ```ts
@@ -29,22 +35,23 @@ export class AppModule {}
 
 ## Angular compatibility
 
-| Angular       | @perfectmemory/ngx-contextmenu |
-| ------------- | ------------------------------ |
-| ^12.0.0       | ^6.0.0                         |
+| Angular   | @perfectmemory/ngx-contextmenu |
+| --------- | ------------------------------ |
+| `^12.0.0` | `^6.0.0`                       |
 
 ## Usage
+
 ### Template
 
 ```html
 <ul>
-    <li
-      *ngFor="let item of items" 
-      [contextMenu]="basicMenu" 
-      [contextMenuSubject]="item"
-    >
-      Right Click: {{ item?.name }}
-    </li>
+  <li
+    *ngFor="let item of items"
+    [contextMenu]="basicMenu"
+    [contextMenuSubject]="item"
+  >
+    Right Click: {{ item?.name }}
+  </li>
 </ul>
 
 <context-menu #basicMenu>
@@ -54,21 +61,16 @@ export class AppModule {}
   >
     Say hi!
   </ng-template>
+  <ng-template contextMenuItem divider="true"></ng-template>
   <ng-template
     contextMenuItem
-    divider="true"
-  ></ng-template>
-  <ng-template
-    contextMenuItem let-item 
+    let-item
     (execute)="showMessage(`${$event.item.name} said: ${$event.item.otherProperty}`)"
   >
     Bye, {{ item?.name }}
   </ng-template>
-  <ng-template
-    contextMenuItem
-    passive="true"
-  >
-    Input something: <input type="text">
+  <ng-template contextMenuItem passive="true">
+    Input something: <input type="text" />
   </ng-template>
 </context-menu>
 ```
@@ -97,11 +99,11 @@ export class Component {
 ## Context Menu Items
 
 - A line of context menu is a `<ng-template>` element with a `contextMenuItem` attribute directive and following optional inputs
-  - `divider` (`boolean`) (`default=false`) when `true` all the other inputs are ignored, the item is a simple divider without action
-  - `passive` (`boolean`) (`default=false`) when `true` the menu item will not emit execute events or close
+  - `divider` (`boolean`) (default=`false`) when `true` all the other inputs are ignored, the item is a simple divider without action
+  - `passive` (`boolean`) (default=`false`) when `true` the menu item will not emit execute events or close
     the context menu when clicked.
-  - `enabled` (`boolean | item => boolean`) (`default=true`) Can be a `boolean` value or a function that takes an item and returns a boolean.
-  - `visible` (`boolean | item => boolean`) (`default=true`) Can be a `boolean` value or a function that takes an item and returns a boolean.
+  - `enabled` (`boolean | item => boolean`) (default=`true`) Can be a `boolean` value or a function that takes an item and returns a boolean.
+  - `visible` (`boolean | item => boolean`) (default=`true`) Can be a `boolean` value or a function that takes an item and returns a boolean.
 
 ```html
 <ng-template
@@ -114,19 +116,20 @@ export class Component {
 ></ng-template>
 ```
 
-- If the `item` object is used in the context menu item template, the `let-item` attribute must be applied to the `<ng-template>` element.
+- Use template binding `let-item` to reference the `item` object inside the menu item template
+
+> **Note:** Make sure to use optional chaining when accessing item properties `item?.name` as the item will be initially `undefined`
 
 ```html
 <ng-template
   contextMenuItem
-  let-item 
+  let-item
   (execute)="showMessage(`${$event.item.name} said: ${$event.item.otherProperty}`)"
 >
   {{ item?.name }}
 </ng-template>
 ```
 
-  > **Note:** Make sure to use optional chaining when accessing item properties `item?.name` as the item will be initially `undefined`
 - Menu items emit on `execute` output. The `$event` object is of the following form
 
 ```ts
@@ -135,28 +138,24 @@ export class Component {
 
 ## Sub menus
 
-You can specify sub-menus like this:
+You can specify sub menus like this:
 
 ```html
 <ul>
-    <li
-      *ngFor="let item of items" 
-      [contextMenu]="basicMenu" 
-      [contextMenuSubject]="item"
-    >
-      Right Click: {{item?.name}}
-    </li>
+  <li
+    *ngFor="let item of items"
+    [contextMenu]="basicMenu"
+    [contextMenuSubject]="item"
+  >
+    Right Click: {{item?.name}}
+  </li>
 </ul>
 <context-menu #basicMenu>
-  <ng-template
-    contextMenuItem
-    [subMenu]="saySubMenu"
-  >
-    Say...
-  </ng-template>
+  <ng-template contextMenuItem [subMenu]="saySubMenu"> Say... </ng-template>
   <context-menu #saySubMenu>
     <ng-template
-      contextMenuItem (execute)="showMessage(`Hi, ${$event.item.name}`)"
+      contextMenuItem
+      (execute)="showMessage(`Hi, ${$event.item.name}`)"
     >
       ...hi!
     </ng-template>
@@ -173,28 +172,23 @@ You can specify sub-menus like this:
       ...salut!
     </ng-template>
   </context-menu>
+  <ng-template contextMenuItem divider="true"></ng-template>
   <ng-template
     contextMenuItem
-    divider="true"
-  ></ng-template>
-  <ng-template
-    contextMenuItem
-    let-item 
+    let-item
     (execute)="showMessage(`${$event.item.name} said: ${$event.item.otherProperty}`)"
   >
     Bye, {{item?.name}}
   </ng-template>
-  <ng-template
-    contextMenuItem
-    passive="true"
-  >
-    Input something: <input type="text">
+  <ng-template contextMenuItem passive="true">
+    Input something: <input type="text" />
   </ng-template>
 </context-menu>
 ```
 
 > Notes:
-> 1. The sub `<context-menu>` cannot be placed inside the `<ng-template>` that references it
+>
+> 1. Sub `<context-menu>` cannot be placed inside the `<ng-template>` that references it
 > 2. Sub-menus may be nested as deeply as you wish.
 
 ## Using `visible` and `enabled` functions
@@ -202,7 +196,7 @@ You can specify sub-menus like this:
 If you need access to properties in your component from within the `enabled` or `visible` functions, you can pass in an arrow function.
 
 ```html
-<ng-template ... [visible]="isMenuItemOutsideValue">
+<ng-template ... [visible]="isMenuItemOutsideValue"></ng-template>
 ```
 
 ```ts
@@ -214,34 +208,31 @@ public isMenuItemOutsideValue = (item: any): boolean => {
 ```
 
 ## Multiple Context Menus
+
 You can use multiple context menus in the same component if you would like.
 
 ```html
 <ul>
-    <li
-      *ngFor="let item of items"
-      [contextMenu]="basicMenu"
-      [contextMenuSubject]="item"
-    >
-      {{item?.name}}
-    </li>
+  <li
+    *ngFor="let item of items"
+    [contextMenu]="basicMenu"
+    [contextMenuSubject]="item"
+  >
+    {{item?.name}}
+  </li>
 </ul>
-<context-menu #basicMenu>
-  ...
-</context-menu>
+<context-menu #basicMenu> ... </context-menu>
 
 <ul>
-    <li 
-      *ngFor="let item of items"
-      [contextMenu]="otherMenu"
-      [contextMenuSubject]="item"
-    >
-      {{ item?.name }}
-    </li>
+  <li
+    *ngFor="let item of items"
+    [contextMenu]="otherMenu"
+    [contextMenuSubject]="item"
+  >
+    {{ item?.name }}
+  </li>
 </ul>
-<context-menu #otherMenu>
-  ...
-</context-menu>
+<context-menu #otherMenu> ... </context-menu>
 ```
 
 ```ts
@@ -252,12 +243,17 @@ public basicMenu: ContextMenuComponent;
 public otherMenu: ContextMenuComponent;
 ```
 
-## Context menu in a different component
+## Other use cases
+
+### Context menu in a different component
+
 If your `<context-menu>` component is in a different component from your list, you'll need to wire up the context menu event yourself.
 
 ```html
 <ul>
-    <li *ngFor="let item of items" (contextmenu)="onContextMenu($event, item)">Right Click: {{item.name}}</li>
+  <li *ngFor="let item of items" (contextmenu)="onContextMenu($event, item)">
+    Right Click: {{item.name}}
+  </li>
 </ul>
 ```
 
@@ -274,7 +270,8 @@ export class MyContextMenuClass {
   ];
 
   // Optional
-  @Input() contextMenu: ContextMenuComponent;
+  @Input()
+  public contextMenu: ContextMenuComponent;
 
   constructor(private contextMenuService: ContextMenuService) {}
 
@@ -291,22 +288,25 @@ export class MyContextMenuClass {
 }
 ```
 
-## Triggering the Context Menu with a Different Event
-The context menu can be triggered at any point using the method above.  For instance, to trigger the context menu
+### Triggering the context menu with a different Event
+
+The context menu can be triggered at any point using the method above. For instance, to trigger the context menu
 with a left click instead of a right click, use this html:
 
 ```html
 <ul>
-    <li *ngFor="let item of items" (click)="onContextMenu($event, item)">Left Click: {{item.name}}</li>
+  <li *ngFor="let item of items" (click)="onContextMenu($event, item)">
+    Left Click: {{item.name}}
+  </li>
 </ul>
 ```
 
 This could be `(keydown)`, `(mouseover)`, or `(myCustomEvent)` as well.
 
-## Positioning the Context Menu around an element
+### Positioning the context menu around an element
+
 If you want to override the context menu positioning to be appended to an element instead of based on mouse position,
-provide an `anchorElement` to the `contextMenuService`.  This makes sense if you want to trigger the context menu with
-a non-MouseEvent.
+provide an `anchorElement` to the `contextMenuService`. This makes sense if you want to trigger the context menu with a non-MouseEvent.
 
 ```ts
 public onContextMenu($event: KeyboardEvent, item: any): void {
@@ -322,7 +322,7 @@ public onContextMenu($event: KeyboardEvent, item: any): void {
 }
 ```
 
-## Custom Styles
+### Custom Styles
 
 The html that is generated for the context menu looks like this:
 
@@ -331,13 +331,15 @@ The html that is generated for the context menu looks like this:
   <ul class="dropdown-menu">
     <li>
       <a><!-- the template for each context menu item goes here --></a>
-      <span><!-- the template for each passive context menu item goes here --></span>
+      <span
+        ><!-- the template for each passive context menu item goes here --></span
+      >
     </li>
   </ul>
 </div>
 ```
 
-You can key off of the `ngx-contextmenu` class to create your own styles.  Note that the `ul.dropdown-menu` will have inline styles applied for `position`, `display`, `left` and `top` so that it will be positioned at the cursor when you right-click.
+You can key off of the `ngx-contextmenu` class to create your own styles. Note that the `ul.dropdown-menu` will have inline styles applied for `position`, `display`, `left` and `top` so that it will be positioned at the cursor when you right-click.
 
 ```css
 .ngx-contextmenu .dropdown-menu {
@@ -352,22 +354,22 @@ You can key off of the `ngx-contextmenu` class to create your own styles.  Note 
   text-align: center;
 }
 .ngx-contextmenu li:first-child {
-  border-top:none;
+  border-top: none;
 }
 .ngx-contextmenu a {
-  color:chartreuse;
+  color: chartreuse;
   display: block;
   padding: 0.5em 1em;
 }
 .ngx-contextmenu a:hover {
-  color:darkgreen;
-  background-color:chartreuse;
+  color: darkgreen;
+  background-color: chartreuse;
 }
 ```
 
-## Bootstrap 4
+### Bootstrap 4
 
-If you're using Bootstrap 4, you can specify a `useBootstrap4` property in the `forRoot` function of the `ContextMenuModule` in order to get the appropriate class names.  Like this:
+If you're using Bootstrap 4, you can specify a `useBootstrap4` property in the `forRoot` function of the `ContextMenuModule` in order to get the appropriate class names. Like this:
 
 ```ts
 @NgModule({
@@ -380,25 +382,25 @@ If you're using Bootstrap 4, you can specify a `useBootstrap4` property in the `
 export class AppModule {}
 ```
 
-**Or, if you want to repeat yourself,** you can add a `useBootstrap4` attribute to each `context-menu` component.  Like this:
+> **Or, if you want to repeat yourself,** you can add a `useBootstrap4` attribute to each `context-menu` component. Like this:
+>
+> ```html
+> <context-menu [useBootstrap4]="true"></context-menu>
+> ```
 
-```html
-<context-menu [useBootstrap4]="true"></context-menu>
-```
-
-## Different styling on menus
+### Different styling on menus
 
 If you want to style one menu differently than other menus, you can add a custom style to the menu.
 
 ```html
-<context-menu [menuClass]="'mystyle'"></context-menu>
+<context-menu menuClass="'custom-class'"></context-menu>
 ```
 
-Please note that the style needs to be global to affect the menu, since the menu element is added to the page outside the component that triggers the menu.
+> Please note that the style needs to be global to affect the menu, since the menu element is added to the page outside the component that triggers the menu.
 
-## AutoFocus
+### AutoFocus
 
-You can optionally set focus on the context menu whenever it opens.  This enables a user to easily tab through the context menu items and press enter to select them.
+You can optionally set focus on the context menu whenever it opens. This enables a user to easily tab through the context menu items and press enter to select them.
 
 ```ts
 @NgModule({
@@ -413,16 +415,16 @@ export class AppModule {}
 
 ## Keyboard navigation
 
-You can use the keyboard to manipulate the context menu.  Note: Keyboard navigation should be used in conjunction with `autoFocus`, since key events are only captured when the context menu is focused.
+You can use the keyboard to manipulate the context menu. Note: Keyboard navigation should be used in conjunction with `autoFocus`, since key events are only captured when the context menu is focused.
 
-| Key            | Action                                         |
-|:--------------:|------------------------------------------------|
-| ArrowDown      | Move to next menu item (wrapping)              |
-| ArrowUp        | Move to previous menu item (wrapping)          |
-| ArrowRight     | Open submenu of current menu item if present   |
-| ArrowLeft      | Close current menu unless already at root menu |
+|      Key       | Action                                         |
+| :------------: | ---------------------------------------------- |
+|   ArrowDown    | Move to next menu item (wrapping)              |
+|    ArrowUp     | Move to previous menu item (wrapping)          |
+|   ArrowRight   | Open submenu of current menu item if present   |
+|   ArrowLeft    | Close current menu unless already at root menu |
 | Enter \| Space | Open submenu or execute current menu item      |
-| Esc            | Close current menu                             |
+|      Esc       | Close current menu                             |
 
 ## Disable Context Menu
 
@@ -446,12 +448,24 @@ The items in the context menu are completely controlled by the `contextMenuActio
 
 ```html
 <ul>
-    <li *ngFor="item in items" [contextMenu]="myContextMenu" [contextMenuSubject]="item">Right Click: {{item.name}}</li>
+  <li
+    *ngFor="item in items"
+    [contextMenu]="myContextMenu"
+    [contextMenuSubject]="item"
+  >
+    Right Click: {{item.name}}
+  </li>
 </ul>
 <context-menu #myContextMenu>
-  <ng-template *ngFor="let action of contextMenuActions" contextMenuItem let-item
-    [visible]="action.visible" [enabled]="action.enabled" [divider]="action.divider"
-    (execute)="action.click($event.item)">
+  <ng-template
+    *ngFor="let action of contextMenuActions"
+    contextMenuItem
+    let-item
+    [visible]="action.visible"
+    [enabled]="action.enabled"
+    [divider]="action.divider"
+    (execute)="action.click($event.item)"
+  >
     {{ action.html($event.item) }}
   </ng-template>
 </context-menu>
@@ -461,29 +475,36 @@ The items in the context menu are completely controlled by the `contextMenuActio
 @Component({
   ...
 })
-export class MyContextMenuClass {
+export class Component {
+  @ViewChild(ContextMenuComponent)
+  public contextMenu: ContextMenuComponent;
+
   public items = [
-      { name: 'John', otherProperty: 'Foo', type: 'type1' },
-      { name: 'Joe', otherProperty: 'Bar', type: 'type2' }
+    { name: 'John', otherProperty: 'Foo', type: 'type1' },
+    { name: 'Joe', otherProperty: 'Bar', type: 'type2' }
   ];
-  @ViewChild(ContextMenuComponent) public contextMenu: ContextMenuComponent;
   public contextMenuActions = [
-        {
-          html: (item) => `Say hi!`,
-          click: (item) => alert('Hi, ' + item.name),
-          enabled: (item) => true,
-          visible: (item) => item.type === 'type1',
-        },
-        {
-          divider: true,
-          visible: true,
-        },
-        {
-          html: (item) => `Something else`,
-          click: (item) => alert('Or not...'),
-          enabled: (item) => false,
-          visible: (item) => item.type === 'type1',
-        },
-      ];
+    {
+      html: (item) => `Say hi!`,
+      click: (item) => alert('Hi, ' + item.name),
+      enabled: (item) => true,
+      visible: (item) => item.type === 'type1',
+    },
+    {
+      divider: true,
+      visible: true,
+    },
+    {
+      html: (item) => `Something else`,
+      click: (item) => alert('Or not...'),
+      enabled: (item) => false,
+      visible: (item) => item.type === 'type1',
+    },
+  ];
 }
 ```
+
+## Inspiration and previous work
+
+This project has been initially forked from [ngx-contextmenu](https://github.com/isaacplmann/ngx-contextmenu.git) to make it possible to port it to Angular 13.
+It was originally inspired by [ui.bootstrap.contextMenu](https://github.com/Templarian/ui.bootstrap.contextMenu).

@@ -1,8 +1,6 @@
 name: Publish Package to npmjs
 on:
   push:
-    branches:
-      - "fix/release-6.0"
     tags:
       - v*
 

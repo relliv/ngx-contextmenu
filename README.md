@@ -1,36 +1,73 @@
 # @perfectmemory/ngx-contextmenu
 
+[![Publish Package to npmjs](https://github.com/PerfectMemory/ngx-contextmenu/actions/workflows/publish.yml/badge.svg)](https://github.com/PerfectMemory/ngx-contextmenu/actions/workflows/publish.yml)
+
 An Angular based context menu module inspired by [ui.bootstrap.contextMenu](https://github.com/Templarian/ui.bootstrap.contextMenu) and forked from original work of [Isaac Mann](https://github.com/isaacplmann/ngx-contextmenu.git).
 
 A context menu built with Angular (12) inspired by [ui.bootstrap.contextMenu](https://github.com/Templarian/ui.bootstrap.contextMenu).  Bootstrap classes are included in the markup, but there is no explicit dependency on Bootstrap. [Demo](https://isaacplmann.github.io/ngx-contextmenu/) [Stackblitz example](https://stackblitz.com/edit/ngx-contextmenu-example)
 
 ## Installation
 
-- `npm install ngx-contextmenu @angular/cdk`
-- import ContextMenuModule.forRoot() into your app module
-- Make sure to include `<!doctype html>` at the top of your `index.html`
+- Installation command
+  - `npm install @perfectmemory/ngx-contextmenu @angular/cdk`
+  - `yarn add @perfectmemory/ngx-contextmenu @angular/cdk`
+- Import in your Angular main module
+
+```ts
+import { ContextMenuModule } from '@perfectmemory/ngx-contextmenu';
+@NgModule({
+  ...
+  imports: [
+    ContextMenuModule.forRoot({
+      autoFocus: true,
+    }),
+  ],
+  ...
+})
+export class AppModule {}
+```
+
+## Angular compatibility
+
+| Angular       | @perfectmemory/ngx-contextmenu |
+| ------------- | ------------------------------ |
+| ^12.0.0       | ^6.0.0                         |
 
 ## Usage
-
-### Angular 5 support
-
-Please use ngx-contextmenu@4.2.0 with Angular 5 projects.
-
 ### Template
 
 ```html
 <ul>
-    <li *ngFor="let item of items" [contextMenu]="basicMenu" [contextMenuSubject]="item">Right Click: {{item?.name}}</li>
+    <li
+      *ngFor="let item of items" 
+      [contextMenu]="basicMenu" 
+      [contextMenuSubject]="item"
+    >
+      Right Click: {{ item?.name }}
+    </li>
 </ul>
-<context-menu>
-  <ng-template contextMenuItem (execute)="showMessage('Hi, ' + $event.item.name)">
+
+<context-menu #basicMenu>
+  <ng-template
+    contextMenuItem
+    (execute)="showMessage(`Hi, ${$event.item.name}`)"
+  >
     Say hi!
   </ng-template>
-  <ng-template contextMenuItem divider="true"></ng-template>
-  <ng-template contextMenuItem let-item (execute)="showMessage($event.item.name + ' said: ' + $event.item.otherProperty)">
-    Bye, {{item?.name}}
+  <ng-template
+    contextMenuItem
+    divider="true"
+  ></ng-template>
+  <ng-template
+    contextMenuItem let-item 
+    (execute)="showMessage(`${$event.item.name} said: ${$event.item.otherProperty}`)"
+  >
+    Bye, {{ item?.name }}
   </ng-template>
-  <ng-template contextMenuItem passive="true">
+  <ng-template
+    contextMenuItem
+    passive="true"
+  >
     Input something: <input type="text">
   </ng-template>
 </context-menu>
@@ -38,95 +75,127 @@ Please use ngx-contextmenu@4.2.0 with Angular 5 projects.
 
 ### Component Code
 
-```js
+```ts
 @Component({
   ...
 })
-export class MyContextMenuClass {
+export class Component {
   public items = [
-      { name: 'John', otherProperty: 'Foo' },
-      { name: 'Joe', otherProperty: 'Bar' }
+    { name: 'John', otherProperty: 'Foo' },
+    { name: 'Joe', otherProperty: 'Bar' }
   ];
-  @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
+
+  @ViewChild(ContextMenuComponent)
+  public basicMenu: ContextMenuComponent;
+
+  public showMessage(message: string) {
+    console.log(message);
+  }
 }
 ```
 
 ## Context Menu Items
 
-- Each context menu item is a `<ng-template>` element with the `contextMenuItem` attribute directive applied.
-- If the `item` object is used in the context menu item template, the `let-item` attribute must be applied to the `<ng-template>` element. 
-  ** Note: ** Make sure to use the `item?.property` syntax in the template rather than `item.property` as the item will be initially `undefined`.
-- Every context menu item emits `execute` events. The `$event` object is of the form `{ event: MouseEvent, item: any }` where `event` is the mouse click event
-  that triggered the execution and `item` is the current item.
-- The `divider` input parameter is optional.  Items default to normal menu items.  If `divider` is `true`, all the other inputs are ignored.
-- The `passive` input parameter is optional.  If `passive` is `true`, the menu item will not emit execute events or close
-  the context menu when clicked.
-- The `enabled` input parameter is optional.  Items are enabled by default.
-  This can be a boolean value or a function definition that takes an item and returns a boolean.
-- The `visible` input parameter is optional.  Items are visible by default.  This property enables you to show certain context menu items based on what the data item is.
-  This can be a boolean value or a function definition that takes an item and returns a boolean.
-- Within the template, you have access to any components and variables available in the outer context.
+- A line of context menu is a `<ng-template>` element with a `contextMenuItem` attribute directive and following optional inputs
+  - `divider` (`boolean`) (`default=false`) when `true` all the other inputs are ignored, the item is a simple divider without action
+  - `passive` (`boolean`) (`default=false`) when `true` the menu item will not emit execute events or close
+    the context menu when clicked.
+  - `enabled` (`boolean | item => boolean`) (`default=true`) Can be a `boolean` value or a function that takes an item and returns a boolean.
+  - `visible` (`boolean | item => boolean`) (`default=true`) Can be a `boolean` value or a function that takes an item and returns a boolean.
 
 ```html
-<context-menu>
-  <ng-template contextMenuItem let-item [visible]="isMenuItemType1" [enabled]="false" (execute)="showMessage('Hi, ' + $event.item.name)">
-    Say hi, {{item?.name}}!  <my-component [attribute]="item"></my-component>
-    With access to the outside context: {{ outsideValue }}
-  </ng-template>
-</context-menu>
-```
-```js
-public outsideValue = "something";
-public isMenuItemType1(item: any): boolean {
-  return item.type === 'type1';
-}
+<ng-template
+  contextMenuItem
+  [divider]="true/false"
+  [enabled]="true/false"
+  [passive]="true/false"
+  [visible]="true/false"
+  (execute)="method($event)"
+></ng-template>
 ```
 
-## Sub-menus
+- If the `item` object is used in the context menu item template, the `let-item` attribute must be applied to the `<ng-template>` element.
+
+```html
+<ng-template
+  contextMenuItem
+  let-item 
+  (execute)="showMessage(`${$event.item.name} said: ${$event.item.otherProperty}`)"
+>
+  {{ item?.name }}
+</ng-template>
+```
+
+  > **Note:** Make sure to use optional chaining when accessing item properties `item?.name` as the item will be initially `undefined`
+- Menu items emit on `execute` output. The `$event` object is of the following form
+
+```ts
+{ event: MouseEvent, item: any }
+```
+
+## Sub menus
 
 You can specify sub-menus like this:
 
 ```html
 <ul>
-    <li *ngFor="let item of items" [contextMenu]="basicMenu" [contextMenuSubject]="item">Right Click: {{item?.name}}</li>
+    <li
+      *ngFor="let item of items" 
+      [contextMenu]="basicMenu" 
+      [contextMenuSubject]="item"
+    >
+      Right Click: {{item?.name}}
+    </li>
 </ul>
-<context-menu>
-  <ng-template contextMenuItem [subMenu]="saySubMenu">
+<context-menu #basicMenu>
+  <ng-template
+    contextMenuItem
+    [subMenu]="saySubMenu"
+  >
     Say...
   </ng-template>
   <context-menu #saySubMenu>
-    <ng-template contextMenuItem (execute)="showMessage('Hi, ' + $event.item.name)">
+    <ng-template
+      contextMenuItem (execute)="showMessage(`Hi, ${$event.item.name}`)"
+    >
       ...hi!
     </ng-template>
-    <ng-template contextMenuItem (execute)="showMessage('Hola, ' + $event.item.name)">
+    <ng-template
+      contextMenuItem
+      (execute)="showMessage(`Hola, ${$event.item.name}`)"
+    >
       ...hola!
     </ng-template>
-    <ng-template contextMenuItem (execute)="showMessage('Salut, ' + $event.item.name)">
+    <ng-template
+      contextMenuItem
+      (execute)="showMessage(`Salut, ${$event.item.name}`)"
+    >
       ...salut!
     </ng-template>
   </context-menu>
-  <ng-template contextMenuItem divider="true"></ng-template>
-  <ng-template contextMenuItem let-item (execute)="showMessage($event.item.name + ' said: ' + $event.item.otherProperty)">
+  <ng-template
+    contextMenuItem
+    divider="true"
+  ></ng-template>
+  <ng-template
+    contextMenuItem
+    let-item 
+    (execute)="showMessage(`${$event.item.name} said: ${$event.item.otherProperty}`)"
+  >
     Bye, {{item?.name}}
   </ng-template>
-  <ng-template contextMenuItem passive="true">
+  <ng-template
+    contextMenuItem
+    passive="true"
+  >
     Input something: <input type="text">
   </ng-template>
 </context-menu>
 ```
 
-Notes:
-1. The sub `<context-menu>` can not be placed inside the `<ng-template>` that references it.
-2. Sub-menus may be nested as deeply as you wish.
-
-## Upgrade from angular2-contextmenu 0.x
-
-1. Change `package.json` to reference `ngx-contextmenu` instead of `angular2-contextmenu`
-2. Upgrade to `@angular` 4.x
-3. Use `<ng-template>` instead of `<template>`
-4. Update any styles that referenced `.angular2-contextmenu` to use `.ngx-contextmenu` instead
-
-**Note:** The imperative way of declaring context menu items has been removed.  i.e. You can't pass an `actions` property to `contextMenuService.show.next()`.
+> Notes:
+> 1. The sub `<context-menu>` cannot be placed inside the `<ng-template>` that references it
+> 2. Sub-menus may be nested as deeply as you wish.
 
 ## Using `visible` and `enabled` functions
 
@@ -135,8 +204,10 @@ If you need access to properties in your component from within the `enabled` or 
 ```html
 <ng-template ... [visible]="isMenuItemOutsideValue">
 ```
-```js
+
+```ts
 public outsideValue = "something";
+
 public isMenuItemOutsideValue = (item: any): boolean => {
   return item.type === this.outsideValue;
 }
@@ -147,26 +218,41 @@ You can use multiple context menus in the same component if you would like.
 
 ```html
 <ul>
-    <li *ngFor="let item of items" [contextMenu]="basicMenu" [contextMenuSubject]="item">{{item?.name}}</li>
+    <li
+      *ngFor="let item of items"
+      [contextMenu]="basicMenu"
+      [contextMenuSubject]="item"
+    >
+      {{item?.name}}
+    </li>
 </ul>
 <context-menu #basicMenu>
   ...
 </context-menu>
 
 <ul>
-    <li *ngFor="let item of items" [contextMenu]="otherMenu" [contextMenuSubject]="item">{{item?.name}}</li>
+    <li 
+      *ngFor="let item of items"
+      [contextMenu]="otherMenu"
+      [contextMenuSubject]="item"
+    >
+      {{ item?.name }}
+    </li>
 </ul>
 <context-menu #otherMenu>
   ...
 </context-menu>
 ```
 
-```js
-@ViewChild('basicMenu') public basicMenu: ContextMenuComponent;
-@ViewChild('otherMenu') public otherMenu: ContextMenuComponent;
+```ts
+@ViewChild('basicMenu')
+public basicMenu: ContextMenuComponent;
+
+@ViewChild('otherMenu')
+public otherMenu: ContextMenuComponent;
 ```
 
-## Context Menu In a Different Component
+## Context menu in a different component
 If your `<context-menu>` component is in a different component from your list, you'll need to wire up the context menu event yourself.
 
 ```html
@@ -175,7 +261,7 @@ If your `<context-menu>` component is in a different component from your list, y
 </ul>
 ```
 
-```js
+```ts
 import { ContextMenuService } from '@perfectmemory/ngx-contextmenu';
 
 @Component({
@@ -283,7 +369,7 @@ You can key off of the `ngx-contextmenu` class to create your own styles.  Note 
 
 If you're using Bootstrap 4, you can specify a `useBootstrap4` property in the `forRoot` function of the `ContextMenuModule` in order to get the appropriate class names.  Like this:
 
-```js
+```ts
 @NgModule({
   import: [
     ContextMenuModule.forRoot({
@@ -314,7 +400,7 @@ Please note that the style needs to be global to affect the menu, since the menu
 
 You can optionally set focus on the context menu whenever it opens.  This enables a user to easily tab through the context menu items and press enter to select them.
 
-```js
+```ts
 @NgModule({
   import: [
     ContextMenuModule.forRoot({

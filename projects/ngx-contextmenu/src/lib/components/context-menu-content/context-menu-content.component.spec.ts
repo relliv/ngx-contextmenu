@@ -24,9 +24,9 @@ import {
 } from './context-menu-content.component';
 
 describe('Component: ContextMenuContentComponent', () => {
-  let component: ContextMenuContentComponent;
-  let fixture: ComponentFixture<ContextMenuContentComponent>;
-  let keyManager: ActiveDescendantKeyManager<ContextMenuItemDirective>;
+  let component: ContextMenuContentComponent<any>;
+  let fixture: ComponentFixture<ContextMenuContentComponent<any>>;
+  let keyManager: ActiveDescendantKeyManager<ContextMenuItemDirective<any>>;
 
   const configureTestingModule = (autoFocus?: boolean) => {
     TestBed.configureTestingModule({
@@ -46,10 +46,10 @@ describe('Component: ContextMenuContentComponent', () => {
   const mockActiveDescendantKeyManager = () => {
     keyManager = {
       onKeydown: jasmine.createSpy('onKeydown'),
-    } as unknown as ActiveDescendantKeyManager<ContextMenuItemDirective>;
+    } as unknown as ActiveDescendantKeyManager<ContextMenuItemDirective<any>>;
     spyOn(TESTING_WRAPPER, 'ActiveDescendantKeyManager').and.returnValue({
       withWrap: jasmine.createSpy('withWrap').and.returnValue(keyManager),
-    } as unknown as ActiveDescendantKeyManager<ContextMenuItemDirective>);
+    } as unknown as ActiveDescendantKeyManager<ContextMenuItemDirective<any>>);
   };
 
   it('should create', () => {
@@ -64,7 +64,7 @@ describe('Component: ContextMenuContentComponent', () => {
         { item: undefined, execute: new Subject() },
         { item: undefined, execute: new Subject() },
         { item: undefined, execute: new Subject() },
-      ] as ContextMenuItemDirective[];
+      ] as ContextMenuItemDirective<any>[];
 
       component.item = { id: 'a' };
 
@@ -86,18 +86,18 @@ describe('Component: ContextMenuContentComponent', () => {
       const emitterB = new EventEmitter();
       const emitterC = new EventEmitter();
 
-      const menuA: ContextMenuItemDirective = {
+      const menuA: ContextMenuItemDirective<any> = {
         item: undefined,
         execute: emitterA,
-      } as ContextMenuItemDirective;
-      const menuB: ContextMenuItemDirective = {
+      } as ContextMenuItemDirective<any>;
+      const menuB: ContextMenuItemDirective<any> = {
         item: undefined,
         execute: emitterB,
-      } as ContextMenuItemDirective;
-      const menuC: ContextMenuItemDirective = {
+      } as ContextMenuItemDirective<any>;
+      const menuC: ContextMenuItemDirective<any> = {
         item: undefined,
         execute: emitterC,
-      } as ContextMenuItemDirective;
+      } as ContextMenuItemDirective<any>;
       component.menuDirectives = [menuA, menuB, menuC];
 
       component.ngOnInit();
@@ -190,33 +190,33 @@ describe('Component: ContextMenuContentComponent', () => {
   describe('#isMenuItemEnabled', () => {
     it('should return true if menu is enabled', () => {
       configureTestingModule();
-      const menu: ContextMenuItemDirective = {
+      const menu: ContextMenuItemDirective<any> = {
         enabled: true,
-      } as ContextMenuItemDirective;
+      } as ContextMenuItemDirective<any>;
       expect(component.isMenuItemEnabled(menu)).toBe(true);
     });
 
     it('should return false if menu is not enabled', () => {
       configureTestingModule();
-      const menu: ContextMenuItemDirective = {
+      const menu: ContextMenuItemDirective<any> = {
         enabled: false,
-      } as ContextMenuItemDirective;
+      } as ContextMenuItemDirective<any>;
       expect(component.isMenuItemEnabled(menu)).toBe(false);
     });
 
     it('should return true if the evaluation of the menu enabled property is true', () => {
       configureTestingModule();
-      const menu: ContextMenuItemDirective = {
+      const menu: ContextMenuItemDirective<any> = {
         enabled: (item: unknown) => true,
-      } as ContextMenuItemDirective;
+      } as ContextMenuItemDirective<any>;
       expect(component.isMenuItemEnabled(menu)).toBe(true);
     });
 
     it('should return false if the evaluation of the menu enabled property is false', () => {
       configureTestingModule();
-      const menu: ContextMenuItemDirective = {
+      const menu: ContextMenuItemDirective<any> = {
         enabled: (item: unknown) => false,
-      } as ContextMenuItemDirective;
+      } as ContextMenuItemDirective<any>;
       expect(component.isMenuItemEnabled(menu)).toBe(false);
     });
   });
@@ -224,33 +224,33 @@ describe('Component: ContextMenuContentComponent', () => {
   describe('#isMenuItemVisible', () => {
     it('should return true if menu is visible', () => {
       configureTestingModule();
-      const menu: ContextMenuItemDirective = {
+      const menu: ContextMenuItemDirective<any> = {
         visible: true,
-      } as ContextMenuItemDirective;
+      } as ContextMenuItemDirective<any>;
       expect(component.isMenuItemVisible(menu)).toBe(true);
     });
 
     it('should return false if menu is not visible', () => {
       configureTestingModule();
-      const menu: ContextMenuItemDirective = {
+      const menu: ContextMenuItemDirective<any> = {
         visible: false,
-      } as ContextMenuItemDirective;
+      } as ContextMenuItemDirective<any>;
       expect(component.isMenuItemVisible(menu)).toBe(false);
     });
 
     it('should return true if the evaluation of the menu visible property is true', () => {
       configureTestingModule();
-      const menu: ContextMenuItemDirective = {
+      const menu: ContextMenuItemDirective<any> = {
         visible: (item: unknown) => true,
-      } as ContextMenuItemDirective;
+      } as ContextMenuItemDirective<any>;
       expect(component.isMenuItemVisible(menu)).toBe(true);
     });
 
     it('should return false if the evaluation of the menu visible property is false', () => {
       configureTestingModule();
-      const menu: ContextMenuItemDirective = {
+      const menu: ContextMenuItemDirective<any> = {
         visible: (item: unknown) => false,
-      } as ContextMenuItemDirective;
+      } as ContextMenuItemDirective<any>;
       expect(component.isMenuItemVisible(menu)).toBe(false);
     });
   });
@@ -330,7 +330,7 @@ describe('Component: ContextMenuContentComponent', () => {
         component.isLeaf = true;
         component.onKeyArrowRight(event);
         expect(component.onOpenSubMenu).toHaveBeenCalledWith(
-          keyManager.activeItem as ContextMenuItemDirective,
+          keyManager.activeItem as ContextMenuItemDirective<any>,
           event
         );
       });
@@ -496,7 +496,7 @@ describe('Component: ContextMenuContentComponent', () => {
         component.isLeaf = true;
         component.onKeyArrowLeft(event);
         expect(component.onOpenSubMenu).toHaveBeenCalledWith(
-          keyManager.activeItem as ContextMenuItemDirective,
+          keyManager.activeItem as ContextMenuItemDirective<any>,
           event
         );
       });
@@ -659,7 +659,7 @@ describe('Component: ContextMenuContentComponent', () => {
       component.isLeaf = true;
       component.onKeyEnterOrSpace(event);
       expect(component.onOpenSubMenu).toHaveBeenCalledWith(
-        keyManager.activeItem as ContextMenuItemDirective,
+        keyManager.activeItem as ContextMenuItemDirective<any>,
         event
       );
     });
@@ -1014,7 +1014,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
   describe('#onOpenSubMenu', () => {
     let openSubMenu: jasmine.Spy<jasmine.Func>;
-    let directive: ContextMenuItemDirective;
+    let directive: ContextMenuItemDirective<any>;
     let nativeElement: HTMLElement;
 
     beforeEach(() => {
@@ -1083,7 +1083,7 @@ describe('Component: ContextMenuContentComponent', () => {
   });
 
   describe('#onMenuItemSelect', () => {
-    let menu: ContextMenuItemDirective;
+    let menu: ContextMenuItemDirective<any>;
     let event: MouseEvent;
 
     beforeEach(() => {
@@ -1114,11 +1114,11 @@ describe('Component: ContextMenuContentComponent', () => {
 
     it('should execute if there is no sub menu', () => {
       component.onMenuItemSelect(menu, event);
-      expect(menu.triggerExecute).toHaveBeenCalledWith(component.item, event);
+      expect(menu.triggerExecute).toHaveBeenCalledWith(event, component.item);
     });
 
     it('should not execute if there is sub menu', () => {
-      menu.subMenu = {} as ContextMenuComponent;
+      menu.subMenu = {} as ContextMenuComponent<any>;
       component.onMenuItemSelect(menu, event);
       expect(menu.triggerExecute).not.toHaveBeenCalled();
     });

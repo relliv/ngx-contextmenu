@@ -13,7 +13,7 @@ import { ContextMenuContentComponent } from '../../components/context-menu-conte
 import { ContextMenuService } from './context-menu.service';
 
 describe('Service: ContextMenuService', () => {
-  let service: ContextMenuService;
+  let service: ContextMenuService<any>;
   let scrollStrategyClose: jasmine.Spy<jasmine.Func>;
   let overlayPosition: jasmine.Spy<jasmine.Func>;
   let overlayFlexibleConnectedTo: jasmine.Spy<jasmine.Func>;
@@ -24,9 +24,9 @@ describe('Service: ContextMenuService', () => {
   let overlayRefDispose: jasmine.Spy<jasmine.Func>;
   let positionStrategy: FlexibleConnectedPositionStrategy;
   let overlayRef: OverlayRef;
-  let contextMenuContentRef: ComponentRef<ContextMenuContentComponent>;
+  let contextMenuContentRef: ComponentRef<ContextMenuContentComponent<any>>;
   let closeScrollStrategy: CloseScrollStrategy;
-  let contextMenuContentComponent: ContextMenuContentComponent;
+  let contextMenuContentComponent: ContextMenuContentComponent<any>;
 
   beforeEach(() => {
     contextMenuContentRef = {
@@ -40,10 +40,10 @@ describe('Service: ContextMenuService', () => {
       changeDetectorRef: {
         detectChanges: jasmine.createSpy('detectChanges'),
       },
-    } as unknown as ComponentRef<ContextMenuContentComponent>;
+    } as unknown as ComponentRef<ContextMenuContentComponent<any>>;
     contextMenuContentComponent = {
       id: 'ContextMenuContentComponent',
-    } as unknown as ContextMenuContentComponent;
+    } as unknown as ContextMenuContentComponent<any>;
     overlayRefAttach = jasmine
       .createSpy('attach')
       .and.returnValue(contextMenuContentRef);

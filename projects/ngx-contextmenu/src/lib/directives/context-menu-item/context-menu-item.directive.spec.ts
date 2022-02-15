@@ -10,7 +10,7 @@ class TestHostComponent {}
 
 describe('Directive: ContextMenuItemDirective', () => {
   let fixture: ComponentFixture<TestHostComponent>;
-  let directive: ContextMenuItemDirective;
+  let directive: ContextMenuItemDirective<any>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -98,7 +98,7 @@ describe('Directive: ContextMenuItemDirective', () => {
       const item = { id: 'item' };
       directive.enabled = jasmine.createSpy('enabled').and.returnValue(true);
       const event = new MouseEvent('click');
-      directive.triggerExecute(item, event);
+      directive.triggerExecute(event, item);
       expect(subscriber).toHaveBeenCalledWith({ event, item });
     });
 
@@ -106,7 +106,7 @@ describe('Directive: ContextMenuItemDirective', () => {
       const item = { id: 'item' };
       directive.enabled = true;
       const event = new MouseEvent('click');
-      directive.triggerExecute(item, event);
+      directive.triggerExecute(event, item);
       expect(subscriber).toHaveBeenCalledWith({ event, item });
     });
 
@@ -114,7 +114,7 @@ describe('Directive: ContextMenuItemDirective', () => {
       const item = { id: 'item' };
       directive.enabled = false;
       const event = new MouseEvent('click');
-      directive.triggerExecute(item, event);
+      directive.triggerExecute(event, item);
       expect(subscriber).not.toHaveBeenCalled();
     });
 
@@ -122,7 +122,7 @@ describe('Directive: ContextMenuItemDirective', () => {
       const item = { id: 'item' };
       directive.enabled = jasmine.createSpy('enabled').and.returnValue(false);
       const event = new MouseEvent('click');
-      directive.triggerExecute(item, event);
+      directive.triggerExecute(event, item);
       expect(subscriber).not.toHaveBeenCalled();
     });
   });

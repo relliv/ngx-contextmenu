@@ -8,15 +8,10 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class ContextMenuService {
-  public show: Subject<IContextMenuOpenEvent> = new Subject();
-  /*   public close: Subject<CloseContextMenuEvent> = new Subject(); */
+export class ContextMenuService<T> {
+  public show: Subject<IContextMenuOpenEvent<T>> = new Subject();
 
-  public display(event: IContextMenuOpenEvent) {
+  public display(event: IContextMenuOpenEvent<T>) {
     this.show.next(event);
   }
-
-  /*   public hide(event: CloseContextMenuEvent) {
-    this.close.next(event);
-  } */
 }

@@ -7,25 +7,26 @@ import {
 } from './context-menu-stack.service';
 
 describe('Service: ContextMenuStackService', () => {
-  let service: ContextMenuStackService;
+  let service: ContextMenuStackService<any>;
 
-  const createContextMenuContentComponent = (): ContextMenuContentComponent => {
-    return TestBed.createComponent(ContextMenuContentComponent)
-      .componentInstance;
-  };
+  const createContextMenuContentComponent =
+    (): ContextMenuContentComponent<any> => {
+      return TestBed.createComponent(ContextMenuContentComponent)
+        .componentInstance;
+    };
 
   const createOverlayRef = (): OverlayRef => {
     return TestBed.inject(Overlay).create();
   };
 
-  const createStackItem = (): ContextMenuStackItem => {
+  const createStackItem = (): ContextMenuStackItem<any> => {
     return {
       contextMenuComponent: createContextMenuContentComponent(),
       overlayRef: createOverlayRef(),
     };
   };
 
-  const spyOnStackItemOverlayRef = (item: ContextMenuStackItem) => {
+  const spyOnStackItemOverlayRef = (item: ContextMenuStackItem<any>) => {
     return {
       detach: spyOn(item.overlayRef, 'detach'),
       dispose: spyOn(item.overlayRef, 'dispose'),
@@ -126,7 +127,7 @@ describe('Service: ContextMenuStackService', () => {
 
     it('should return undefined if given component is not defined', () => {
       const result = service.destroySubMenus(
-        undefined as unknown as ContextMenuContentComponent
+        undefined as unknown as ContextMenuContentComponent<any>
       );
       expect(result).toBeUndefined();
     });

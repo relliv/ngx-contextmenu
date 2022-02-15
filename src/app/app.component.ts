@@ -87,13 +87,13 @@ export class AppComponent {
   public outsideValue = 'something';
 
   @ViewChild('basicMenu', { static: true })
-  public basicMenu?: ContextMenuComponent;
+  public basicMenu?: ContextMenuComponent<any>;
   /*   @ViewChild('enableAndVisible', { static: true })
   public enableAndVisible?: ContextMenuComponent;
   @ViewChild('withFunctions', { static: true })
   public withFunctions?: ContextMenuComponent; */
 
-  constructor(private contextMenuService: ContextMenuService) {}
+  constructor(private contextMenuService: ContextMenuService<any>) {}
 
   public canUseFullScreen(): boolean {
     return !!this.wrapper?.nativeElement.requestFullscreen;

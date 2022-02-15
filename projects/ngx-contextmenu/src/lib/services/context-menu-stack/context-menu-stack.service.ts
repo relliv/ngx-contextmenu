@@ -2,21 +2,21 @@ import { OverlayRef } from '@angular/cdk/overlay';
 import { Injectable } from '@angular/core';
 import { ContextMenuContentComponent } from '../../components/context-menu-content/context-menu-content.component';
 
-export interface ContextMenuStackItem {
+export interface ContextMenuStackItem<T> {
   overlayRef: OverlayRef;
-  contextMenuComponent: ContextMenuContentComponent;
+  contextMenuComponent: ContextMenuContentComponent<T>;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class ContextMenuStackService {
-  private stack: ContextMenuStackItem[] = [];
+export class ContextMenuStackService<T> {
+  private stack: ContextMenuStackItem<T>[] = [];
 
   /**
    * Add an item to the stack
    */
-  public push(value: ContextMenuStackItem) {
+  public push(value: ContextMenuStackItem<T>) {
     this.stack.push(value);
   }
 
@@ -45,7 +45,7 @@ export class ContextMenuStackService {
   /**
    * Detach and dispose sub menu's overlays of the given ContextMenuContentComponent
    */
-  public destroySubMenus(contextMenu: ContextMenuContentComponent): void {
+  public destroySubMenus(contextMenu: ContextMenuContentComponent<T>): void {
     if (!contextMenu) {
       return;
     }
@@ -92,7 +92,7 @@ export class ContextMenuStackService {
   /**
    * Starting by most recent items, dispose all detached item and return the most recent attached one
    */
-  private disposeLastDetached(): ContextMenuStackItem | undefined {
+  private disposeLastDetached(): ContextMenuStackItem<T> | undefined {
     let item = this.last();
 
     if (!item) {
@@ -112,7 +112,7 @@ export class ContextMenuStackService {
     return item;
   }
 
-  private last(): ContextMenuStackItem | undefined {
+  private last(): ContextMenuStackItem<T> | undefined {
     if (this.isEmpty()) {
       return;
     }
@@ -120,18 +120,18 @@ export class ContextMenuStackService {
     return this.stack[this.stack.length - 1];
   }
 
-  private pop(): ContextMenuStackItem | undefined {
+  private pop(): ContextMenuStackItem<T> | undefined {
     const value = this.stack.pop();
     return this.dispose(value);
   }
 
-  private isDetached(item: ContextMenuStackItem): boolean {
+  private isDetached(item: ContextMenuStackItem<T>): boolean {
     return !item.overlayRef?.hasAttached();
   }
 
   private dispose(
-    item: ContextMenuStackItem | undefined
-  ): ContextMenuStackItem | undefined {
+    item: ContextMenuStackItem<T> | undefined
+  ): ContextMenuStackItem<T> | undefined {
     if (item) {
       item.overlayRef.detach();
       item.overlayRef.dispose();

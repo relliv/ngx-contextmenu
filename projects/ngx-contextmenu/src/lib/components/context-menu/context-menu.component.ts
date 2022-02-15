@@ -7,6 +7,7 @@ import {
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
   Component,
+  ComponentRef,
   ContentChildren,
   ElementRef,
   EventEmitter,
@@ -42,7 +43,7 @@ import {
   styleUrls: ['./context-menu.component.scss'],
   template: '',
 })
-export class ContextMenuComponent implements OnDestroy {
+export class ContextMenuComponent<T> implements OnDestroy {
   /**
    * A CSS class to add to the context menu, ideal for theming and custom styling
    */
@@ -71,7 +72,7 @@ export class ContextMenuComponent implements OnDestroy {
    * Emit when the menu is opened
    */
   @Output()
-  public open: EventEmitter<IContextMenuOpenEvent> = new EventEmitter();
+  public open: EventEmitter<IContextMenuOpenEvent<T>> = new EventEmitter();
 
   /**
    * Emit when the menu is closed
@@ -83,24 +84,24 @@ export class ContextMenuComponent implements OnDestroy {
    * The menu item directives defined inside the component
    */
   @ContentChildren(ContextMenuItemDirective)
-  public menuItems!: QueryList<ContextMenuItemDirective>;
+  public menuItems!: QueryList<ContextMenuItemDirective<T>>;
 
   /**
    * @internal
    */
-  public visibleMenuItems: ContextMenuItemDirective[] = [];
+  public visibleMenuItems: ContextMenuItemDirective<T>[] = [];
   /**
    * @internal
    */
-  public item: any;
+  public item?: T;
 
   private subscription: Subscription = new Subscription();
 
   constructor(
     private overlay: Overlay,
     private scrollStrategy: ScrollStrategyOptions,
-    private contextMenuStack: ContextMenuStackService,
-    private contextMenuService: ContextMenuService,
+    private contextMenuStack: ContextMenuStackService<T>,
+    private contextMenuService: ContextMenuService<T>,
     @Optional()
     @Inject(CONTEXT_MENU_OPTIONS)
     private options: IContextMenuOptions
@@ -127,7 +128,7 @@ export class ContextMenuComponent implements OnDestroy {
   /**
    * Open context menu
    */
-  public openContextMenu(context: IContextMenuContext) {
+  public openContextMenu(context: IContextMenuContext<T>) {
     let positionStrategy: FlexibleConnectedPositionStrategy;
 
     if (context.anchoredTo === 'position') {
@@ -156,7 +157,7 @@ export class ContextMenuComponent implements OnDestroy {
     this.attachContextMenu(overlayRef, context);
   }
 
-  private onMenuEvent(event: IContextMenuOpenEvent): void {
+  private onMenuEvent(event: IContextMenuOpenEvent<T>): void {
     if (this.disabled) {
       return;
     }
@@ -182,11 +183,13 @@ export class ContextMenuComponent implements OnDestroy {
 
   private attachContextMenu(
     overlayRef: OverlayRef,
-    context: IContextMenuContext
+    context: IContextMenuContext<T>
   ): void {
     const { item, menuDirectives, menuClass, dir } = context;
     const contextMenuContentRef = overlayRef.attach(
-      new ComponentPortal(ContextMenuContentComponent)
+      new ComponentPortal<ContextMenuContentComponent<T>>(
+        ContextMenuContentComponent
+      )
     );
     const { instance: contextMenuContentComponent } = contextMenuContentRef;
 
@@ -223,7 +226,7 @@ export class ContextMenuComponent implements OnDestroy {
     );
     subscriptions.add(
       contextMenuContentComponent.openSubMenu.subscribe(
-        (subMenuEvent: IContextMenuOpenEvent) => {
+        (subMenuEvent: IContextMenuOpenEvent<T>) => {
           this.contextMenuStack.destroySubMenus(contextMenuContentComponent);
           if (!subMenuEvent.contextMenu) {
             contextMenuContentComponent.isLeaf = true;
@@ -255,7 +258,7 @@ export class ContextMenuComponent implements OnDestroy {
     }
   }
 
-  private isMenuItemVisible(menuItem: ContextMenuItemDirective): boolean {
+  private isMenuItemVisible(menuItem: ContextMenuItemDirective<T>): boolean {
     return evaluateIfFunction(menuItem.visible, this.item);
   }
 

@@ -10,13 +10,11 @@ import {
   HostListener,
   Inject,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   QueryList,
-  SimpleChanges,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
@@ -50,20 +48,20 @@ export const TESTING_WRAPPER = {
   templateUrl: './context-menu-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContextMenuContentComponent
+export class ContextMenuContentComponent<T>
   implements OnInit, OnDestroy, AfterViewInit
 {
   /**
    * The list of `ContextMenuItemDirective` that represent each menu items
    */
   @Input()
-  public menuDirectives: ContextMenuItemDirective[] = [];
+  public menuDirectives: ContextMenuItemDirective<T>[] = [];
 
   /**
    * The item on which the menu act
    */
   @Input()
-  public item: any;
+  public item?: T;
 
   /**
    * The orientation of the component
@@ -77,7 +75,7 @@ export class ContextMenuContentComponent
    * The parent menu of the instance
    */
   @Input()
-  public parentContextMenu!: ContextMenuContentComponent;
+  public parentContextMenu!: ContextMenuContentComponent<T>;
 
   /**
    * A CSS class to apply a theme to the the menu
@@ -103,15 +101,16 @@ export class ContextMenuContentComponent
   @Output()
   public execute: EventEmitter<{
     event: MouseEvent | KeyboardEvent;
-    item: any;
-    menuDirective: ContextMenuItemDirective;
+    item?: T;
+    menuDirective: ContextMenuItemDirective<T>;
   }> = new EventEmitter();
 
   /**
    * Emit when a sub menu is opened
    */
   @Output()
-  public openSubMenu: EventEmitter<IContextMenuOpenEvent> = new EventEmitter();
+  public openSubMenu: EventEmitter<IContextMenuOpenEvent<T>> =
+    new EventEmitter();
 
   /**
    * Emit when a leaf menu is closed
@@ -140,7 +139,7 @@ export class ContextMenuContentComponent
   public liElementRefs!: QueryList<ElementRef>;
 
   private autoFocus?: boolean = this.options?.autoFocus || false;
-  private keyManager!: ActiveDescendantKeyManager<ContextMenuItemDirective>;
+  private keyManager!: ActiveDescendantKeyManager<ContextMenuItemDirective<T>>;
   private subscription: Subscription = new Subscription();
   constructor(
     @Optional()
@@ -275,14 +274,14 @@ export class ContextMenuContentComponent
   /**
    * @internal
    */
-  public isMenuItemEnabled(menuItem: ContextMenuItemDirective): boolean {
+  public isMenuItemEnabled(menuItem: ContextMenuItemDirective<T>): boolean {
     return evaluateIfFunction(menuItem?.enabled, this.item);
   }
 
   /**
    * @internal
    */
-  public isMenuItemVisible(menuItem: ContextMenuItemDirective): boolean {
+  public isMenuItemVisible(menuItem: ContextMenuItemDirective<T>): boolean {
     return evaluateIfFunction(menuItem?.visible, this.item);
   }
 
@@ -297,7 +296,7 @@ export class ContextMenuContentComponent
    * @internal
    */
   public onOpenSubMenu(
-    menuItem: ContextMenuItemDirective,
+    menuItem: ContextMenuItemDirective<T>,
     event: MouseEvent | KeyboardEvent
   ): void {
     if (this.keyManager.activeItemIndex === null) {
@@ -340,14 +339,14 @@ export class ContextMenuContentComponent
    * @internal
    */
   public onMenuItemSelect(
-    menuItem: ContextMenuItemDirective,
+    menuItem: ContextMenuItemDirective<T>,
     event: MouseEvent | KeyboardEvent
   ): void {
     event.preventDefault();
     event.stopPropagation();
     this.onOpenSubMenu(menuItem, event);
     if (!menuItem.subMenu) {
-      menuItem.triggerExecute(this.item, event);
+      menuItem.triggerExecute(event, this.item);
     }
   }
 
@@ -360,12 +359,11 @@ export class ContextMenuContentComponent
         )
       );
     });
-    const queryList = new QueryList<ContextMenuItemDirective>();
+    const queryList = new QueryList<ContextMenuItemDirective<T>>();
     queryList.reset(this.menuDirectives);
-    this.keyManager =
-      new TESTING_WRAPPER.ActiveDescendantKeyManager<ContextMenuItemDirective>(
-        queryList
-      ).withWrap();
+    this.keyManager = new TESTING_WRAPPER.ActiveDescendantKeyManager<
+      ContextMenuItemDirective<T>
+    >(queryList).withWrap();
   }
 
   private openActiveItemSubMenu(event: KeyboardEvent) {

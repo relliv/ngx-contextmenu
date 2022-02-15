@@ -5,7 +5,7 @@ import { ContextMenuService } from '../../services/context-menu/context-menu.ser
 @Directive({
   selector: '[contextMenu]',
 })
-export class ContextMenuDirective<T = unknown> {
+export class ContextMenuDirective<T> {
   /**
    * The item related to the context menu
    */
@@ -16,7 +16,7 @@ export class ContextMenuDirective<T = unknown> {
    * The component holding the menu item directive templates
    */
   @Input()
-  public contextMenu?: ContextMenuComponent;
+  public contextMenu?: ContextMenuComponent<T>;
 
   /**
    * The directive must have a tabindex for being accessible
@@ -40,7 +40,7 @@ export class ContextMenuDirective<T = unknown> {
   @HostBinding('attr.aria-haspopup')
   public ariaHasPopup = 'true';
 
-  constructor(private contextMenuService: ContextMenuService) {}
+  constructor(private contextMenuService: ContextMenuService<T>) {}
 
   /**
    * @internal

@@ -63,7 +63,7 @@ export class AppModule {}
   <li
     *ngFor="let item of items"
     [contextMenu]="basicMenu"
-    [contextMenuSubject]="item"
+    [contextMenuItem]="item"
   >
     Right Click: {{ item?.name }}
   </li>
@@ -160,7 +160,7 @@ You can specify sub menus like this:
   <li
     *ngFor="let item of items"
     [contextMenu]="basicMenu"
-    [contextMenuSubject]="item"
+    [contextMenuItem]="item"
   >
     Right Click: {{item?.name}}
   </li>
@@ -231,7 +231,7 @@ You can use multiple context menus in the same component if you would like.
   <li
     *ngFor="let item of items"
     [contextMenu]="basicMenu"
-    [contextMenuSubject]="item"
+    [contextMenuItem]="item"
   >
     {{item?.name}}
   </li>
@@ -242,7 +242,7 @@ You can use multiple context menus in the same component if you would like.
   <li
     *ngFor="let item of items"
     [contextMenu]="otherMenu"
-    [contextMenuSubject]="item"
+    [contextMenuItem]="item"
   >
     {{ item?.name }}
   </li>
@@ -381,27 +381,6 @@ You can key off of the `ngx-contextmenu` class to create your own styles. Note t
 }
 ```
 
-### Bootstrap 4
-
-If you're using Bootstrap 4, you can specify a `useBootstrap4` property in the `forRoot` function of the `ContextMenuModule` in order to get the appropriate class names. Like this:
-
-```ts
-@NgModule({
-  import: [
-    ContextMenuModule.forRoot({
-      useBootstrap4: true,
-    }),
-  ],
-})
-export class AppModule {}
-```
-
-> **Or, if you want to repeat yourself,** you can add a `useBootstrap4` attribute to each `context-menu` component. Like this:
->
-> ```html
-> <context-menu [useBootstrap4]="true"></context-menu>
-> ```
-
 ### Different styling on menus
 
 If you want to style one menu differently than other menus, you can add a custom style to the menu.
@@ -465,7 +444,7 @@ The items in the context menu are completely controlled by the `contextMenuActio
   <li
     *ngFor="item in items"
     [contextMenu]="myContextMenu"
-    [contextMenuSubject]="item"
+    [contextMenuItem]="item"
   >
     Right Click: {{item.name}}
   </li>

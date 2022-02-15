@@ -72,26 +72,6 @@ describe('Directive: ContextMenuItemDirective', () => {
     });
   });
 
-  describe('#evaluateIfFunction', () => {
-    it('should return the given value if not a function', () => {
-      const item = { id: 'item' };
-      const value = { id: 'a' };
-      const result = directive.evaluateIfFunction(value, item);
-      expect(result).toBe(value);
-    });
-
-    it('should return the result of the evaluation of value if it is a function', () => {
-      const item = { id: 'item' };
-      const actualResult = { id: 'result' };
-      const value = jasmine
-        .createSpy('functionValue')
-        .and.returnValue(actualResult);
-      const result = directive.evaluateIfFunction(value, item);
-      expect(value).toHaveBeenCalledWith(item);
-      expect(result).toBe(actualResult);
-    });
-  });
-
   describe('#setActiveStyles', () => {
     it('should activate the directive', () => {
       directive.setActiveStyles();

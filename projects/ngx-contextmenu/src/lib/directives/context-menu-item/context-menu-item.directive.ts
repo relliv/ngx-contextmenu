@@ -1,20 +1,21 @@
 import { Highlightable } from '@angular/cdk/a11y';
 import {
   Directive,
-  ElementRef,
   EventEmitter,
   Input,
   Optional,
   Output,
   TemplateRef,
 } from '@angular/core';
+import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
+import { evaluateIfFunction } from '../../helper/evaluate';
 
 @Directive({
   selector: '[contextMenuItem]',
 })
 export class ContextMenuItemDirective implements Highlightable {
   @Input()
-  public subMenu: any;
+  public subMenu!: ContextMenuComponent;
 
   @Input()
   public divider = false;
@@ -34,39 +35,36 @@ export class ContextMenuItemDirective implements Highlightable {
     item: any;
   }> = new EventEmitter();
 
-  public currentItem: any;
+  public item: any;
+
   public isActive = false;
+
   public get disabled() {
     return (
       this.passive ||
       this.divider ||
-      !this.evaluateIfFunction(this.enabled, this.currentItem)
+      !evaluateIfFunction(this.enabled, this.item)
     );
   }
+
   constructor(
     @Optional()
-    public template: TemplateRef<{ item: any }>,
-    public elementRef: ElementRef
+    public template: TemplateRef<{ item: any }>
   ) {}
-
-  public evaluateIfFunction(value: any, item: any): any {
-    if (value instanceof Function) {
-      return value(item);
-    }
-    return value;
-  }
 
   public setActiveStyles(): void {
     this.isActive = true;
   }
+
   public setInactiveStyles(): void {
     this.isActive = false;
   }
 
   public triggerExecute(item: any, $event: MouseEvent | KeyboardEvent): void {
-    if (!this.evaluateIfFunction(this.enabled, item)) {
+    if (!evaluateIfFunction(this.enabled, item)) {
       return;
     }
+
     this.execute.emit({ event: $event, item });
   }
 }

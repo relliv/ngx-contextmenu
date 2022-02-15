@@ -10,18 +10,18 @@ import { ContextMenuComponent } from './components/context-menu/context-menu.com
 import { IContextMenuOptions } from './context-menu.options';
 import { CONTEXT_MENU_OPTIONS } from './context-menu.tokens';
 import { ContextMenuItemDirective } from './directives/context-menu-item/context-menu-item.directive';
-import { ContextMenuAttachDirective } from './directives/context-menu/context-menu.directive';
+import { ContextMenuDirective } from './directives/context-menu/context-menu.directive';
 import { ContextMenuService } from './services/context-menu/context-menu.service';
 
 @NgModule({
   declarations: [
-    ContextMenuAttachDirective,
+    ContextMenuDirective,
     ContextMenuComponent,
     ContextMenuContentComponent,
     ContextMenuItemDirective,
   ],
   exports: [
-    ContextMenuAttachDirective,
+    ContextMenuDirective,
     ContextMenuComponent,
     ContextMenuItemDirective,
   ],

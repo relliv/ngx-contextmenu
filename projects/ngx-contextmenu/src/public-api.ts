@@ -15,7 +15,7 @@ export * from './lib/directives/context-menu/context-menu.directive';
 /**
  * Services
  */
-export * from './lib/services/context-menu/context-menu.service';
+export { ContextMenuService } from './lib/services/context-menu/context-menu.service';
 /**
  * Models
  */

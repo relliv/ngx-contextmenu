@@ -15,7 +15,7 @@ import { evaluateIfFunction } from '../../helper/evaluate';
 })
 export class ContextMenuItemDirective<T> implements Highlightable {
   @Input()
-  public subMenu!: ContextMenuComponent<T>;
+  public subMenu?: ContextMenuComponent<T>;
 
   @Input()
   public divider = false;

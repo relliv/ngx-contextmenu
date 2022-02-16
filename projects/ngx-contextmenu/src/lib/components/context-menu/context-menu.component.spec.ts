@@ -17,9 +17,9 @@ import { ContextMenuComponent } from './context-menu.component';
 import { IContextMenuContext } from './context-menu.component.interface';
 
 describe('Component: ContextMenuComponent', () => {
-  let component: ContextMenuComponent<any>;
-  let fixture: ComponentFixture<ContextMenuComponent<any>>;
-  let contextMenuService: ContextMenuService<any>;
+  let component: ContextMenuComponent<unknown>;
+  let fixture: ComponentFixture<ContextMenuComponent<unknown>>;
+  let contextMenuService: ContextMenuService<unknown>;
   let scrollStrategyClose: jasmine.Spy<jasmine.Func>;
   let overlayPosition: jasmine.Spy<jasmine.Func>;
   let overlayFlexibleConnectedTo: jasmine.Spy<jasmine.Func>;
@@ -30,9 +30,9 @@ describe('Component: ContextMenuComponent', () => {
   let overlayRefDispose: jasmine.Spy<jasmine.Func>;
   let positionStrategy: FlexibleConnectedPositionStrategy;
   let overlayRef: OverlayRef;
-  let contextMenuContentRef: ComponentRef<ContextMenuContentComponent<any>>;
+  let contextMenuContentRef: ComponentRef<ContextMenuContentComponent<unknown>>;
   let closeScrollStrategy: CloseScrollStrategy;
-  let contextMenuContentComponent: ContextMenuContentComponent<any>;
+  let contextMenuContentComponent: ContextMenuContentComponent<unknown>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -51,10 +51,10 @@ describe('Component: ContextMenuComponent', () => {
       changeDetectorRef: {
         detectChanges: jasmine.createSpy('detectChanges'),
       },
-    } as unknown as ComponentRef<ContextMenuContentComponent<any>>;
+    } as unknown as ComponentRef<ContextMenuContentComponent<unknown>>;
     contextMenuContentComponent = {
       id: 'ContextMenuContentComponent',
-    } as unknown as ContextMenuContentComponent<any>;
+    } as unknown as ContextMenuContentComponent<unknown>;
     overlayRefAttach = jasmine
       .createSpy('attach')
       .and.returnValue(contextMenuContentRef);
@@ -118,25 +118,25 @@ describe('Component: ContextMenuComponent', () => {
     describe('#onMenuEvent', () => {
       let open: jasmine.Spy<jasmine.Func>;
       let close: jasmine.Spy<jasmine.Func>;
-      let a: ContextMenuItemDirective<any>;
-      let b: ContextMenuItemDirective<any>;
-      let c: ContextMenuItemDirective<any>;
-      let d: ContextMenuItemDirective<any>;
+      let a: ContextMenuItemDirective<unknown>;
+      let b: ContextMenuItemDirective<unknown>;
+      let c: ContextMenuItemDirective<unknown>;
+      let d: ContextMenuItemDirective<unknown>;
       let item: unknown;
 
       beforeEach(() => {
         a = {
           visible: false,
-        } as ContextMenuItemDirective<any>;
+        } as ContextMenuItemDirective<unknown>;
         b = {
           visible: true,
-        } as ContextMenuItemDirective<any>;
+        } as ContextMenuItemDirective<unknown>;
         c = {
           visible: (item: unknown) => false,
-        } as ContextMenuItemDirective<any>;
+        } as ContextMenuItemDirective<unknown>;
         d = {
           visible: (item: unknown) => true,
-        } as ContextMenuItemDirective<any>;
+        } as ContextMenuItemDirective<unknown>;
         spyOn(component, 'openContextMenu');
         open = jasmine.createSpy('open');
         component.open.subscribe(open);
@@ -144,7 +144,7 @@ describe('Component: ContextMenuComponent', () => {
         component.close.subscribe(close);
 
         item = { id: 'a' };
-        const menuItems = new QueryList<ContextMenuItemDirective<any>>();
+        const menuItems = new QueryList<ContextMenuItemDirective<unknown>>();
         menuItems.reset([a, b, c, d]);
         component.menuItems = menuItems;
         component.menuClass = 'custom-class';
@@ -200,7 +200,7 @@ describe('Component: ContextMenuComponent', () => {
             anchoredTo: 'position',
             x: 0,
             y: 0,
-            contextMenu: undefined as unknown as ContextMenuComponent<any>,
+            contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
             parentContextMenu: undefined,
             item,
           });
@@ -221,7 +221,7 @@ describe('Component: ContextMenuComponent', () => {
             y: 0,
             parentContextMenu: undefined,
             item,
-            contextMenu: undefined as unknown as ContextMenuComponent<any>,
+            contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
             menuDirectives: [b, d],
             menuClass: 'custom-class',
             dir: 'rtl',
@@ -235,7 +235,7 @@ describe('Component: ContextMenuComponent', () => {
             y: 0,
             parentContextMenu: undefined,
             item,
-            contextMenu: undefined as unknown as ContextMenuComponent<any>,
+            contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
           });
         });
       });
@@ -247,7 +247,7 @@ describe('Component: ContextMenuComponent', () => {
             anchoredTo: 'position',
             x: 0,
             y: 0,
-            contextMenu: undefined as unknown as ContextMenuComponent<any>,
+            contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
             parentContextMenu: undefined,
             item,
           });
@@ -303,7 +303,7 @@ describe('Component: ContextMenuComponent', () => {
   });
 
   describe('#openContextMenu', () => {
-    let contextMenuStackService: ContextMenuStackService<any>;
+    let contextMenuStackService: ContextMenuStackService<unknown>;
 
     beforeEach(() => {
       contextMenuStackService = TestBed.inject(ContextMenuStackService);
@@ -315,7 +315,7 @@ describe('Component: ContextMenuComponent', () => {
 
     describe('when open anchoredTo position', () => {
       it('should close all other menus', () => {
-        const context: IContextMenuContext<any> = {
+        const context: IContextMenuContext<unknown> = {
           anchoredTo: 'position',
           x: 0,
           y: 0,
@@ -335,7 +335,7 @@ describe('Component: ContextMenuComponent', () => {
       });
 
       it('should get a position strategy with position and create an overlay from it', () => {
-        const context: IContextMenuContext<any> = {
+        const context: IContextMenuContext<unknown> = {
           anchoredTo: 'position',
           x: 0,
           y: 0,
@@ -405,7 +405,7 @@ describe('Component: ContextMenuComponent', () => {
       });
 
       it('should get a position strategy with position LTR and create an overlay from it', () => {
-        const context: IContextMenuContext<any> = {
+        const context: IContextMenuContext<unknown> = {
           anchoredTo: 'position',
           x: 0,
           y: 0,
@@ -475,7 +475,7 @@ describe('Component: ContextMenuComponent', () => {
       });
 
       it('should get a position strategy with position parent LTR and create an overlay from it', () => {
-        const context: IContextMenuContext<any> = {
+        const context: IContextMenuContext<unknown> = {
           anchoredTo: 'position',
           x: 0,
           y: 0,
@@ -483,7 +483,7 @@ describe('Component: ContextMenuComponent', () => {
             TestBed.createComponent(ContextMenuComponent).componentInstance,
           parentContextMenu: {
             dir: 'ltr',
-          } as unknown as ContextMenuContentComponent<any>,
+          } as unknown as ContextMenuContentComponent<unknown>,
           item: {},
           dir: 'ltr',
           menuClass: '',
@@ -547,7 +547,7 @@ describe('Component: ContextMenuComponent', () => {
       });
 
       it('should get a position strategy with position RTL and create an overlay from it', () => {
-        const context: IContextMenuContext<any> = {
+        const context: IContextMenuContext<unknown> = {
           anchoredTo: 'position',
           x: 0,
           y: 0,
@@ -619,7 +619,7 @@ describe('Component: ContextMenuComponent', () => {
 
     describe('when open anchoredTo element', () => {
       it('should close all sub menus', () => {
-        const context: IContextMenuContext<any> = {
+        const context: IContextMenuContext<unknown> = {
           anchoredTo: 'element',
           anchorElement: document.createElement('div'),
           contextMenu:
@@ -640,7 +640,7 @@ describe('Component: ContextMenuComponent', () => {
 
       it('should get a position strategy with anchor Element and create an overlay from it', () => {
         const anchorElement = document.createElement('div');
-        const context: IContextMenuContext<any> = {
+        const context: IContextMenuContext<unknown> = {
           anchoredTo: 'element',
           anchorElement,
           contextMenu:
@@ -704,7 +704,7 @@ describe('Component: ContextMenuComponent', () => {
 
       it('should get a position strategy with anchor Element RTL and create an overlay from it', () => {
         const anchorElement = document.createElement('div');
-        const context: IContextMenuContext<any> = {
+        const context: IContextMenuContext<unknown> = {
           anchoredTo: 'element',
           anchorElement,
           contextMenu:
@@ -768,29 +768,29 @@ describe('Component: ContextMenuComponent', () => {
     });
 
     describe('with created contextMenuContentComponent', () => {
-      let a: ContextMenuItemDirective<any>;
-      let b: ContextMenuItemDirective<any>;
-      let c: ContextMenuItemDirective<any>;
-      let d: ContextMenuItemDirective<any>;
-      let context: IContextMenuContext<any>;
+      let a: ContextMenuItemDirective<unknown>;
+      let b: ContextMenuItemDirective<unknown>;
+      let c: ContextMenuItemDirective<unknown>;
+      let d: ContextMenuItemDirective<unknown>;
+      let context: IContextMenuContext<unknown>;
       let item: unknown;
 
       beforeEach(() => {
         a = {
           visible: false,
-        } as ContextMenuItemDirective<any>;
+        } as ContextMenuItemDirective<unknown>;
         b = {
           visible: true,
-        } as ContextMenuItemDirective<any>;
+        } as ContextMenuItemDirective<unknown>;
         c = {
           visible: (item: unknown) => false,
-        } as ContextMenuItemDirective<any>;
+        } as ContextMenuItemDirective<unknown>;
         d = {
           visible: (item: unknown) => true,
-        } as ContextMenuItemDirective<any>;
+        } as ContextMenuItemDirective<unknown>;
 
         item = { id: 'a' };
-        const menuItems = new QueryList<ContextMenuItemDirective<any>>();
+        const menuItems = new QueryList<ContextMenuItemDirective<unknown>>();
         menuItems.reset([a, b, c, d]);
         component.menuItems = menuItems;
         component.menuClass = 'custom-class';
@@ -828,7 +828,7 @@ describe('Component: ContextMenuComponent', () => {
         context.dir = undefined;
         (context.parentContextMenu = {
           dir: 'ltr',
-        } as unknown as ContextMenuContentComponent<any>),
+        } as unknown as ContextMenuContentComponent<unknown>),
           component.openContextMenu(context);
         expect(contextMenuContentRef.instance.dir).toEqual('ltr');
       });
@@ -906,18 +906,6 @@ describe('Component: ContextMenuComponent', () => {
         );
         expect(contextMenuContentRef.instance.isLeaf).toEqual(false);
         expect(contextMenuService.display).toHaveBeenCalledWith(context);
-      });
-
-      it('should open sub menu menus when instance emits openSubMenu and set its isLeaf property to true', () => {
-        component.openContextMenu(context);
-        spyOn(contextMenuService, 'display');
-        delete context.contextMenu;
-        contextMenuContentRef.instance.openSubMenu.next(context);
-        expect(contextMenuStackService.destroySubMenus).toHaveBeenCalledWith(
-          contextMenuContentRef.instance
-        );
-        expect(contextMenuContentRef.instance.isLeaf).toEqual(true);
-        expect(contextMenuService.display).not.toHaveBeenCalled();
       });
 
       it('should inactive all menu items when instance is destroyed', () => {

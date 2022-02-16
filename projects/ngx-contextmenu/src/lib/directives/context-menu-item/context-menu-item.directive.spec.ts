@@ -10,7 +10,7 @@ class TestHostComponent {}
 
 describe('Directive: ContextMenuItemDirective', () => {
   let fixture: ComponentFixture<TestHostComponent>;
-  let directive: ContextMenuItemDirective<any>;
+  let directive: ContextMenuItemDirective<unknown>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

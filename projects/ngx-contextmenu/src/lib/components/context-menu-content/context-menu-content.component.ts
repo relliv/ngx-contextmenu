@@ -35,6 +35,7 @@ export interface ILinkConfig {
 }
 
 const ARROW_LEFT_KEYCODE = 37;
+const ARROW_RIGHT_KEYCODE = 39;
 
 /**
  * For testing purpose only
@@ -299,7 +300,7 @@ export class ContextMenuContentComponent<T>
     menuItem: ContextMenuItemDirective<T>,
     event: MouseEvent | KeyboardEvent
   ): void {
-    if (this.keyManager.activeItemIndex === null) {
+    if (this.keyManager.activeItemIndex === null || !menuItem.subMenu) {
       return;
     }
 
@@ -386,7 +387,10 @@ export class ContextMenuContentComponent<T>
     this.cancelEvent(event);
 
     this.closeLeafMenu.emit({
-      excludeRootMenu: event.keyCode === ARROW_LEFT_KEYCODE,
+      excludeRootMenu:
+        this.dir === 'rtl'
+          ? event.keyCode === ARROW_RIGHT_KEYCODE
+          : event.keyCode === ARROW_LEFT_KEYCODE,
       event,
     });
   }
@@ -398,7 +402,7 @@ export class ContextMenuContentComponent<T>
 
     const target = event.target as HTMLElement;
     if (
-      ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(target.tagName) > -1 ||
+      ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) ||
       target.isContentEditable
     ) {
       return;

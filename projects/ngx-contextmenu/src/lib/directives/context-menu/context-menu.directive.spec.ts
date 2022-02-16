@@ -13,8 +13,8 @@ class TestHostComponent {}
 
 describe('Directive: ContextMenuDirective', () => {
   let fixture: ComponentFixture<TestHostComponent>;
-  let directive: ContextMenuDirective<any>;
-  let contextMenuService: ContextMenuService<any>;
+  let directive: ContextMenuDirective<unknown>;
+  let contextMenuService: ContextMenuService<unknown>;
   let show: jasmine.Spy<jasmine.Func>;
 
   beforeEach(() => {

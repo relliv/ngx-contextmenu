@@ -7,7 +7,7 @@ import { ContextMenuService } from '../../services/context-menu/context-menu.ser
 import { ContextMenuDirective } from './context-menu.directive';
 
 describe('Integ: ContextMenuDirective', () => {
-  let host: SpectatorHost<ContextMenuDirective<any>>;
+  let host: SpectatorHost<ContextMenuDirective<unknown>>;
 
   const createHost = createHostFactory({
     component: ContextMenuDirective,

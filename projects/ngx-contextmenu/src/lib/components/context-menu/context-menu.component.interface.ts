@@ -16,7 +16,7 @@ export interface IContextMenuClickEvent<T> {
 export interface IContextMenuOpenKeyboardEvent<T> {
   anchoredTo: 'element';
   anchorElement: Element | EventTarget;
-  contextMenu?: ContextMenuComponent<T>;
+  contextMenu: ContextMenuComponent<T>;
   parentContextMenu: ContextMenuContentComponent<T>;
   item?: T;
 }

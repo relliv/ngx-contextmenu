@@ -126,7 +126,7 @@ export class ContextMenuStackService<T> {
   }
 
   private isDetached(item: ContextMenuStackItem<T>): boolean {
-    return !item.overlayRef?.hasAttached();
+    return !item.overlayRef.hasAttached();
   }
 
   private dispose(

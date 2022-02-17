@@ -351,6 +351,19 @@ describe('Component: ContextMenuContentComponent', () => {
         expect(closeLeafMenu).not.toHaveBeenCalled();
       });
 
+      it('should not open active if activeItemIndex is null', () => {
+        const directive = new ContextMenuItemDirective(
+          undefined as unknown as TemplateRef<{ item: any }>
+        );
+        (keyManager.activeItem as any) = directive;
+        (keyManager.activeItemIndex as any) = null;
+        component.ngOnInit();
+        const event = new KeyboardEvent('mousedown');
+        component.isLeaf = true;
+        component.onKeyArrowRight(event);
+        expect(component.onOpenSubMenu).not.toHaveBeenCalled();
+      });
+
       it('should not open active sub menu if this is not leaf', () => {
         const directive = new ContextMenuItemDirective(
           undefined as unknown as TemplateRef<{ item: any }>
@@ -407,6 +420,21 @@ describe('Component: ContextMenuContentComponent', () => {
           event,
           excludeRootMenu: true,
         });
+      });
+
+      it('should not close active sub menu if activeItemIndex is null', () => {
+        const directive = new ContextMenuItemDirective(
+          undefined as unknown as TemplateRef<{ item: any }>
+        );
+        (keyManager.activeItem as any) = directive;
+        (keyManager.activeItemIndex as any) = null;
+        const closeLeafMenu = jasmine.createSpy('subscriber');
+        component.closeLeafMenu.subscribe(closeLeafMenu);
+        component.ngOnInit();
+        const event = new KeyboardEvent('mousedown', { keyCode: 39 });
+        component.isLeaf = true;
+        component.onKeyArrowRight(event);
+        expect(closeLeafMenu).not.toHaveBeenCalled();
       });
 
       it('should close active sub menu', () => {
@@ -1113,7 +1141,6 @@ describe('Component: ContextMenuContentComponent', () => {
         y: 58,
         contextMenu: directive.subMenu,
         item: component.item,
-        parentContextMenu: component,
       });
     });
   });

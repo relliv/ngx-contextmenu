@@ -1,6 +1,6 @@
 import { Directive, HostBinding, HostListener, Input } from '@angular/core';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
-import { ContextMenuService } from '../../services/context-menu/context-menu.service';
+import { ContextMenuEventService } from '../../services/context-menu-event/context-menu-event.service';
 
 @Directive({
   selector: '[contextMenu]',
@@ -40,7 +40,7 @@ export class ContextMenuDirective<T> {
   @HostBinding('attr.aria-haspopup')
   public ariaHasPopup = 'true';
 
-  constructor(private contextMenuService: ContextMenuService<T>) {}
+  constructor(private contextMenuEventService: ContextMenuEventService<T>) {}
 
   /**
    * @internal
@@ -48,7 +48,7 @@ export class ContextMenuDirective<T> {
   @HostListener('contextmenu', ['$event'])
   public onContextMenu(event: MouseEvent): void {
     if (this.contextMenu && !this.contextMenu.disabled) {
-      this.contextMenuService.display({
+      this.contextMenuEventService.show({
         anchoredTo: 'position',
         contextMenu: this.contextMenu,
         x: event.clientX,

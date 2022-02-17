@@ -276,14 +276,14 @@ export class ContextMenuContentComponent<T>
    * @internal
    */
   public isMenuItemEnabled(menuItem: ContextMenuItemDirective<T>): boolean {
-    return evaluateIfFunction(menuItem?.enabled, this.item);
+    return evaluateIfFunction(menuItem.enabled, this.item);
   }
 
   /**
    * @internal
    */
   public isMenuItemVisible(menuItem: ContextMenuItemDirective<T>): boolean {
-    return evaluateIfFunction(menuItem?.visible, this.item);
+    return evaluateIfFunction(menuItem.visible, this.item);
   }
 
   /**
@@ -331,7 +331,7 @@ export class ContextMenuContentComponent<T>
         y: (event as MouseEvent).clientY,
         contextMenu: menuItem.subMenu,
         item: this.item,
-        parentContextMenu: this,
+        // parentContextMenu: this,
       });
     }
   }

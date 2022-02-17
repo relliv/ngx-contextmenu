@@ -10,8 +10,8 @@ import { ComponentRef, ElementRef, QueryList } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { ContextMenuItemDirective } from '../../directives/context-menu-item/context-menu-item.directive';
+import { ContextMenuEventService } from '../../services/context-menu-event/context-menu-event.service';
 import { ContextMenuStackService } from '../../services/context-menu-stack/context-menu-stack.service';
-import { ContextMenuService } from '../../services/context-menu/context-menu.service';
 import { ContextMenuContentComponent } from '../context-menu-content/context-menu-content.component';
 import { ContextMenuComponent } from './context-menu.component';
 import { IContextMenuContext } from './context-menu.component.interface';
@@ -19,7 +19,7 @@ import { IContextMenuContext } from './context-menu.component.interface';
 describe('Component: ContextMenuComponent', () => {
   let component: ContextMenuComponent<unknown>;
   let fixture: ComponentFixture<ContextMenuComponent<unknown>>;
-  let contextMenuService: ContextMenuService<unknown>;
+  let contextMenuEventService: ContextMenuEventService<unknown>;
   let scrollStrategyClose: jasmine.Spy<jasmine.Func>;
   let overlayPosition: jasmine.Spy<jasmine.Func>;
   let overlayFlexibleConnectedTo: jasmine.Spy<jasmine.Func>;
@@ -37,7 +37,7 @@ describe('Component: ContextMenuComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OverlayModule],
-      providers: [ContextMenuService],
+      providers: [ContextMenuEventService],
       declarations: [ContextMenuComponent],
     }).compileComponents();
     contextMenuContentRef = {
@@ -88,7 +88,7 @@ describe('Component: ContextMenuComponent', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule],
       providers: [
-        ContextMenuService,
+        ContextMenuEventService,
         {
           provide: Overlay,
           useValue: {
@@ -105,7 +105,7 @@ describe('Component: ContextMenuComponent', () => {
       ],
     });
     fixture = TestBed.createComponent(ContextMenuComponent);
-    contextMenuService = TestBed.inject(ContextMenuService);
+    contextMenuEventService = TestBed.inject(ContextMenuEventService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -154,12 +154,11 @@ describe('Component: ContextMenuComponent', () => {
 
       describe('with all required properties', () => {
         beforeEach(() => {
-          TestBed.inject(ContextMenuService).show.next({
+          TestBed.inject(ContextMenuEventService).show({
             anchoredTo: 'position',
             x: 0,
             y: 0,
             contextMenu: component,
-            parentContextMenu: undefined,
             item,
           });
         });
@@ -174,7 +173,6 @@ describe('Component: ContextMenuComponent', () => {
             x: 0,
             y: 0,
             contextMenu: component,
-            parentContextMenu: undefined,
             item,
             dir: 'rtl',
             menuDirectives: [b, d],
@@ -188,7 +186,6 @@ describe('Component: ContextMenuComponent', () => {
             x: 0,
             y: 0,
             contextMenu: component,
-            parentContextMenu: undefined,
             item,
           });
         });
@@ -196,12 +193,11 @@ describe('Component: ContextMenuComponent', () => {
 
       describe('with contextMenu not defined', () => {
         beforeEach(() => {
-          TestBed.inject(ContextMenuService).show.next({
+          TestBed.inject(ContextMenuEventService).show({
             anchoredTo: 'position',
             x: 0,
             y: 0,
             contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
-            parentContextMenu: undefined,
             item,
           });
         });
@@ -219,7 +215,6 @@ describe('Component: ContextMenuComponent', () => {
             anchoredTo: 'position',
             x: 0,
             y: 0,
-            parentContextMenu: undefined,
             item,
             contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
             menuDirectives: [b, d],
@@ -233,7 +228,6 @@ describe('Component: ContextMenuComponent', () => {
             anchoredTo: 'position',
             x: 0,
             y: 0,
-            parentContextMenu: undefined,
             item,
             contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
           });
@@ -243,12 +237,11 @@ describe('Component: ContextMenuComponent', () => {
       describe('when disabled', () => {
         beforeEach(() => {
           component.disabled = true;
-          TestBed.inject(ContextMenuService).show.next({
+          TestBed.inject(ContextMenuEventService).show({
             anchoredTo: 'position',
             x: 0,
             y: 0,
             contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
-            parentContextMenu: undefined,
             item,
           });
         });
@@ -272,13 +265,12 @@ describe('Component: ContextMenuComponent', () => {
 
       describe('when contextMenu being another component instance', () => {
         beforeEach(() => {
-          TestBed.inject(ContextMenuService).show.next({
+          TestBed.inject(ContextMenuEventService).show({
             anchoredTo: 'position',
             x: 0,
             y: 0,
             contextMenu:
               TestBed.createComponent(ContextMenuComponent).componentInstance,
-            parentContextMenu: undefined,
             item,
           });
         });
@@ -321,7 +313,6 @@ describe('Component: ContextMenuComponent', () => {
           y: 0,
           contextMenu:
             TestBed.createComponent(ContextMenuComponent).componentInstance,
-          parentContextMenu: undefined,
           item: {},
           dir: 'rtl',
           menuClass: '',
@@ -341,7 +332,6 @@ describe('Component: ContextMenuComponent', () => {
           y: 0,
           contextMenu:
             TestBed.createComponent(ContextMenuComponent).componentInstance,
-          parentContextMenu: undefined,
           item: {},
           dir: undefined,
           menuClass: '',
@@ -411,7 +401,6 @@ describe('Component: ContextMenuComponent', () => {
           y: 0,
           contextMenu:
             TestBed.createComponent(ContextMenuComponent).componentInstance,
-          parentContextMenu: undefined,
           item: {},
           dir: 'ltr',
           menuClass: '',
@@ -474,7 +463,7 @@ describe('Component: ContextMenuComponent', () => {
         });
       });
 
-      it('should get a position strategy with position parent LTR and create an overlay from it', () => {
+      /*       it('should get a position strategy with position parent LTR and create an overlay from it', () => {
         const context: IContextMenuContext<unknown> = {
           anchoredTo: 'position',
           x: 0,
@@ -544,7 +533,7 @@ describe('Component: ContextMenuComponent', () => {
           overlayRef,
           contextMenuComponent: contextMenuContentRef.instance,
         });
-      });
+      }); */
 
       it('should get a position strategy with position RTL and create an overlay from it', () => {
         const context: IContextMenuContext<unknown> = {
@@ -553,7 +542,6 @@ describe('Component: ContextMenuComponent', () => {
           y: 0,
           contextMenu:
             TestBed.createComponent(ContextMenuComponent).componentInstance,
-          parentContextMenu: undefined,
           item: {},
           dir: 'rtl',
           menuClass: '',
@@ -801,7 +789,6 @@ describe('Component: ContextMenuComponent', () => {
           y: 0,
           contextMenu:
             TestBed.createComponent(ContextMenuComponent).componentInstance,
-          parentContextMenu: undefined,
           item,
           dir: 'rtl',
           menuClass: 'menu-class',
@@ -822,15 +809,6 @@ describe('Component: ContextMenuComponent', () => {
         expect(contextMenuContentRef.instance.isLeaf).toEqual(true);
         expect(contextMenuContentRef.instance.menuClass).toEqual('menu-class');
         expect(contextMenuContentRef.instance.dir).toEqual('rtl');
-      });
-
-      it('should set contextMenuContentComponent dir from parentContextMenu if defined', () => {
-        context.dir = undefined;
-        (context.parentContextMenu = {
-          dir: 'ltr',
-        } as unknown as ContextMenuContentComponent<unknown>),
-          component.openContextMenu(context);
-        expect(contextMenuContentRef.instance.dir).toEqual('ltr');
       });
 
       it('should close all context menu when instance execute', () => {
@@ -897,15 +875,27 @@ describe('Component: ContextMenuComponent', () => {
         );
       });
 
-      it('should open sub menu menus when instance emits openSubMenu and set its isLeaf property to false and display it', () => {
+      it('should open sub menu menus when instance emits openSubMenu, set its isLeaf property to false and show it', () => {
         component.openContextMenu(context);
-        spyOn(contextMenuService, 'display');
+        spyOn(contextMenuEventService, 'show');
         contextMenuContentRef.instance.openSubMenu.next(context);
         expect(contextMenuStackService.destroySubMenus).toHaveBeenCalledWith(
           contextMenuContentRef.instance
         );
         expect(contextMenuContentRef.instance.isLeaf).toEqual(false);
-        expect(contextMenuService.display).toHaveBeenCalledWith(context);
+        expect(contextMenuEventService.show).toHaveBeenCalledWith(context);
+      });
+
+      it('should not open sub menu menus when instance emits openSubMenu without menu and set its isLeaf property to true', () => {
+        component.openContextMenu(context);
+        spyOn(contextMenuEventService, 'show');
+        delete (context as any).contextMenu;
+        contextMenuContentRef.instance.openSubMenu.next(context);
+        expect(contextMenuStackService.destroySubMenus).toHaveBeenCalledWith(
+          contextMenuContentRef.instance
+        );
+        expect(contextMenuContentRef.instance.isLeaf).toEqual(true);
+        expect(contextMenuEventService.show).not.toHaveBeenCalled();
       });
 
       it('should inactive all menu items when instance is destroyed', () => {

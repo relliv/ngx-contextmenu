@@ -1,17 +1,57 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import {
-  CloseContextMenuEvent,
-  IContextMenuOpenEvent,
-} from '../../components/context-menu/context-menu.component.interface';
+import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
+import { ContextMenuEventService } from '../context-menu-event/context-menu-event.service';
 
+export interface ContextMenuOpenAtPositionOptions<T> {
+  /**
+   * Optional associated data to the context menu, will be emitted when a menu item is selected
+   */
+  item?: T;
+  /**
+   * The horizontal position of the menu
+   */
+  x: number;
+  /**
+   * The vertical position of the menu
+   */
+  y: number;
+}
+export interface ContextMenuOpenAtElementOptions<T> {
+  /**
+   * Optional associated data to the context menu, will be emitted when a menu item is selected
+   */
+  item?: T;
+  /**
+   * The horizontal position of the menu
+   */
+  x: number;
+  /**
+   * The vertical position of the menu
+   */
+  y: number;
+}
+
+/**
+ * Programmatically open a ContextMenuComponent to a X/Y position
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class ContextMenuService<T> {
-  public show: Subject<IContextMenuOpenEvent<T>> = new Subject();
-
-  public display(event: IContextMenuOpenEvent<T>) {
-    this.show.next(event);
+  constructor(private contextMenuEventService: ContextMenuEventService<T>) {}
+  /**
+   * Show the given `ContextMenuComponent` at a specified X/Y position
+   */
+  public show(
+    contextMenu: ContextMenuComponent<T>,
+    options: ContextMenuOpenAtPositionOptions<T> = { x: 0, y: 0 }
+  ) {
+    this.contextMenuEventService.show({
+      anchoredTo: 'position',
+      contextMenu: contextMenu,
+      item: options.item,
+      x: options.x,
+      y: options.y,
+    });
   }
 }

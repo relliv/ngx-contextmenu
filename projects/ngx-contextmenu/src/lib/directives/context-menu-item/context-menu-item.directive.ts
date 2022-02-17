@@ -14,21 +14,39 @@ import { evaluateIfFunction } from '../../helper/evaluate';
   selector: '[contextMenuItem]',
 })
 export class ContextMenuItemDirective<T> implements Highlightable {
+  /**
+   * Optional subMenu component ref
+   */
   @Input()
   public subMenu?: ContextMenuComponent<T>;
 
+  /**
+   * Is this menu item a divider
+   */
   @Input()
   public divider = false;
 
+  /**
+   * Is this menu item enabled
+   */
   @Input()
   public enabled: boolean | ((item?: T) => boolean) = true;
 
+  /**
+   * Is this menu item passive (for title)
+   */
   @Input()
   public passive = false;
 
+  /**
+   * Is this menu item visible
+   */
   @Input()
   public visible: boolean | ((item?: T) => boolean) = true;
 
+  /**
+   * Emits
+   */
   @Output()
   public execute: EventEmitter<{
     event: MouseEvent | KeyboardEvent;
@@ -40,8 +58,14 @@ export class ContextMenuItemDirective<T> implements Highlightable {
    */
   public item?: T;
 
+  /**
+   * @internal
+   */
   public isActive = false;
 
+  /**
+   * @internal
+   */
   public get disabled() {
     return (
       this.passive ||
@@ -63,6 +87,9 @@ export class ContextMenuItemDirective<T> implements Highlightable {
     this.isActive = false;
   }
 
+  /**
+   * @internal
+   */
   public triggerExecute($event: MouseEvent | KeyboardEvent, item?: T): void {
     if (!evaluateIfFunction(this.enabled, item)) {
       return;

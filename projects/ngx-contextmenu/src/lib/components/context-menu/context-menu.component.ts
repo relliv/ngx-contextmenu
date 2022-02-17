@@ -24,6 +24,7 @@ import { IContextMenuOptions } from '../../context-menu.options';
 import { CONTEXT_MENU_OPTIONS } from '../../context-menu.tokens';
 import { ContextMenuItemDirective } from '../../directives/context-menu-item/context-menu-item.directive';
 import { evaluateIfFunction } from '../../helper/evaluate';
+import { ContextMenuEventService } from '../../services/context-menu-event/context-menu-event.service';
 import { ContextMenuStackService } from '../../services/context-menu-stack/context-menu-stack.service';
 import { ContextMenuService } from '../../services/context-menu/context-menu.service';
 import { ContextMenuContentComponent } from '../context-menu-content/context-menu-content.component';
@@ -101,7 +102,7 @@ export class ContextMenuComponent<T> implements OnDestroy {
     private overlay: Overlay,
     private scrollStrategy: ScrollStrategyOptions,
     private contextMenuStack: ContextMenuStackService<T>,
-    private contextMenuService: ContextMenuService<T>,
+    private contextMenuEventService: ContextMenuEventService<T>,
     @Optional()
     @Inject(CONTEXT_MENU_OPTIONS)
     private options: IContextMenuOptions
@@ -111,9 +112,11 @@ export class ContextMenuComponent<T> implements OnDestroy {
    * @internal
    */
   public ngOnInit(): void {
-    const subscription = this.contextMenuService.show.subscribe((menuEvent) => {
-      this.onMenuEvent(menuEvent);
-    });
+    const subscription = this.contextMenuEventService.onShow.subscribe(
+      (menuEvent) => {
+        this.onMenuEvent(menuEvent);
+      }
+    );
 
     this.subscription.add(subscription);
   }
@@ -197,9 +200,8 @@ export class ContextMenuComponent<T> implements OnDestroy {
     contextMenuContentComponent.menuDirectives = menuDirectives;
     contextMenuContentComponent.overlayRef = overlayRef;
     contextMenuContentComponent.isLeaf = true;
-    contextMenuContentComponent.menuClass =
-      menuClass || context?.parentContextMenu?.menuClass || '';
-    contextMenuContentComponent.dir = dir || context?.parentContextMenu?.dir;
+    contextMenuContentComponent.menuClass = this.getMenuClass(context);
+    contextMenuContentComponent.dir = this.getDir(context);
     contextMenuContentRef.changeDetectorRef.detectChanges;
 
     this.contextMenuStack.push({
@@ -226,14 +228,14 @@ export class ContextMenuComponent<T> implements OnDestroy {
     );
     subscriptions.add(
       contextMenuContentComponent.openSubMenu.subscribe(
-        (subMenuEvent: IContextMenuOpenEvent<T>) => {
+        (openSubMenuEvent: IContextMenuOpenEvent<T>) => {
           this.contextMenuStack.destroySubMenus(contextMenuContentComponent);
-          if (!subMenuEvent.contextMenu) {
+          if (!openSubMenuEvent.contextMenu) {
             contextMenuContentComponent.isLeaf = true;
             return;
           }
           contextMenuContentComponent.isLeaf = false;
-          this.contextMenuService.display(subMenuEvent);
+          this.contextMenuEventService.show(openSubMenuEvent);
         }
       )
     );
@@ -242,6 +244,22 @@ export class ContextMenuComponent<T> implements OnDestroy {
       subscriptions.unsubscribe();
     });
     contextMenuContentRef.changeDetectorRef.detectChanges();
+  }
+
+  private getMenuClass(event: IContextMenuContext<T>): string {
+    return (
+      event.menuClass ||
+      (event.anchoredTo === 'element' && event?.parentContextMenu?.menuClass) ||
+      ''
+    );
+  }
+
+  private getDir(event: IContextMenuContext<T>): 'ltr' | 'rtl' | undefined {
+    return (
+      event.dir ||
+      (event.anchoredTo === 'element' && event?.parentContextMenu?.dir) ||
+      undefined
+    );
   }
 
   private closeAllContextMenus(closeEvent: CloseContextMenuEvent): void {

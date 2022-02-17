@@ -133,8 +133,79 @@ describe('Service: ContextMenuStackService', () => {
     });
   });
 
-  /*   describe('#getLastAttachedOverlay', () => {
-    it('should return the last item that has attached overlay', () => {
+  describe('#closeLeafMenu', () => {
+    it('should return false when there is no item left in the stack', () => {
+      const result = service.closeLeafMenu(false);
+      expect(result).toEqual(false);
+    });
+
+    it('should return the true if destroyed root menu', () => {
+      const item = createStackItem();
+      const item2 = createStackItem();
+      const item3 = createStackItem();
+      const item4 = createStackItem();
+      service.push(item);
+      service.push(item2);
+      service.push(item3);
+      service.push(item4);
+
+      const { hasAttached: hasAttached2 } = spyOnStackItemOverlayRef(item2);
+      const {
+        detach: detach3,
+        dispose: dispose3,
+        hasAttached: hasAttached3,
+      } = spyOnStackItemOverlayRef(item3);
+      const {
+        detach: detach4,
+        dispose: dispose4,
+        hasAttached: hasAttached4,
+      } = spyOnStackItemOverlayRef(item4);
+
+      hasAttached2.and.returnValue(true);
+      hasAttached3.and.returnValue(true);
+      hasAttached4.and.returnValue(false);
+      const result = service.closeLeafMenu(false);
+      expect(detach3).toHaveBeenCalled();
+      expect(dispose3).toHaveBeenCalled();
+      expect(detach4).toHaveBeenCalled();
+      expect(dispose4).toHaveBeenCalled();
+      expect(result).toEqual(true);
+    });
+
+    it('should return the true if destroyed root menu', () => {
+      const item = createStackItem();
+      const item2 = createStackItem();
+      const item3 = createStackItem();
+      const item4 = createStackItem();
+      service.push(item);
+      service.push(item2);
+      service.push(item3);
+      service.push(item4);
+
+      const { hasAttached: hasAttached2 } = spyOnStackItemOverlayRef(item2);
+      const {
+        detach: detach3,
+        dispose: dispose3,
+        hasAttached: hasAttached3,
+      } = spyOnStackItemOverlayRef(item3);
+      const {
+        detach: detach4,
+        dispose: dispose4,
+        hasAttached: hasAttached4,
+      } = spyOnStackItemOverlayRef(item4);
+
+      hasAttached2.and.returnValue(false);
+      hasAttached3.and.returnValue(false);
+      hasAttached4.and.returnValue(false);
+      const result = service.closeLeafMenu(false);
+      expect(detach3).toHaveBeenCalled();
+      expect(dispose3).toHaveBeenCalled();
+      expect(detach4).toHaveBeenCalled();
+      expect(dispose4).toHaveBeenCalled();
+      expect(result).toEqual(true);
+    });
+
+    it('should return false if destroyed root menu', () => {
       const item = createStackItem();
       const item2 = createStackItem();
       const item3 = createStackItem();
@@ -159,17 +230,12 @@ describe('Service: ContextMenuStackService', () => {
       hasAttached2.and.returnValue(true);
       hasAttached3.and.returnValue(false);
       hasAttached4.and.returnValue(false);
-      const result = service.disposeLastDetached();
+      const result = service.closeLeafMenu(true);
       expect(detach3).toHaveBeenCalled();
       expect(dispose3).toHaveBeenCalled();
       expect(detach4).toHaveBeenCalled();
       expect(dispose4).toHaveBeenCalled();
-      expect(result).toEqual(item2);
+      expect(result).toEqual(false);
     });
-
-    it('should return undefined if the stack is empty', () => {
-      const result = service.disposeLastDetached();
-      expect(result).toBeUndefined();
-    });
-  }); */
+  });
 });

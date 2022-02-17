@@ -2,28 +2,53 @@ import { ContextMenuItemDirective } from '../../directives/context-menu-item/con
 import { ContextMenuContentComponent } from '../context-menu-content/context-menu-content.component';
 import { ContextMenuComponent } from './context-menu.component';
 
-export interface IContextMenuBaseEvent<T> {}
-
-export interface IContextMenuClickEvent<T> {
-  anchoredTo: 'position';
-  x: number;
-  y: number;
+export interface IContextMenuBaseEvent<T> {
+  anchoredTo: 'position' | 'element';
+  /**
+   * ContextMenuComponent instance to display
+   */
   contextMenu: ContextMenuComponent<T>;
-  parentContextMenu?: ContextMenuContentComponent<T>;
+  /**
+   * Optional associated data to the context menu, will be emitted when a menu item is selected
+   */
   item?: T;
 }
 
-export interface IContextMenuOpenKeyboardEvent<T> {
+export interface IContextMenuAnchoredToPositionEvent<T>
+  extends IContextMenuBaseEvent<T> {
+  /**
+   * Open the menu to an x/y position
+   */
+  anchoredTo: 'position';
+  /**
+   * The horizontal position of the menu
+   */
+  x: number;
+  /**
+   * The vertical position of the menu
+   */
+  y: number;
+}
+
+export interface IContextMenuAnchoredToElementEvent<T>
+  extends IContextMenuBaseEvent<T> {
+  /**
+   * Open the menu anchored to a DOM element
+   */
   anchoredTo: 'element';
+  /**
+   * The anchor element to display the menu next to
+   */
   anchorElement: Element | EventTarget;
-  contextMenu: ContextMenuComponent<T>;
+  /**
+   * The parent context menu from which this menu will be displayed
+   */
   parentContextMenu: ContextMenuContentComponent<T>;
-  item?: T;
 }
 
 export type IContextMenuOpenEvent<T> =
-  | IContextMenuClickEvent<T>
-  | IContextMenuOpenKeyboardEvent<T>;
+  | IContextMenuAnchoredToPositionEvent<T>
+  | IContextMenuAnchoredToElementEvent<T>;
 
 export type IContextMenuContext<T> = IContextMenuOpenEvent<T> & {
   menuDirectives: ContextMenuItemDirective<T>[];

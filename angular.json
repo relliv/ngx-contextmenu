@@ -130,6 +130,24 @@
             "tsConfig": "projects/ngx-contextmenu/tsconfig.spec.json",
             "karmaConfig": "projects/ngx-contextmenu/karma.conf.js"
           }
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "browserTarget": "ngx-contextmenu:build",
+            "port": 6006,
+            "styles": [
+              "./src/stories/assets/stylesheets/index.scss",
+              "./node_modules/@angular/cdk/overlay-prebuilt.css",
+              "./projects/ngx-contextmenu/src/assets/stylesheets/base.scss"
+            ]
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "browserTarget": "ngx-contextmenu:build"
+          }
         }
       }
     }

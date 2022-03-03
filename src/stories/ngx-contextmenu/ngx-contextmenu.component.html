@@ -1,0 +1,110 @@
+<span
+  *ngIf="!disabled; else disabledTemplate"
+  class="ngx-context-menu-focusable"
+  [contextMenu]="contextMenu"
+  [contextMenuItem]="item"
+>
+  <ng-container *ngIf="demoMode === 'simple'">
+    When you right click on this text, a context menu will appear
+  </ng-container>
+  <ng-container *ngIf="demoMode === 'form'">
+    When you right click on this text, a context menu with form inputs will
+    appear
+  </ng-container>
+  <span *ngIf="dir === 'rtl'"> in the right to left direction</span>
+</span>
+
+<ng-template #disabledTemplate>
+  <span
+    class="ngx-context-menu-focusable"
+    [contextMenu]="contextMenu"
+    [contextMenuItem]="item"
+  >
+    When you right click on this text, no context menu will appear because it is
+    disabled
+  </span>
+</ng-template>
+
+<context-menu
+  #contextMenu
+  [menuClass]="menuClass"
+  [disabled]="disabled"
+  [dir]="dir"
+  (open)="open($event)"
+  (close)="close()"
+>
+  <ng-template contextMenuItem passive="true"
+    ><span class="menu-item-title">Context menu title</span></ng-template
+  >
+  <ng-template
+    *ngIf="demoMode === 'simple'"
+    contextMenuItem
+    (execute)="execute('Cut')"
+    >Cut</ng-template
+  >
+  <ng-template
+    *ngIf="demoMode === 'simple'"
+    contextMenuItem
+    (execute)="execute('Copy')"
+    >Copy</ng-template
+  >
+  <ng-template
+    *ngIf="demoMode === 'simple'"
+    contextMenuItem
+    (execute)="execute('Paste')"
+    >Paste</ng-template
+  >
+  <ng-template *ngIf="demoMode === 'simple'" contextMenuItem [disabled]="true"
+    >Disabled menu item</ng-template
+  >
+  <ng-template
+    *ngIf="demoMode === 'simple'"
+    contextMenuItem
+    divider="true"
+  ></ng-template>
+  <ng-template
+    *ngIf="demoMode === 'simple'"
+    contextMenuItem
+    [subMenu]="specialPast"
+    >Special past...</ng-template
+  >
+
+  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+    ><label
+      ><input type="checkbox" value="Choice A" /> <span>Choice A</span></label
+    ></ng-template
+  >
+  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+    ><label
+      ><input type="checkbox" value="Choice B" /> <span>Choice B</span></label
+    ></ng-template
+  >
+  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+    ><label
+      ><input type="checkbox" value="Choice C" /> <span>Choice C</span></label
+    ></ng-template
+  >
+  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+    ><label
+      ><input type="checkbox" value="Choice D" /> <span>Choice D</span></label
+    ></ng-template
+  >
+  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+    ><label
+      ><input type="checkbox" value="Choice E" /> <span>Choice E</span></label
+    ></ng-template
+  >
+  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+    ><label
+      ><input type="checkbox" value="Choice E" /> <span>Choice E</span></label
+    ></ng-template
+  >
+</context-menu>
+<context-menu #specialPast>
+  <ng-template contextMenuItem (execute)="execute('Paste as HTML')"
+    >Paste as HTML</ng-template
+  >
+  <ng-template contextMenuItem (execute)="execute('Paste unformatted')"
+    >Paste unformatted</ng-template
+  >
+</context-menu>

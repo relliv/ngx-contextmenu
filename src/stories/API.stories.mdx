@@ -1,0 +1,78 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Context Menu/API" />
+
+# Public API
+
+## As a context menu user what is available to me ?
+
+Context Menu comes in 3 parts:
+
+1. A `contextMenu` directive to apply to any HTML element where a right click should display a context menu
+2. A `<context-menu>` component to hold the menu content and be referenced by the above directive
+   > NB. this component has no template itself and can only have `<ng-template>` as content,
+   > as you might guess it is not intended to be rendered in place but to populate the context menu overlay
+3. A `contextMenuItem` directive to apply to a `<ng-template>` inside the above component
+
+## In a nutshell
+
+```html
+<!-- directive reference the <context-menu> component via the #oneContextMenu template variable -->
+<span [contextMenu]="oneContextMenu">You can right click on this text</span>
+
+<!-- component delares itself via the #oneContextMenu template variable -->
+<context-menu #oneContextMenu>
+  <!-- each menu item is a <ng-template>... -->
+  <ng-template contextMenuItem passive="true">
+    <!-- ...that can contain any HTML with sepcific styling -->
+    <span class="menu-item-title">Context menu title</span>
+  </ng-template>
+  <!-- ...or just text, the (execute) output is called when the menu item is clicked -->
+  <ng-template contextMenuItem (execute)="execute('Cut')">Cut</ng-template>
+  <ng-template contextMenuItem (execute)="execute('Copy')">Copy</ng-template>
+  <ng-template contextMenuItem (execute)="execute('Paste')">Paste</ng-template>
+  <ng-template contextMenuItem [disabled]="true">Disabled menu item</ng-template>
+</context-menu>
+```
+
+## API details
+
+### Generic
+
+> A `contextMenuItem` can be passed to a `[contextMenu]` directive and then emitted by `[contextMenuItem]` when clicked.
+> The type of the item is [generic](https://www.typescriptlang.org/docs/handbook/2/generics.html) and noted as `T` in the documentation below.
+
+### `[contextMenu]` directive
+
+| `Input()`           | Type                          | Description                                             |
+| :------------------ | :---------------------------- | :------------------------------------------------------ |
+| `[contextMenu]`     | `ContextMenuComponent`        | The component holding the menu item directive templates |
+| `[contextMenuItem]` | `T`                           | The item related to the context menu                    |
+| `[tabindex]`        | `number` <br />(default: `0`) | The default tabindex for the directive to be accessible |
+
+### `<context-menu>` component
+
+| `Input()`     | Type                                  | Description                                                                              |
+| :------------ | :------------------------------------ | :--------------------------------------------------------------------------------------- |
+| `[menuClass]` | `string` <br />(default: `''`)        | A CSS class to apply to the context menu overlay, ideal for theming and custom styling   |
+| `[disabled]`  | `boolean` <br />(default: `false`)    | Disable the whole context menu                                                           |
+| `[dir]`       | `ltr` \| `rtl` <br />(default: `ltr`) | Whether the menu is oriented to the right <br />(default: `ltr`) or to the right (`rtl`) |
+
+| `Output()` | Type                   | Description                  |
+| :--------- | :--------------------- | :--------------------------- |
+| `(open)`   | `ContextMenuOpenEvent` | Emit when the menu is opened |
+| `(close)`  | `void`                 | Emit when the menu is closed |
+
+### `[contextMenuItem]` directive
+
+| `Input()`    | Type                                                          | Description                                                            |
+| :----------- | :------------------------------------------------------------ | :--------------------------------------------------------------------- |
+| `[subMenu]`  | `ContextMenuComponent`                                        | The component holding the sub menu item directive templates            |
+| `[divider]`  | `boolean` <br />(default: `false`)                            | Is this menu item a divider (no action is executed)                    |
+| `[disabled]` | `boolean` \| `(item?: T) => boolean` <br />(default: `false`) | Is this menu item disabled (no action is executed)                     |
+| `[passive]`  | `boolean` \| `(item?: T) => boolean` <br />(default: `false`) | Is this menu item passive (for title, or forms, no action is executed) |
+| `[visible]`  | `boolean` \| `(item?: T) => boolean` <br />(default: `false`) | Is this menu item visible                                              |
+
+| `Output()`  | Type                                           | Description                   |
+| :---------- | :--------------------------------------------- | :---------------------------- |
+| `(execute)` | {event: MouseEvent \| KeyboardEvent;item?: T;} | Emit when the menu is clicked |

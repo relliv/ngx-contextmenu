@@ -63,7 +63,7 @@ export class AppComponent {
         },
       ],
     },
-    {
+    /*    {
       name: 'Joe',
       otherProperty: 'Bar',
       layout: {
@@ -82,18 +82,18 @@ export class AppComponent {
           visible: true,
         },
       ],
-    },
+    }, */
   ];
   public outsideValue = 'something';
 
   @ViewChild('basicMenu', { static: true })
-  public basicMenu?: ContextMenuComponent;
-  @ViewChild('enableAndVisible', { static: true })
+  public basicMenu?: ContextMenuComponent<any>;
+  /*   @ViewChild('enableAndVisible', { static: true })
   public enableAndVisible?: ContextMenuComponent;
   @ViewChild('withFunctions', { static: true })
-  public withFunctions?: ContextMenuComponent;
+  public withFunctions?: ContextMenuComponent; */
 
-  constructor(private contextMenuService: ContextMenuService) {}
+  constructor(private contextMenuService: ContextMenuService<any>) {}
 
   public canUseFullScreen(): boolean {
     return !!this.wrapper?.nativeElement.requestFullscreen;
@@ -107,10 +107,14 @@ export class AppComponent {
     }
   }
 
-  public onContextMenu($event: MouseEvent, item: any): void {
-    this.contextMenuService.show.next({ event: $event, item: item });
-    $event.preventDefault();
-  }
+  /*   public onContextMenu(event: MouseEvent, item: any): void {
+    this.contextMenuService.display({
+      kind: 'mouse',
+      event: event,
+      item: item,
+    });
+    event.preventDefault();
+  } */
 
   public showMessage(message: any, data?: any): void {
     console.log(message, data);

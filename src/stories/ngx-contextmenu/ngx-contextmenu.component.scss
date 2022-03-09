@@ -1,0 +1,18 @@
+label {
+  input,
+  span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+.menu-item-title {
+  text-transform: uppercase;
+}
+
+.ngx-context-menu-focusable {
+  &:focus {
+    border-bottom: var(--ngx-contextmenu-focusable-border-bottom);
+    outline: none;
+  }
+}

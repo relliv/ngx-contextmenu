@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
       <li
         *ngFor="let item of items"
         [contextMenu]="routingMenu"
-        [contextMenuSubject]="item"
+        [contextMenuValue]="item"
       >
         Right Click: {{ item?.name }}
       </li>

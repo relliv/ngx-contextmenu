@@ -1,22 +1,22 @@
 /*
- * Public API Surface of ngx-contextmenu
+ * Public API Surface of @perfectmemory/ngx-contextmenu
  */
 
 export { ContextMenuModule } from './lib/ngx-contextmenu.module';
 /**
  * Components
  */
-export * from './lib/components/context-menu/context-menu.component';
+export { ContextMenuComponent } from './lib/components/context-menu/context-menu.component';
+export {
+  ContextMenuCloseEvent,
+  ContextMenuOpenEvent,
+} from './lib/components/context-menu/context-menu.component.interface';
 /**
  * Directives
  */
-export * from './lib/directives/context-menu-item/context-menu-item.directive';
-export * from './lib/directives/context-menu/context-menu.directive';
+export { ContextMenuItemDirective } from './lib/directives/context-menu-item/context-menu-item.directive';
+export { ContextMenuDirective } from './lib/directives/context-menu/context-menu.directive';
 /**
  * Services
  */
-export * from './lib/services/context-menu/context-menu.service';
-/**
- * Models
- */
-export * from './lib/context-menu.options';
+export { ContextMenuService } from './lib/services/context-menu/context-menu.service';

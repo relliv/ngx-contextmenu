@@ -1,26 +1,52 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import { Directive, HostBinding, HostListener, Input } from '@angular/core';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
-import { ContextMenuService } from '../../services/context-menu/context-menu.service';
+import { ContextMenuEventService } from '../../services/context-menu-event/context-menu-event.service';
 
 @Directive({
   selector: '[contextMenu]',
 })
-export class ContextMenuAttachDirective {
+export class ContextMenuDirective<T> {
+  /**
+   * The value related to the context menu
+   */
   @Input()
-  public contextMenuSubject: any;
+  public contextMenuValue?: T;
 
+  /**
+   * The component holding the menu item directive templates
+   */
   @Input()
-  public contextMenu?: ContextMenuComponent;
+  public contextMenu?: ContextMenuComponent<T>;
 
-  constructor(private contextMenuService: ContextMenuService) {}
+  /**
+   * The directive must have a tabindex for being accessible
+   */
+  @Input()
+  @HostBinding('attr.tabindex')
+  public tabindex = 0;
 
+  /**
+   * Accessibility
+   *
+   * @internal
+   */
+  @HostBinding('attr.aria-haspopup')
+  public ariaHasPopup = 'true';
+
+  constructor(private contextMenuEventService: ContextMenuEventService<T>) {}
+
+  /**
+   * @internal
+   */
   @HostListener('contextmenu', ['$event'])
   public onContextMenu(event: MouseEvent): void {
     if (this.contextMenu && !this.contextMenu.disabled) {
-      this.contextMenuService.show.next({
+      this.contextMenuEventService.show({
+        anchoredTo: 'position',
         contextMenu: this.contextMenu,
-        event,
-        item: this.contextMenuSubject,
+        x: event.clientX,
+        y: event.clientY,
+        value: this.contextMenuValue,
       });
       event.preventDefault();
       event.stopPropagation();

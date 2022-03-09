@@ -1,0 +1,20 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Context Menu/Documentation/<context-menu>" />
+
+# `<context-menu>` component
+
+A `<context-menu>` component to hold the menu content and be referenced by the `[contextMenu]` directive
+   > NB. this component has no template itself and can only have `<ng-template>` children,
+   > as you might guess it is not intended to be rendered in place but to populate the context menu overlay
+
+| `Input()`     | Type                                  | Description                                                                              |
+| :------------ | :------------------------------------ | :--------------------------------------------------------------------------------------- |
+| `[menuClass]` | `string` <br />(default: `''`)        | A CSS class to apply to the context menu overlay, ideal for theming and custom styling   |
+| `[disabled]`  | `boolean` <br />(default: `false`)    | Disable the whole context menu                                                           |
+| `[dir]`       | `ltr` \| `rtl` <br />(default: `ltr`) | Whether the menu is oriented to the right <br />(default: `ltr`) or to the right (`rtl`) |
+
+| `Output()` | Type                   | Description                  |
+| :--------- | :--------------------- | :--------------------------- |
+| `(open)`   | `ContextMenuOpenEvent` | Emit when the menu is opened |
+| `(close)`  | `void`                 | Emit when the menu is closed |

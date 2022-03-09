@@ -2,200 +2,144 @@ import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { OverlayRef } from '@angular/cdk/overlay';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
+  HostBinding,
   HostListener,
-  Inject,
   Input,
   OnDestroy,
   OnInit,
-  Optional,
   Output,
   QueryList,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IContextMenuOptions } from '../../context-menu.options';
-import { CONTEXT_MENU_OPTIONS } from '../../context-menu.tokens';
 import { ContextMenuItemDirective } from '../../directives/context-menu-item/context-menu-item.directive';
+import { evaluateIfFunction } from '../../helper/evaluate';
 import {
-  CloseLeafMenuEvent,
-  IContextMenuClickEvent,
-} from '../../services/context-menu/context-menu.service';
-
-export interface ILinkConfig {
-  click: (item: any, $event?: MouseEvent) => void;
-  enabled?: (item: any) => boolean;
-  html: (item: any) => string;
-}
+  ContextMenuCloseLeafEvent,
+  ContextMenuOpenEvent,
+} from '../context-menu/context-menu.component.interface';
 
 const ARROW_LEFT_KEYCODE = 37;
+const ARROW_RIGHT_KEYCODE = 39;
+
+/**
+ * For testing purpose only
+ */
+export const TESTING_WRAPPER = {
+  ActiveDescendantKeyManager,
+};
 
 @Component({
   selector: 'context-menu-content',
-  styles: [
-    `
-      .passive {
-        display: block;
-        padding: 3px 20px;
-        clear: both;
-        font-weight: normal;
-        line-height: @line-height-base;
-        white-space: nowrap;
-      }
-      .hasSubMenu:before {
-        content: '\u25B6';
-        float: right;
-      }
-    `,
-  ],
-  template: `
-    <div
-      class="dropdown open show ngx-contextmenu"
-      [ngClass]="menuClass"
-      tabindex="0"
-    >
-      <ul
-        #menu
-        class="dropdown-menu show"
-        style="position: static; float: none;"
-        tabindex="0"
-      >
-        <li
-          #li
-          *ngFor="let menuItem of menuItems; let i = index"
-          [class.disabled]="!isMenuItemEnabled(menuItem)"
-          [class.divider]="menuItem.divider"
-          [class.dropdown-divider]="useBootstrap4 && menuItem.divider"
-          [class.active]="menuItem.isActive && isMenuItemEnabled(menuItem)"
-          [attr.role]="menuItem.divider ? 'separator' : undefined"
-        >
-          <a
-            *ngIf="!menuItem.divider && !menuItem.passive"
-            href
-            [class.dropdown-item]="useBootstrap4"
-            [class.active]="menuItem.isActive && isMenuItemEnabled(menuItem)"
-            [class.disabled]="useBootstrap4 && !isMenuItemEnabled(menuItem)"
-            [class.hasSubMenu]="!!menuItem.subMenu"
-            (click)="onMenuItemSelect(menuItem, $event)"
-            (mouseenter)="onOpenSubMenu(menuItem, $event)"
-          >
-            <ng-template
-              [ngTemplateOutlet]="menuItem.template"
-              [ngTemplateOutletContext]="{ $implicit: item }"
-            ></ng-template>
-          </a>
-
-          <span
-            (click)="stopEvent($event)"
-            (contextmenu)="stopEvent($event)"
-            class="passive"
-            *ngIf="!menuItem.divider && menuItem.passive"
-            [class.dropdown-item]="useBootstrap4"
-            [class.disabled]="useBootstrap4 && !isMenuItemEnabled(menuItem)"
-          >
-            <ng-template
-              [ngTemplateOutlet]="menuItem.template"
-              [ngTemplateOutletContext]="{ $implicit: item }"
-            ></ng-template>
-          </span>
-        </li>
-      </ul>
-    </div>
-  `,
+  templateUrl: './context-menu-content.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContextMenuContentComponent
+export class ContextMenuContentComponent<T>
   implements OnInit, OnDestroy, AfterViewInit
 {
+  /**
+   * The list of `ContextMenuItemDirective` that represent each menu items
+   */
   @Input()
-  public menuItems: ContextMenuItemDirective[] = [];
+  public menuDirectives: ContextMenuItemDirective<T>[] = [];
 
+  /**
+   * The item on which the menu act
+   */
   @Input()
-  public item: any;
+  public value?: T;
 
+  /**
+   * The orientation of the component
+   * @see https://developer.mozilla.org/fr/docs/Web/HTML/Global_attributes/dir
+   */
   @Input()
-  public event!: MouseEvent | KeyboardEvent;
+  @HostBinding('attr.dir')
+  public dir: 'ltr' | 'rtl' | undefined;
 
+  /**
+   * The parent menu of the instance
+   */
   @Input()
-  public parentContextMenu!: ContextMenuContentComponent;
+  public parentContextMenu!: ContextMenuContentComponent<T>;
 
+  /**
+   * A CSS class to apply a theme to the the menu
+   */
   @Input()
-  public menuClass!: string;
+  public menuClass: string = '';
 
+  /**
+   * The overlay ref associated to the instance
+   */
   @Input()
-  public overlay!: OverlayRef;
+  public overlayRef: OverlayRef | undefined;
 
+  /**
+   * Wether the instance is a leaf menu or not
+   */
   @Input()
   public isLeaf = false;
 
+  /**
+   * Emit when a menu item is selected
+   */
   @Output()
   public execute: EventEmitter<{
     event: MouseEvent | KeyboardEvent;
-    item: any;
-    menuItem: ContextMenuItemDirective;
+    value?: T;
+    menuDirective: ContextMenuItemDirective<T>;
   }> = new EventEmitter();
 
+  /**
+   * Emit when a sub menu is opened
+   */
   @Output()
-  public openSubMenu: EventEmitter<IContextMenuClickEvent> = new EventEmitter();
+  public openSubMenu: EventEmitter<ContextMenuOpenEvent<T>> =
+    new EventEmitter();
 
+  /**
+   * Emit when a leaf menu is closed
+   */
   @Output()
-  public closeLeafMenu: EventEmitter<CloseLeafMenuEvent> = new EventEmitter();
+  public closeLeafMenu: EventEmitter<ContextMenuCloseLeafEvent> = new EventEmitter();
 
+  /**
+   * Emit when all menus is closed
+   */
   @Output()
   public closeAllMenus: EventEmitter<{
     event: MouseEvent;
   }> = new EventEmitter();
 
-  @ViewChild('menu', { static: true })
-  public menuElement!: ElementRef;
-
+  /**
+   * @internal
+   */
   @ViewChildren('li')
-  public menuItemElements!: QueryList<ElementRef>;
+  public liElementRefs!: QueryList<ElementRef>;
 
-  public autoFocus?: boolean = false;
-  public useBootstrap4?: boolean = false;
-  private _keyManager!: ActiveDescendantKeyManager<ContextMenuItemDirective>;
+  private keyManager!: ActiveDescendantKeyManager<ContextMenuItemDirective<T>>;
   private subscription: Subscription = new Subscription();
-  constructor(
-    @Optional()
-    @Inject(CONTEXT_MENU_OPTIONS)
-    private options: IContextMenuOptions
-  ) {
-    if (options) {
-      this.autoFocus = options.autoFocus;
-      this.useBootstrap4 = options.useBootstrap4;
-    }
-  }
+
+  constructor(private elementRef: ElementRef<HTMLElement>) {}
 
   /**
    * @internal
    */
   public ngOnInit(): void {
-    this.menuItems.forEach((menuItem) => {
-      menuItem.currentItem = this.item;
-      this.subscription.add(
-        menuItem.execute.subscribe((event) =>
-          this.execute.emit({ ...event, menuItem })
-        )
-      );
-    });
-    const queryList = new QueryList<ContextMenuItemDirective>();
-    queryList.reset(this.menuItems);
-    this._keyManager = new ActiveDescendantKeyManager<ContextMenuItemDirective>(
-      queryList
-    ).withWrap();
+    this.setupDirectives();
   }
 
   /**
    * @internal
    */
   public ngAfterViewInit() {
-    if (this.autoFocus) {
-      setTimeout(() => this.focus());
-    }
-    this.overlay?.updatePosition();
+    this.overlayRef?.updatePosition();
   }
 
   /**
@@ -205,131 +149,235 @@ export class ContextMenuContentComponent
     this.subscription.unsubscribe();
   }
 
-  public focus(): void {
-    if (this.autoFocus) {
-      this.menuElement.nativeElement.focus();
+  /**
+   * @internal
+   */
+  @HostListener('window:keydown.ArrowDown', ['$event'])
+  @HostListener('window:keydown.ArrowUp', ['$event'])
+  public onKeyArrowDownOrUp(event: KeyboardEvent): void {
+    if (!this.isLeaf) {
+      return;
     }
+
+    this.keyManager.onKeydown(event);
   }
 
+  /**
+   * @internal
+   */
+  @HostListener('window:keydown.ArrowRight', ['$event'])
+  public onKeyArrowRight(event: KeyboardEvent): void {
+    if (!this.isLeaf) {
+      return;
+    }
+
+    if (this.dir === 'rtl') {
+      this.closeActiveItemSubMenu(event);
+      return;
+    }
+
+    this.openActiveItemSubMenu(event);
+  }
+
+  /**
+   * @internal
+   */
+  @HostListener('window:keydown.ArrowLeft', ['$event'])
+  public onKeyArrowLeft(event: KeyboardEvent): void {
+    if (!this.isLeaf) {
+      return;
+    }
+
+    if (this.dir === 'rtl') {
+      this.openActiveItemSubMenu(event);
+      return;
+    }
+
+    this.closeActiveItemSubMenu(event);
+  }
+
+  /**
+   * @internal
+   */
+  @HostListener('window:keydown.Enter', ['$event'])
+  @HostListener('window:keydown.Space', ['$event'])
+  public onKeyEnterOrSpace(event: KeyboardEvent): void {
+    if (!this.isLeaf) {
+      return;
+    }
+
+    if (!this.keyManager.activeItem) {
+      return;
+    }
+
+    this.onMenuItemSelect(this.keyManager.activeItem, event);
+  }
+
+  /**
+   * @internal
+   */
+  @HostListener('window:keydown.Escape', ['$event'])
+  public onKeyArrowEscape(event: KeyboardEvent): void {
+    if (!this.isLeaf) {
+      return;
+    }
+
+    this.closeActiveItemSubMenu(event);
+  }
+
+  /**
+   * @internal
+   */
+  @HostListener('document:click', ['$event'])
+  @HostListener('document:contextmenu', ['$event'])
+  public onClickOrRightClick(event: MouseEvent): void {
+    if (event.type === 'click' && event.button === 2) {
+      return;
+    }
+
+    if (this.elementRef.nativeElement.contains(event.target as Node)) {
+      return;
+    }
+
+    this.closeAllMenus.emit({ event });
+  }
+
+  /**
+   * @internal
+   */
   public stopEvent(event: MouseEvent) {
     event.stopPropagation();
   }
 
-  public isMenuItemEnabled(menuItem: ContextMenuItemDirective): boolean {
-    return this.evaluateIfFunction(menuItem && menuItem.enabled);
+  /**
+   * @internal
+   */
+  public isMenuItemDisabled(menuItem: ContextMenuItemDirective<T>): boolean {
+    return evaluateIfFunction(menuItem.disabled, this.value);
   }
 
-  public isMenuItemVisible(menuItem: ContextMenuItemDirective): boolean {
-    return this.evaluateIfFunction(menuItem && menuItem.visible);
+  /**
+   * @internal
+   */
+  public isMenuItemVisible(menuItem: ContextMenuItemDirective<T>): boolean {
+    return evaluateIfFunction(menuItem.visible, this.value);
   }
 
-  public evaluateIfFunction(value: any): any {
-    if (value instanceof Function) {
-      return value(this.item);
-    }
-    return value;
-  }
-
-  public isDisabled(link: ILinkConfig): boolean {
-    return !!link.enabled && !link.enabled(this.item);
-  }
-
-  @HostListener('window:keydown.ArrowDown', ['$event'])
-  @HostListener('window:keydown.ArrowUp', ['$event'])
-  public onKeyEvent(event: KeyboardEvent): void {
-    if (!this.isLeaf) {
-      return;
-    }
-    this._keyManager.onKeydown(event);
-  }
-
-  @HostListener('window:keydown.ArrowRight', ['$event'])
-  public keyboardOpenSubMenu(event: KeyboardEvent): void {
-    if (!this.isLeaf || this._keyManager.activeItemIndex === null) {
-      return;
-    }
-    this.cancelEvent(event);
-    const menuItem = this.menuItems[this._keyManager.activeItemIndex];
-    if (menuItem) {
-      this.onOpenSubMenu(menuItem, event);
-    }
-  }
-
-  @HostListener('window:keydown.Enter', ['$event'])
-  @HostListener('window:keydown.Space', ['$event'])
-  public keyboardMenuItemSelect(event: KeyboardEvent): void {
-    if (!this.isLeaf || this._keyManager.activeItemIndex === null) {
-      return;
-    }
-    this.cancelEvent(event);
-    const menuItem = this.menuItems[this._keyManager.activeItemIndex];
-    if (menuItem) {
-      this.onMenuItemSelect(menuItem, event);
-    }
-  }
-
-  @HostListener('window:keydown.Escape', ['$event'])
-  @HostListener('window:keydown.ArrowLeft', ['$event'])
-  public onCloseLeafMenu(event: KeyboardEvent): void {
-    if (!this.isLeaf) {
-      return;
-    }
-    this.cancelEvent(event);
-    this.closeLeafMenu.emit({
-      exceptRootMenu: event.keyCode === ARROW_LEFT_KEYCODE,
-      event,
-    });
-  }
-
-  @HostListener('document:click', ['$event'])
-  @HostListener('document:contextmenu', ['$event'])
-  public closeMenu(event: MouseEvent): void {
-    if (event.type === 'click' && event.button === 2) {
-      return;
-    }
-    this.closeAllMenus.emit({ event });
-  }
-
+  /**
+   * @internal
+   */
   public onOpenSubMenu(
-    menuItem: ContextMenuItemDirective,
+    menuItem: ContextMenuItemDirective<T>,
     event: MouseEvent | KeyboardEvent
   ): void {
-    if (this._keyManager.activeItemIndex === null) {
+    if (this.keyManager.activeItemIndex === null || !menuItem.subMenu) {
       return;
     }
 
     const anchorElementRef =
-      this.menuItemElements.toArray()[this._keyManager.activeItemIndex];
+      this.liElementRefs.toArray()[this.keyManager.activeItemIndex];
     const anchorElement = anchorElementRef && anchorElementRef.nativeElement;
-    this.openSubMenu.emit({
-      anchorElement,
-      contextMenu: menuItem.subMenu,
-      event,
-      item: this.item,
-      parentContextMenu: this,
-    });
-  }
 
-  public onMenuItemSelect(
-    menuItem: ContextMenuItemDirective,
-    event: MouseEvent | KeyboardEvent
-  ): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.onOpenSubMenu(menuItem, event);
-    if (!menuItem.subMenu) {
-      menuItem.triggerExecute(this.item, event);
+    if (anchorElement && event instanceof KeyboardEvent) {
+      this.openSubMenu.emit({
+        anchoredTo: 'element',
+        anchorElement,
+        contextMenu: menuItem.subMenu,
+        value: this.value,
+        parentContextMenu: this,
+      });
+    } else if (event.target) {
+      this.openSubMenu.emit({
+        anchoredTo: 'element',
+        anchorElement: event.target,
+        contextMenu: menuItem.subMenu,
+        value: this.value,
+        parentContextMenu: this,
+      });
+    } else {
+      this.openSubMenu.emit({
+        anchoredTo: 'position',
+        x: (event as MouseEvent).clientX,
+        y: (event as MouseEvent).clientY,
+        contextMenu: menuItem.subMenu,
+        value: this.value,
+      });
     }
   }
 
-  private cancelEvent(event?: KeyboardEvent): void {
+  /**
+   * @internal
+   */
+  public onMenuItemSelect(
+    menuItem: ContextMenuItemDirective<T>,
+    event: MouseEvent | KeyboardEvent
+  ): void {
+    this.cancelEvent(event);
+    this.onOpenSubMenu(menuItem, event);
+    if (!menuItem.subMenu) {
+      this.triggerExecute(menuItem, event);
+    }
+  }
+
+  private triggerExecute(
+    menuItem: ContextMenuItemDirective<T>,
+    event: MouseEvent | KeyboardEvent
+  ): void {
+    menuItem.triggerExecute(event, this.value);
+  }
+
+  private setupDirectives() {
+    this.menuDirectives.forEach((menuDirective) => {
+      menuDirective.value = this.value;
+      this.subscription.add(
+        menuDirective.execute.subscribe((event) =>
+          this.execute.emit({ ...event, menuDirective })
+        )
+      );
+    });
+    const queryList = new QueryList<ContextMenuItemDirective<T>>();
+    queryList.reset(this.menuDirectives);
+    this.keyManager = new TESTING_WRAPPER.ActiveDescendantKeyManager<
+      ContextMenuItemDirective<T>
+    >(queryList).withWrap();
+  }
+
+  private openActiveItemSubMenu(event: KeyboardEvent) {
+    if (this.keyManager.activeItemIndex === null) {
+      return;
+    }
+
+    this.cancelEvent(event);
+
+    if (this.keyManager.activeItem) {
+      this.onOpenSubMenu(this.keyManager.activeItem, event);
+    }
+  }
+
+  private closeActiveItemSubMenu(event: KeyboardEvent) {
+    if (this.keyManager.activeItemIndex === null) {
+      return;
+    }
+
+    this.cancelEvent(event);
+
+    this.closeLeafMenu.emit({
+      excludeRootMenu:
+        this.dir === 'rtl'
+          ? event.keyCode === ARROW_RIGHT_KEYCODE
+          : event.keyCode === ARROW_LEFT_KEYCODE,
+      event,
+    });
+  }
+
+  private cancelEvent(event?: MouseEvent | KeyboardEvent): void {
     if (!event || !event.target) {
       return;
     }
 
     const target = event.target as HTMLElement;
     if (
-      ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(target.tagName) > -1 ||
+      ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) ||
       target.isContentEditable
     ) {
       return;

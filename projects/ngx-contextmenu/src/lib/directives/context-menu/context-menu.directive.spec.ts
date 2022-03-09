@@ -3,35 +3,36 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
+import { ContextMenuEventService } from '../../services/context-menu-event/context-menu-event.service';
 import { ContextMenuService } from '../../services/context-menu/context-menu.service';
-import { ContextMenuAttachDirective } from './context-menu.directive';
+import { ContextMenuDirective } from './context-menu.directive';
 
 @Component({
   template: '<div contextMenu></div>',
 })
 class TestHostComponent {}
 
-describe('Directive: ContextMenuAttachDirective', () => {
+describe('Directive: ContextMenuDirective', () => {
   let fixture: ComponentFixture<TestHostComponent>;
-  let directive: ContextMenuAttachDirective;
-  let contextMenuService: ContextMenuService;
-  let show: jasmine.Spy<jasmine.Func>;
+  let directive: ContextMenuDirective<unknown>;
+  let contextMenuEventService: ContextMenuEventService<unknown>;
+  let onShow: jasmine.Spy<jasmine.Func>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [OverlayModule],
-      providers: [ContextMenuService],
-      declarations: [ContextMenuAttachDirective, TestHostComponent],
+      providers: [ContextMenuEventService],
+      declarations: [ContextMenuDirective, TestHostComponent],
     });
 
     fixture = TestBed.createComponent(TestHostComponent);
     const directiveEl = fixture.debugElement.query(
-      By.directive(ContextMenuAttachDirective)
+      By.directive(ContextMenuDirective)
     );
-    directive = directiveEl.injector.get(ContextMenuAttachDirective);
-    contextMenuService = TestBed.inject(ContextMenuService);
-    show = jasmine.createSpy('show');
-    contextMenuService.show.subscribe(show);
+    directive = directiveEl.injector.get(ContextMenuDirective);
+    contextMenuEventService = TestBed.inject(ContextMenuEventService);
+    onShow = jasmine.createSpy('onShow');
+    contextMenuEventService.onShow.subscribe(onShow);
   });
 
   afterEach(() => {
@@ -46,31 +47,35 @@ describe('Directive: ContextMenuAttachDirective', () => {
 
   describe('#onContextMenu', () => {
     it('should show attached context menu', () => {
-      directive.contextMenu = new ContextMenuComponent(contextMenuService, {});
-      directive.contextMenuSubject = { id: 'a' };
-      const event = new MouseEvent('contextmenu');
+      directive.contextMenu =
+        TestBed.createComponent(ContextMenuComponent).componentInstance;
+      directive.contextMenuValue = { id: 'a' };
+      const event = new MouseEvent('contextmenu', { clientX: 42, clientY: 34 });
       directive.onContextMenu(event);
-      expect(show).toHaveBeenCalledWith({
-        event,
+      expect(onShow).toHaveBeenCalledWith({
+        anchoredTo: 'position',
         contextMenu: directive.contextMenu,
-        item: directive.contextMenuSubject,
+        x: 42,
+        y: 34,
+        value: directive.contextMenuValue,
       });
     });
 
     it('should not show attached context menu if it is disabled', () => {
-      directive.contextMenu = new ContextMenuComponent(contextMenuService, {});
+      directive.contextMenu =
+        TestBed.createComponent(ContextMenuComponent).componentInstance;
       directive.contextMenu.disabled = true;
-      directive.contextMenuSubject = { id: 'a' };
+      directive.contextMenuValue = { id: 'a' };
       const event = new MouseEvent('contextmenu');
       directive.onContextMenu(event);
-      expect(show).not.toHaveBeenCalled();
+      expect(onShow).not.toHaveBeenCalled();
     });
 
     it('should show nothing if not context menu is attached', () => {
-      directive.contextMenuSubject = { id: 'a' };
+      directive.contextMenuValue = { id: 'a' };
       const event = new MouseEvent('contextmenu');
       directive.onContextMenu(event);
-      expect(show).not.toHaveBeenCalled();
+      expect(onShow).not.toHaveBeenCalled();
     });
   });
 });

@@ -48,3 +48,7 @@ Thumbs.db
 
 # Binary files
 *.tgz
+
+# doc build
+storybook-static
+documentation.json

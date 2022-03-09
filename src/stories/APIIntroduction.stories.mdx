@@ -1,0 +1,93 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Context Menu/Documentation/In a nutshell" />
+
+# Documentation in a nutshell
+
+Context Menu comes in 3 parts:
+
+1. A `contextMenu` directive to apply to any HTML element where a right click should display a context menu
+2. A `<context-menu>` component to hold the menu content and be referenced by the above directive
+   > NB. this component has no template itself and can only have `<ng-template>` children,
+   > as you might guess it is not intended to be rendered in place but to populate the context menu overlay
+3. A `contextMenuItem` directive to apply to a `<ng-template>` inside the above component
+
+## Simple menu
+
+> Component
+
+```typescript
+@Component({...})
+export class Component {
+  // The value can be typed
+  public value: string = 'a simple value attached to the context menu';
+
+  // The value can be typed
+  public execute(text: string, value: string) {
+    console.log(text, value);
+  }
+}
+```
+
+> Template
+
+```html
+<!-- directive reference the <context-menu> component via the #oneContextMenu template variable -->
+<span [contextMenu]="oneContextMenu" [contextMenuValue]="value"
+  >You can right click on this text</span
+>
+
+<!-- component delares itself via the #oneContextMenu template variable -->
+<context-menu #oneContextMenu>
+  <!-- each menu item is a <ng-template>... -->
+  <ng-template contextMenuItem passive="true">
+    <!-- ...that can contain any HTML with sepcific styling -->
+    <span class="menu-item-title">Context menu title</span>
+  </ng-template>
+  <!-- ...or just text, the (execute) output is called when the menu item is clicked -->
+  <ng-template contextMenuItem (execute)="execute('Cut', $event)">Cut</ng-template>
+  <ng-template contextMenuItem (execute)="execute('Copy', $event)">Copy</ng-template>
+  <ng-template contextMenuItem (execute)="execute('Paste', $event)">Paste</ng-template>
+  <ng-template contextMenuItem [disabled]="true"
+    >Disabled menu item</ng-template
+  >
+</context-menu>
+```
+
+## Sub menu
+
+```html
+<span [contextMenu]="oneContextMenu" [contextMenuValue]="value"
+  >You can right click on this text</span
+>
+
+<context-menu #oneContextMenu>
+  <ng-template contextMenuItem (execute)="execute('Cut', $event)"
+    >Cut</ng-template
+  >
+  <ng-template contextMenuItem (execute)="execute('Copy', $event)"
+    >Copy</ng-template
+  >
+  <ng-template contextMenuItem (execute)="execute('Paste', $event)"
+    >Paste</ng-template
+  >
+  <!-- directive reference the <context-menu> component via the #specialPast template variable -->
+  <ng-template contextMenuItem [subMenu]="specialPast"
+    >Special pastes...</ng-template
+  >
+</context-menu>
+<!-- component delares itself via the #specialPast template variable -->
+<context-menu #specialPast>
+  <ng-template contextMenuItem (execute)="execute('Paste as HTML', $event)"
+    >Paste as HTML</ng-template
+  >
+  <ng-template contextMenuItem (execute)="execute('Paste unformatted', $event)"
+    >Paste unformatted</ng-template
+  >
+</context-menu>
+```
+
+## Generic
+
+> A `contextMenuItem` can be passed to a `[contextMenu]` directive via the `[contextMenuValue]` input and then will be emitted by [contextMenuItem] via the `(execute)` output when clicked.
+> The type of the item is [generic](https://www.typescriptlang.org/docs/handbook/2/generics.html) and noted as `T` in the documentation below.

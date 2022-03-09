@@ -29,6 +29,7 @@
     "build": "npm run build:lib && npm run build:demo",
     "build:demo": "rimraf dist/demo && ng build",
     "build:lib": "ng build ngx-contextmenu && copyfiles README.md LICENSE dist/ngx-contextmenu/",
+    "build:doc": "ng run ngx-contextmenu:build-storybook",
     "watch": "ng build --watch --configuration development",
     "test": "ng test ngx-contextmenu --code-coverage",
     "ci:test": "ng test ngx-contextmenu --browsers=ChromeHeadless --watch=false --code-coverage",

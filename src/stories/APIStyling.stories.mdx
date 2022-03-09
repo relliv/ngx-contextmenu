@@ -1,0 +1,56 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Context Menu/Documentation/Styling" />
+
+# Context menu styling
+
+Context menu positioning is handled by the Angular CDK `@angular/cdk/overlay-prebuilt.css`.
+Its default styles are defined in the `@perfectmemory/ngx-contextmenu/src/assets/stylesheets/base.scss` file.
+This file also provides a number of CSS variables for customization.
+
+## CSS variables
+
+To cusomize the contextmenu styling, add a CSS class name to the `menuClass` property and then adjust CSS variables in your own CSS file.
+
+> html
+
+```html
+<context-menu menuClass="custom-style"></context-menu>
+```
+
+> css
+
+```css
+.custom-style {
+  /* Styling of the element where a context menu can appear */
+  --ngx-contextmenu-focusable-border-bottom: 1px dotted #70757e;
+
+  /* Styling of the context menu itself */
+  --ngx-contextmenu-font-family: sans-serif;
+  --ngx-contextmenu-background-color: white;
+  --ngx-contextmenu-border-radius: 4px;
+  --ngx-contextmenu-border: 1px solid rgba(0, 0, 0, 0.18);
+  --ngx-contextmenu-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+  --ngx-contextmenu-font-size: 14px;
+  --ngx-contextmenu-margin: 2px 0 0;
+  --ngx-contextmenu-min-width: 160px;
+  --ngx-contextmenu-outline: 1px solid #70757e;
+  --ngx-contextmenu-padding: 5px 0;
+  --ngx-contextmenu-text-color: #70757e;
+  --ngx-contextmenu-text-disabled-color: #8a909a;
+
+  /* Styling of context menu items */
+  --ngx-contextmenu-item-arrow-left: '◀';
+  --ngx-contextmenu-item-arrow-right: '▶';
+  --ngx-contextmenu-item-background-hover-color: #f8f8f8;
+  --ngx-contextmenu-item-separator-color: #8a909a;
+  --ngx-contextmenu-item-separator-padding: 10px;
+  --ngx-contextmenu-item-separator-width: 96%;
+  --ngx-contextmenu-item-padding: 6px 20px;
+  --ngx-contextmenu-item-text-hover-color: #5a6473;
+}
+```
+
+## More styling
+
+If you want more control over styling just copy the `@perfectmemory/ngx-contextmenu/src/assets/stylesheets/base.scss` and make your own adjustments

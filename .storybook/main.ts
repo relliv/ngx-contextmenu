@@ -3,9 +3,10 @@ import { StorybookConfig } from '@storybook/core-common';
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
+    '@storybook/addon-controls',
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
+    // '@storybook/addon-interactions',
     '@storybook/preset-scss',
     {
       name: '@storybook/addon-docs',
@@ -16,7 +17,6 @@ const config: StorybookConfig = {
         transcludeMarkdown: true,
       },
     },
-    '@storybook/addon-controls',
   ],
   framework: '@storybook/angular',
   staticDirs: ['./public'],

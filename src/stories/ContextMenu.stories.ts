@@ -14,6 +14,7 @@ export default {
       imports: [ContextMenuModule],
     }),
   ],
+  play: undefined,
   argTypes: {
     dir: {
       name: 'Direction',
@@ -84,6 +85,3 @@ export const Form = Template.bind({});
 Form.args = {
   demoMode: 'form',
 };
-
-// [] Divider --> Separator
-// [] Update change log

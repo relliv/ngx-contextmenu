@@ -17,6 +17,11 @@
 - Better ARIA support
 - context menu items are now typed with by [generics](https://www.typescriptlang.org/docs/handbook/2/generics.html)
 
+### Documentation
+
+- Added Storybook demos and documentation
+
+## 7.0.1 - 2022-02-09
 
 ### Fixed
 

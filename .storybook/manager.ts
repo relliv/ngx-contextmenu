@@ -9,5 +9,5 @@ addons.setConfig({
     brandUrl: '/',
     brandImage: logo,
   }),
-  // isToolshown: false,
+  isToolshown: false,
 });

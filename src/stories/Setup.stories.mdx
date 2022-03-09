@@ -18,16 +18,17 @@ yarn add @perfectmemory/ngx-contextmenu @angular/cdk
 
 ## Compatibility matrix
 
-| Angular   | @perfectmemory/ngx-contextmenu |
-| --------- | ------------------------------ |
-| `^12.0.0` | `^6.0.0`                       |
-| `^13.0.0` | `^7.0.0`                       |
+| Angular   | @perfectmemory/ngx-contextmenu | Main purpose                                                                  |
+| --------- | ------------------------------ | ----------------------------------------------------------------------------- |
+| `^13.0.0` | `^8.0.0-alpha.x`               | Public API cleanup, new features, breaking changes                            |
+| `^13.0.0` | `^7.0.0`                       | Support Angular 13                                                            |
+| `^12.0.0` | `^6.0.0`                       | Fork from `ngx-contextmenu` (drop in replacement with support for Angular 12) |
 
 ## Project setup
 
 In your Angular project, you have to import:
 
-1. Angular CDK overlay's CSS file
+1. Angular CDK overlay and `contextmenu` CSS files
 2. `ContextMenuModule` in your Angular application module.
 
 ### Import the Angular CDK overlay CSS
@@ -36,6 +37,7 @@ You can import it either in the main `styles.scss`, for example `./src/styles.sc
 
 ```css
 @import '@angular/cdk/overlay-prebuilt.css';
+@import '@perfectmemory/ngx-contextmenu/src/assets/stylesheets/base.scss';
 ```
 
 Or in the `angular.json`
@@ -49,6 +51,7 @@ Or in the `angular.json`
         "styles": [
           "src/styles.scss",
           "@angular/cdk/overlay-prebuilt.css"
+          "@perfectmemory/ngx-contextmenu/src/assets/stylesheets/base.scss",
         ],
       },
     },

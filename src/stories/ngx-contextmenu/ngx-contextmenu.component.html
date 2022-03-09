@@ -2,7 +2,7 @@
   *ngIf="!disabled; else disabledTemplate"
   class="ngx-context-menu-focusable"
   [contextMenu]="contextMenu"
-  [contextMenuItem]="item"
+  [contextMenuValue]="item"
 >
   <ng-container *ngIf="demoMode === 'simple'">
     When you right click on this text, a context menu will appear
@@ -18,7 +18,7 @@
   <span
     class="ngx-context-menu-focusable"
     [contextMenu]="contextMenu"
-    [contextMenuItem]="item"
+    [contextMenuValue]="item"
   >
     When you right click on this text, no context menu will appear because it is
     disabled
@@ -39,19 +39,19 @@
   <ng-template
     *ngIf="demoMode === 'simple'"
     contextMenuItem
-    (execute)="execute('Cut')"
+    (execute)="execute('Cut', $event)"
     >Cut</ng-template
   >
   <ng-template
     *ngIf="demoMode === 'simple'"
     contextMenuItem
-    (execute)="execute('Copy')"
+    (execute)="execute('Copy', $event)"
     >Copy</ng-template
   >
   <ng-template
     *ngIf="demoMode === 'simple'"
     contextMenuItem
-    (execute)="execute('Paste')"
+    (execute)="execute('Paste', $event)"
     >Paste</ng-template
   >
   <ng-template *ngIf="demoMode === 'simple'" contextMenuItem [disabled]="true"
@@ -66,7 +66,7 @@
     *ngIf="demoMode === 'simple'"
     contextMenuItem
     [subMenu]="specialPast"
-    >Special past...</ng-template
+    >Special pastes...</ng-template
   >
 
   <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
@@ -101,10 +101,10 @@
   >
 </context-menu>
 <context-menu #specialPast>
-  <ng-template contextMenuItem (execute)="execute('Paste as HTML')"
+  <ng-template contextMenuItem (execute)="execute('Paste as HTML', $event)"
     >Paste as HTML</ng-template
   >
-  <ng-template contextMenuItem (execute)="execute('Paste unformatted')"
+  <ng-template contextMenuItem (execute)="execute('Paste unformatted', $event)"
     >Paste unformatted</ng-template
   >
 </context-menu>

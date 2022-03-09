@@ -12,7 +12,25 @@ export const parameters = {
   },
   options: {
     storySort: {
-      order: ['Context Menu', ['Introduction', 'Installation and setup', 'API', 'FAQ', 'Changelog', 'Demo']],
+      order: [
+        'Context Menu',
+        [
+          'Introduction',
+          'Installation and setup',
+          'Demo',
+          'Documentation',
+          [
+            'In a nutshell',
+            '[contextMenu]',
+            '<context-menu>',
+            '[contextMenuItem]',
+            'Styling',
+            'Keyboard navigation'
+          ],
+          'FAQ',
+          'Changelog',
+        ],
+      ],
     },
   },
   docs: { inlineStories: true },

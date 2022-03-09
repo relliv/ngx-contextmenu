@@ -34,8 +34,9 @@ export default class NgxContextMenuComponent {
   /**
    * @internal
    */
-  public execute(value: string) {
-    this.onMenuItemExecuted.next(value);
+  public execute(text: string, value: any) {
+    console.log(value);
+    this.onMenuItemExecuted.next(`${text}: ${value.value}`);
   }
 
   /**

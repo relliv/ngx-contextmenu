@@ -18,6 +18,7 @@ export const parameters = {
           'Introduction',
           'Installation and setup',
           'Demo',
+          ['Simple', 'Form'],
           'Documentation',
           [
             'In a nutshell',
@@ -25,7 +26,7 @@ export const parameters = {
             '<context-menu>',
             '[contextMenuItem]',
             'Styling',
-            'Keyboard navigation'
+            'Keyboard navigation',
           ],
           'FAQ',
           'Changelog',

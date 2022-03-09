@@ -135,7 +135,12 @@
         "build-storybook": {
           "builder": "@storybook/angular:build-storybook",
           "options": {
-            "browserTarget": "ngx-contextmenu:build"
+            "browserTarget": "ngx-contextmenu:build",
+            "styles": [
+              "./src/stories/assets/stylesheets/index.scss",
+              "./node_modules/@angular/cdk/overlay-prebuilt.css",
+              "./projects/ngx-contextmenu/src/assets/stylesheets/base.scss"
+            ]
           }
         }
       }

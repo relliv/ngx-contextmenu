@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [8.0.0] - 2022-03-09
+
 ### BREAKING CHANGES
 
 - Remove Bootstrap dependency in favor of CSS variables based theming

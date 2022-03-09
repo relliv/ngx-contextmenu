@@ -32,7 +32,7 @@ describe('Service: ContextMenuService', () => {
         contextMenu: component,
         x: 0,
         y: 0,
-        item: undefined,
+        value: undefined,
       });
     });
 
@@ -40,13 +40,13 @@ describe('Service: ContextMenuService', () => {
       spyOn(eventService, 'show');
       const component =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
-      service.show(component, { x: 42, y: 34, item: { any: 'thing' } });
+      service.show(component, { x: 42, y: 34, value: { any: 'thing' } });
       expect(eventService.show).toHaveBeenCalledWith({
         anchoredTo: 'position',
         contextMenu: component,
         x: 42,
         y: 34,
-        item: { any: 'thing' },
+        value: { any: 'thing' },
       });
     });
   });

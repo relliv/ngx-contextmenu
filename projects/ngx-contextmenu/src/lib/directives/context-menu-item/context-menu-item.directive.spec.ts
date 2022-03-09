@@ -34,15 +34,10 @@ describe('Directive: ContextMenuItemDirective', () => {
     beforeEach(() => {
       directive.passive = false;
       directive.divider = false;
-      directive.enabled = true;
+      directive.disabled = false;
     });
 
     it('should be false', () => {
-      expect(directive.disabled).toEqual(false);
-    });
-
-    it('should be false if enabled evaluate to true', () => {
-      directive.enabled = jasmine.createSpy('enabled').and.returnValue(true);
       expect(directive.disabled).toEqual(false);
     });
 
@@ -56,19 +51,14 @@ describe('Directive: ContextMenuItemDirective', () => {
       expect(directive.disabled).toEqual(true);
     });
 
-    it('should be true if directive is not enabled', () => {
-      directive.enabled = false;
+    it('should be true if directive is disabled', () => {
+      directive.disabled = true;
       expect(directive.disabled).toEqual(true);
     });
 
-    it('should be true if directive is not enabled', () => {
-      directive.enabled = false;
-      expect(directive.disabled).toEqual(true);
-    });
-
-    it('should be true if enabled evaluate to false', () => {
-      directive.enabled = jasmine.createSpy('enabled').and.returnValue(false);
-      expect(directive.disabled).toEqual(true);
+    it('should be false if enabled evaluate to false', () => {
+      directive.disabled = () => false;
+      expect(directive.disabled).toEqual(false);
     });
   });
 
@@ -95,34 +85,34 @@ describe('Directive: ContextMenuItemDirective', () => {
     });
 
     it('should emit on execute if the result of the evaluation of enabled is truthy', () => {
-      const item = { id: 'item' };
-      directive.enabled = jasmine.createSpy('enabled').and.returnValue(true);
+      const value = { id: 'item' };
+      directive.disabled = () => false;
       const event = new MouseEvent('click');
-      directive.triggerExecute(event, item);
-      expect(subscriber).toHaveBeenCalledWith({ event, item });
+      directive.triggerExecute(event, value);
+      expect(subscriber).toHaveBeenCalledWith({ event, value });
     });
 
     it('should emit on execute if enabled is truthy', () => {
-      const item = { id: 'item' };
-      directive.enabled = true;
+      const value = { id: 'item' };
+      directive.disabled = false;
       const event = new MouseEvent('click');
-      directive.triggerExecute(event, item);
-      expect(subscriber).toHaveBeenCalledWith({ event, item });
+      directive.triggerExecute(event, value);
+      expect(subscriber).toHaveBeenCalledWith({ event, value });
     });
 
     it('should not emit on execute if enabled is falsy', () => {
-      const item = { id: 'item' };
-      directive.enabled = false;
+      const value = { id: 'item' };
+      directive.disabled = true;
       const event = new MouseEvent('click');
-      directive.triggerExecute(event, item);
+      directive.triggerExecute(event, value);
       expect(subscriber).not.toHaveBeenCalled();
     });
 
     it('should not emit on execute if the result of the evaluation of enabled is falsy', () => {
-      const item = { id: 'item' };
-      directive.enabled = jasmine.createSpy('enabled').and.returnValue(false);
+      const value = { id: 'item' };
+      directive.disabled = () => true;
       const event = new MouseEvent('click');
-      directive.triggerExecute(event, item);
+      directive.triggerExecute(event, value);
       expect(subscriber).not.toHaveBeenCalled();
     });
   });

@@ -2,7 +2,7 @@ import { ContextMenuItemDirective } from '../../directives/context-menu-item/con
 import { ContextMenuContentComponent } from '../context-menu-content/context-menu-content.component';
 import { ContextMenuComponent } from './context-menu.component';
 
-export interface IContextMenuBaseEvent<T> {
+export interface ContextMenuBaseEvent<T> {
   anchoredTo: 'position' | 'element';
   /**
    * ContextMenuComponent instance to display
@@ -11,11 +11,11 @@ export interface IContextMenuBaseEvent<T> {
   /**
    * Optional associated data to the context menu, will be emitted when a menu item is selected
    */
-  item?: T;
+  value?: T;
 }
 
-export interface IContextMenuAnchoredToPositionEvent<T>
-  extends IContextMenuBaseEvent<T> {
+export interface ContextMenuAnchoredToPositionEvent<T>
+  extends ContextMenuBaseEvent<T> {
   /**
    * Open the menu to an x/y position
    */
@@ -30,8 +30,8 @@ export interface IContextMenuAnchoredToPositionEvent<T>
   y: number;
 }
 
-export interface IContextMenuAnchoredToElementEvent<T>
-  extends IContextMenuBaseEvent<T> {
+export interface ContextMenuAnchoredToElementEvent<T>
+  extends ContextMenuBaseEvent<T> {
   /**
    * Open the menu anchored to a DOM element
    */
@@ -46,28 +46,28 @@ export interface IContextMenuAnchoredToElementEvent<T>
   parentContextMenu: ContextMenuContentComponent<T>;
 }
 
-export type IContextMenuOpenEvent<T> =
-  | IContextMenuAnchoredToPositionEvent<T>
-  | IContextMenuAnchoredToElementEvent<T>;
+export type ContextMenuOpenEvent<T> =
+  | ContextMenuAnchoredToPositionEvent<T>
+  | ContextMenuAnchoredToElementEvent<T>;
 
-export type IContextMenuContext<T> = IContextMenuOpenEvent<T> & {
-  menuDirectives: ContextMenuItemDirective<T>[];
+export type IContextMenuContext<T> = ContextMenuOpenEvent<T> & {
+  menuItemDirectives: ContextMenuItemDirective<T>[];
   menuClass: string;
   dir: 'ltr' | 'rtl' | undefined;
 };
-export interface CloseLeafMenuEvent {
+export interface ContextMenuCloseLeafEvent {
   excludeRootMenu?: boolean;
   event?: MouseEvent | KeyboardEvent;
 }
 
-export interface CancelContextMenuEvent {
+export interface ContextMenuCancelEvent {
   eventType: 'cancel';
 }
-export interface ExecuteContextMenuEvent<T extends Object = any> {
+export interface ContextMenuExecuteEvent<T extends Object = any> {
   eventType: 'execute';
   item?: T;
   menuDirective: ContextMenuItemDirective<T>;
 }
-export type CloseContextMenuEvent<T extends Object = any> =
-  | ExecuteContextMenuEvent<T>
-  | CancelContextMenuEvent;
+export type ContextMenuCloseEvent<T extends Object = any> =
+  | ContextMenuExecuteEvent<T>
+  | ContextMenuCancelEvent;

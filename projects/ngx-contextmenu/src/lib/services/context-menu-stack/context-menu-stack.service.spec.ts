@@ -21,7 +21,7 @@ describe('Service: ContextMenuStackService', () => {
 
   const createStackItem = (): ContextMenuStackItem<unknown> => {
     return {
-      contextMenuComponent: createContextMenuContentComponent(),
+      contextMenuContentComponent: createContextMenuContentComponent(),
       overlayRef: createOverlayRef(),
     };
   };

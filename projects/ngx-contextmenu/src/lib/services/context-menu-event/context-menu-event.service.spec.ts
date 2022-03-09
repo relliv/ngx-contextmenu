@@ -31,14 +31,14 @@ describe('Service: ContextMenuEventService', () => {
         contextMenu: component,
         x: 42,
         y: 34,
-        item: { any: 'thing' },
+        value: { any: 'thing' },
       });
       expect(onShow).toHaveBeenCalledWith({
         anchoredTo: 'position',
         contextMenu: component,
         x: 42,
         y: 34,
-        item: { any: 'thing' },
+        value: { any: 'thing' },
       });
     });
 
@@ -54,14 +54,14 @@ describe('Service: ContextMenuEventService', () => {
         contextMenu: component,
         anchorElement,
         parentContextMenu: parent,
-        item: { any: 'thing' },
+        value: { any: 'thing' },
       });
       expect(onShow).toHaveBeenCalledWith({
         anchoredTo: 'element',
         contextMenu: component,
         anchorElement,
         parentContextMenu: parent,
-        item: { any: 'thing' },
+        value: { any: 'thing' },
       });
     });
   });

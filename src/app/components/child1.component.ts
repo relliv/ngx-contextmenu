@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
       <li
         *ngFor="let item of items"
         [contextMenu]="routingMenu"
-        [contextMenuItem]="item"
+        [contextMenuValue]="item"
       >
         Right Click: {{ item?.name }}
       </li>

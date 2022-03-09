@@ -35,12 +35,12 @@ describe('Integ: ContextMenuDirective', () => {
     it('should open context menu', () => {
       host = createHost(
         `
-        <div [contextMenu]="static" [contextMenuItem]="item">Right click</div>
+        <div [contextMenu]="static" [contextMenuValue]="item">Right click</div>
         <context-menu #static>
-          <ng-template contextMenuItem [visible]="true" [enabled]="false">A</ng-template>
+          <ng-template contextMenuItem [visible]="true" [disabled]="true">A</ng-template>
           <ng-template contextMenuItem [visible]="false"                 >B</ng-template>
           <ng-template contextMenuItem [divider]="true"                  >C</ng-template>
-          <ng-template contextMenuItem [visible]="true" [enabled]="true" [subMenu]="subMenu">D</ng-template>
+          <ng-template contextMenuItem [visible]="true" [disabled]="false" [subMenu]="subMenu">D</ng-template>
           <context-menu #subMenu>
             <ng-template contextMenuItem [visible]="true">DD</ng-template>
           </context-menu>
@@ -91,7 +91,7 @@ describe('Integ: ContextMenuDirective', () => {
     it('should navigate the menu on arrow keys', () => {
       host = createHost(
         `
-        <div [contextMenu]="static" [contextMenuItem]="item">Right click</div>
+        <div [contextMenu]="static" [contextMenuValue]="item">Right click</div>
         <context-menu #static>
           <ng-template contextMenuItem [visible]="true"                    >A</ng-template>
           <ng-template contextMenuItem [visible]="true"                    >B</ng-template>

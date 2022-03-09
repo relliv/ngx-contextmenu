@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { IContextMenuOpenEvent } from '../../components/context-menu/context-menu.component.interface';
+import { ContextMenuOpenEvent } from '../../components/context-menu/context-menu.component.interface';
 
 /**
  * @internal
@@ -9,9 +9,9 @@ import { IContextMenuOpenEvent } from '../../components/context-menu/context-men
   providedIn: 'root',
 })
 export class ContextMenuEventService<T> {
-  public onShow: Subject<IContextMenuOpenEvent<T>> = new Subject();
+  public onShow: Subject<ContextMenuOpenEvent<T>> = new Subject();
 
-  public show(options: IContextMenuOpenEvent<T>) {
+  public show(options: ContextMenuOpenEvent<T>) {
     this.onShow.next(options);
   }
 }

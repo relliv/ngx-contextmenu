@@ -24,15 +24,9 @@
   --ngx-contextmenu-item-background-hover-color: #f8f8f8;
   --ngx-contextmenu-item-separator-color: #8a909a;
   --ngx-contextmenu-item-separator-padding: 10px;
+  --ngx-contextmenu-item-separator-width: 96%;
   --ngx-contextmenu-item-padding: 6px 20px;
   --ngx-contextmenu-item-text-hover-color: #5a6473;
-}
-
-.ngx-context-menu-focusable {
-  &:focus {
-    border-bottom: var(--ngx-contextmenu-focusable-border-bottom);
-    outline: none;
-  }
 }
 
 context-menu-content {
@@ -74,7 +68,7 @@ context-menu-content {
           border-width: 0 0 1px 0;
           border-bottom: 1px solid var(--ngx-contextmenu-item-separator-color);
           margin: var(--ngx-contextmenu-item-separator-padding) 2%;
-          width: 96%;
+          width: var(--ngx-contextmenu-item-separator-width);
         }
 
         > [role='menuitem'] {
@@ -90,7 +84,7 @@ context-menu-content {
           text-decoration: none;
           white-space: nowrap;
 
-          &:not(.disabled) {
+          &:not(.disabled):not(.ngx-contextmenu--item-content-passive) {
             &:hover,
             &.active {
               text-decoration: none;

@@ -7,58 +7,45 @@ import {
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
   Component,
-  ComponentRef,
   ContentChildren,
   ElementRef,
   EventEmitter,
-  Inject,
   Input,
   OnDestroy,
-  Optional,
   Output,
   QueryList,
   ViewEncapsulation,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { IContextMenuOptions } from '../../context-menu.options';
-import { CONTEXT_MENU_OPTIONS } from '../../context-menu.tokens';
 import { ContextMenuItemDirective } from '../../directives/context-menu-item/context-menu-item.directive';
 import { evaluateIfFunction } from '../../helper/evaluate';
 import { ContextMenuEventService } from '../../services/context-menu-event/context-menu-event.service';
 import { ContextMenuStackService } from '../../services/context-menu-stack/context-menu-stack.service';
-import { ContextMenuService } from '../../services/context-menu/context-menu.service';
 import { ContextMenuContentComponent } from '../context-menu-content/context-menu-content.component';
 import {
   getPositionsToAnchorElement,
   getPositionsToXY,
 } from './context-menu.component.helpers';
 import {
-  CloseContextMenuEvent,
+  ContextMenuCloseEvent,
+  ContextMenuOpenEvent,
   IContextMenuContext,
-  IContextMenuOpenEvent,
 } from './context-menu.component.interface';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
   selector: 'context-menu',
-  styleUrls: ['./context-menu.component.scss'],
   template: '',
 })
 export class ContextMenuComponent<T> implements OnDestroy {
   /**
-   * A CSS class to add to the context menu, ideal for theming and custom styling
+   * A CSS class to apply to the context menu overlay, ideal for theming and custom styling
    */
   @Input()
   public menuClass = '';
 
   /**
-   * Focus on the menu when opened
-   */
-  @Input()
-  public autoFocus = this.options?.autoFocus || false;
-
-  /**
-   * Disabled the whole context menu
+   * Disable the whole context menu
    */
   @Input()
   public disabled = false;
@@ -73,13 +60,13 @@ export class ContextMenuComponent<T> implements OnDestroy {
    * Emit when the menu is opened
    */
   @Output()
-  public open: EventEmitter<IContextMenuOpenEvent<T>> = new EventEmitter();
+  public open: EventEmitter<ContextMenuOpenEvent<T>> = new EventEmitter();
 
   /**
    * Emit when the menu is closed
    */
   @Output()
-  public close: EventEmitter<CloseContextMenuEvent> = new EventEmitter();
+  public close: EventEmitter<void> = new EventEmitter();
 
   /**
    * The menu item directives defined inside the component
@@ -94,7 +81,7 @@ export class ContextMenuComponent<T> implements OnDestroy {
   /**
    * @internal
    */
-  public item?: T;
+  public value?: T;
 
   private subscription: Subscription = new Subscription();
 
@@ -102,10 +89,7 @@ export class ContextMenuComponent<T> implements OnDestroy {
     private overlay: Overlay,
     private scrollStrategy: ScrollStrategyOptions,
     private contextMenuStack: ContextMenuStackService<T>,
-    private contextMenuEventService: ContextMenuEventService<T>,
-    @Optional()
-    @Inject(CONTEXT_MENU_OPTIONS)
-    private options: IContextMenuOptions
+    private contextMenuEventService: ContextMenuEventService<T>
   ) {}
 
   /**
@@ -160,23 +144,23 @@ export class ContextMenuComponent<T> implements OnDestroy {
     this.attachContextMenu(overlayRef, context);
   }
 
-  private onMenuEvent(event: IContextMenuOpenEvent<T>): void {
+  private onMenuEvent(event: ContextMenuOpenEvent<T>): void {
     if (this.disabled) {
       return;
     }
 
-    const { contextMenu, item } = event;
+    const { contextMenu, value } = event;
 
     if (contextMenu && contextMenu !== this) {
       return;
     }
 
-    this.item = item;
+    this.value = value;
     this.setVisibleMenuItems();
 
     this.openContextMenu({
       ...event,
-      menuDirectives: this.visibleMenuItems,
+      menuItemDirectives: this.visibleMenuItems,
       menuClass: this.menuClass,
       dir: this.dir,
     });
@@ -188,16 +172,17 @@ export class ContextMenuComponent<T> implements OnDestroy {
     overlayRef: OverlayRef,
     context: IContextMenuContext<T>
   ): void {
-    const { item, menuDirectives, menuClass, dir } = context;
+    const { value, menuItemDirectives } = context;
     const contextMenuContentRef = overlayRef.attach(
       new ComponentPortal<ContextMenuContentComponent<T>>(
         ContextMenuContentComponent
       )
     );
+
     const { instance: contextMenuContentComponent } = contextMenuContentRef;
 
-    contextMenuContentComponent.item = item;
-    contextMenuContentComponent.menuDirectives = menuDirectives;
+    contextMenuContentComponent.value = value;
+    contextMenuContentComponent.menuDirectives = menuItemDirectives;
     contextMenuContentComponent.overlayRef = overlayRef;
     contextMenuContentComponent.isLeaf = true;
     contextMenuContentComponent.menuClass = this.getMenuClass(context);
@@ -206,7 +191,7 @@ export class ContextMenuComponent<T> implements OnDestroy {
 
     this.contextMenuStack.push({
       overlayRef,
-      contextMenuComponent: contextMenuContentComponent,
+      contextMenuContentComponent,
     });
 
     const subscriptions: Subscription = new Subscription();
@@ -228,7 +213,7 @@ export class ContextMenuComponent<T> implements OnDestroy {
     );
     subscriptions.add(
       contextMenuContentComponent.openSubMenu.subscribe(
-        (openSubMenuEvent: IContextMenuOpenEvent<T>) => {
+        (openSubMenuEvent: ContextMenuOpenEvent<T>) => {
           this.contextMenuStack.destroySubMenus(contextMenuContentComponent);
           if (!openSubMenuEvent.contextMenu) {
             contextMenuContentComponent.isLeaf = true;
@@ -240,7 +225,8 @@ export class ContextMenuComponent<T> implements OnDestroy {
       )
     );
     contextMenuContentRef.onDestroy(() => {
-      menuDirectives.forEach((menuItem) => (menuItem.isActive = false));
+      this.close.next();
+      menuItemDirectives.forEach((menuItem) => (menuItem.isActive = false));
       subscriptions.unsubscribe();
     });
     contextMenuContentRef.changeDetectorRef.detectChanges();
@@ -262,8 +248,8 @@ export class ContextMenuComponent<T> implements OnDestroy {
     );
   }
 
-  private closeAllContextMenus(closeEvent: CloseContextMenuEvent): void {
-    this.close.next(closeEvent);
+  private closeAllContextMenus(closeEvent: ContextMenuCloseEvent): void {
+    // this.close.next(closeEvent);
     this.contextMenuStack.closeAll();
   }
 
@@ -271,13 +257,13 @@ export class ContextMenuComponent<T> implements OnDestroy {
     const hasDestroyedRoot =
       this.contextMenuStack.closeLeafMenu(excludeRootMenu);
 
-    if (hasDestroyedRoot) {
+    /*     if (hasDestroyedRoot) {
       this.close.next({ eventType: 'cancel' });
-    }
+    } */
   }
 
   private isMenuItemVisible(menuItem: ContextMenuItemDirective<T>): boolean {
-    return evaluateIfFunction(menuItem.visible, this.item);
+    return evaluateIfFunction(menuItem.visible, this.value);
   }
 
   private setVisibleMenuItems(): void {

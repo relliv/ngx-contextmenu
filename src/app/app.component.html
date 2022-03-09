@@ -18,7 +18,7 @@
           <li
             *ngFor="let item of items"
             [contextMenu]="basicMenu"
-            [contextMenuItem]="item"
+            [contextMenuValue]="item"
           >
             Right Click ltr: {{ item?.name }}
           </li>
@@ -27,7 +27,7 @@
           <li
             *ngFor="let item of items"
             [contextMenu]="basicMenuRtl"
-            [contextMenuItem]="item"
+            [contextMenuValue]="item"
           >
             Right Click rtl: {{ item?.name }}
           </li>
@@ -80,7 +80,7 @@
             <li
               *ngFor="let item of items"
               [contextMenu]="enableAndVisible"
-              [contextMenuItem]="item"
+              [contextMenuValue]="item"
             >
               Right Click: {{ item?.name }}
             </li>
@@ -154,7 +154,7 @@
           <li
             *ngFor="let item of items"
             [contextMenu]="withFunctions"
-            [contextMenuItem]="item"
+            [contextMenuValue]="item"
           >
             Right Click: {{ item?.name }}
           </li>
@@ -192,7 +192,7 @@
           <li
             *ngFor="let item of items"
             [contextMenu]="customClassMenu"
-            [contextMenuItem]="item"
+            [contextMenuValue]="item"
           >
             Right click to see styled menu
           </li>
@@ -393,7 +393,7 @@
       style="pointer-events: all"
       [ngStyle]="item.layout"
       [contextMenu]="componentMenu"
-      [contextMenuItem]="item"
+      [contextMenuValue]="item"
     >
       {{ item.name }}
     </div>
@@ -418,7 +418,7 @@
   <li
     *ngFor="let item of items"
     [contextMenu]="itemContextMenu"
-    [contextMenuItem]="item"
+    [contextMenuValue]="item"
   >
     {{ item.name }}
     <context-menu #itemContextMenu>

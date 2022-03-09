@@ -32,7 +32,6 @@ describe('Component: ContextMenuComponent', () => {
   let overlayRef: OverlayRef;
   let contextMenuContentRef: ComponentRef<ContextMenuContentComponent<unknown>>;
   let closeScrollStrategy: CloseScrollStrategy;
-  let contextMenuContentComponent: ContextMenuContentComponent<unknown>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -52,9 +51,6 @@ describe('Component: ContextMenuComponent', () => {
         detectChanges: jasmine.createSpy('detectChanges'),
       },
     } as unknown as ComponentRef<ContextMenuContentComponent<unknown>>;
-    contextMenuContentComponent = {
-      id: 'ContextMenuContentComponent',
-    } as unknown as ContextMenuContentComponent<unknown>;
     overlayRefAttach = jasmine
       .createSpy('attach')
       .and.returnValue(contextMenuContentRef);
@@ -122,7 +118,7 @@ describe('Component: ContextMenuComponent', () => {
       let b: ContextMenuItemDirective<unknown>;
       let c: ContextMenuItemDirective<unknown>;
       let d: ContextMenuItemDirective<unknown>;
-      let item: unknown;
+      let value: unknown;
 
       beforeEach(() => {
         a = {
@@ -143,7 +139,7 @@ describe('Component: ContextMenuComponent', () => {
         close = jasmine.createSpy('close');
         component.close.subscribe(close);
 
-        item = { id: 'a' };
+        value = { id: 'a' };
         const menuItems = new QueryList<ContextMenuItemDirective<unknown>>();
         menuItems.reset([a, b, c, d]);
         component.menuItems = menuItems;
@@ -159,12 +155,12 @@ describe('Component: ContextMenuComponent', () => {
             x: 0,
             y: 0,
             contextMenu: component,
-            item,
+            value,
           });
         });
 
         it('should set item', () => {
-          expect(component.item).toEqual(item);
+          expect(component.value).toEqual(value);
         });
 
         it('should open context menu', () => {
@@ -173,9 +169,9 @@ describe('Component: ContextMenuComponent', () => {
             x: 0,
             y: 0,
             contextMenu: component,
-            item,
+            value,
             dir: 'rtl',
-            menuDirectives: [b, d],
+            menuItemDirectives: [b, d],
             menuClass: 'custom-class',
           });
         });
@@ -186,7 +182,7 @@ describe('Component: ContextMenuComponent', () => {
             x: 0,
             y: 0,
             contextMenu: component,
-            item,
+            value,
           });
         });
       });
@@ -198,12 +194,12 @@ describe('Component: ContextMenuComponent', () => {
             x: 0,
             y: 0,
             contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
-            item,
+            value,
           });
         });
 
         it('should set item', () => {
-          expect(component.item).toEqual(item);
+          expect(component.value).toEqual(value);
         });
 
         it('should set visible items', () => {
@@ -215,9 +211,9 @@ describe('Component: ContextMenuComponent', () => {
             anchoredTo: 'position',
             x: 0,
             y: 0,
-            item,
+            value,
             contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
-            menuDirectives: [b, d],
+            menuItemDirectives: [b, d],
             menuClass: 'custom-class',
             dir: 'rtl',
           });
@@ -228,7 +224,7 @@ describe('Component: ContextMenuComponent', () => {
             anchoredTo: 'position',
             x: 0,
             y: 0,
-            item,
+            value,
             contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
           });
         });
@@ -242,12 +238,12 @@ describe('Component: ContextMenuComponent', () => {
             x: 0,
             y: 0,
             contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
-            item,
+            value,
           });
         });
 
         it('should not set item', () => {
-          expect(component.item).toBeUndefined();
+          expect(component.value).toBeUndefined();
         });
 
         it('should set visible items', () => {
@@ -271,12 +267,12 @@ describe('Component: ContextMenuComponent', () => {
             y: 0,
             contextMenu:
               TestBed.createComponent(ContextMenuComponent).componentInstance,
-            item,
+            value,
           });
         });
 
         it('should not set item', () => {
-          expect(component.item).toBeUndefined();
+          expect(component.value).toBeUndefined();
         });
 
         it('should set visible items', () => {
@@ -313,16 +309,15 @@ describe('Component: ContextMenuComponent', () => {
           y: 0,
           contextMenu:
             TestBed.createComponent(ContextMenuComponent).componentInstance,
-          item: {},
+          value: {},
           dir: 'rtl',
           menuClass: '',
-          menuDirectives: [],
+          menuItemDirectives: [],
         };
         const subscriber = jasmine.createSpy('subscriber');
         component.close.subscribe(subscriber);
         component.openContextMenu(context);
         expect(contextMenuStackService.closeAll).toHaveBeenCalled();
-        expect(subscriber).toHaveBeenCalledWith({ eventType: 'cancel' });
       });
 
       it('should get a position strategy with position and create an overlay from it', () => {
@@ -332,10 +327,10 @@ describe('Component: ContextMenuComponent', () => {
           y: 0,
           contextMenu:
             TestBed.createComponent(ContextMenuComponent).componentInstance,
-          item: {},
+          value: {},
           dir: undefined,
           menuClass: '',
-          menuDirectives: [],
+          menuItemDirectives: [],
         };
         component.openContextMenu(context);
 
@@ -390,7 +385,7 @@ describe('Component: ContextMenuComponent', () => {
 
         expect(contextMenuStackService.push).toHaveBeenCalledWith({
           overlayRef,
-          contextMenuComponent: contextMenuContentRef.instance,
+          contextMenuContentComponent: contextMenuContentRef.instance,
         });
       });
 
@@ -401,10 +396,10 @@ describe('Component: ContextMenuComponent', () => {
           y: 0,
           contextMenu:
             TestBed.createComponent(ContextMenuComponent).componentInstance,
-          item: {},
+          value: {},
           dir: 'ltr',
           menuClass: '',
-          menuDirectives: [],
+          menuItemDirectives: [],
         };
         component.openContextMenu(context);
 
@@ -459,7 +454,7 @@ describe('Component: ContextMenuComponent', () => {
 
         expect(contextMenuStackService.push).toHaveBeenCalledWith({
           overlayRef,
-          contextMenuComponent: contextMenuContentRef.instance,
+          contextMenuContentComponent: contextMenuContentRef.instance,
         });
       });
 
@@ -542,10 +537,10 @@ describe('Component: ContextMenuComponent', () => {
           y: 0,
           contextMenu:
             TestBed.createComponent(ContextMenuComponent).componentInstance,
-          item: {},
+          value: {},
           dir: 'rtl',
           menuClass: '',
-          menuDirectives: [],
+          menuItemDirectives: [],
         };
         component.openContextMenu(context);
 
@@ -600,7 +595,7 @@ describe('Component: ContextMenuComponent', () => {
 
         expect(contextMenuStackService.push).toHaveBeenCalledWith({
           overlayRef,
-          contextMenuComponent: contextMenuContentRef.instance,
+          contextMenuContentComponent: contextMenuContentRef.instance,
         });
       });
     });
@@ -615,10 +610,10 @@ describe('Component: ContextMenuComponent', () => {
           parentContextMenu: TestBed.createComponent(
             ContextMenuContentComponent
           ).componentInstance,
-          item: {},
+          value: {},
           dir: 'rtl',
           menuClass: '',
-          menuDirectives: [],
+          menuItemDirectives: [],
         };
         const subscriber = jasmine.createSpy('subscriber');
         component.close.subscribe(subscriber);
@@ -636,10 +631,10 @@ describe('Component: ContextMenuComponent', () => {
           parentContextMenu: TestBed.createComponent(
             ContextMenuContentComponent
           ).componentInstance,
-          item: {},
+          value: {},
           dir: undefined,
           menuClass: '',
-          menuDirectives: [],
+          menuItemDirectives: [],
         };
         context.parentContextMenu.dir = 'ltr';
         component.openContextMenu(context);
@@ -686,7 +681,7 @@ describe('Component: ContextMenuComponent', () => {
 
         expect(contextMenuStackService.push).toHaveBeenCalledWith({
           overlayRef,
-          contextMenuComponent: contextMenuContentRef.instance,
+          contextMenuContentComponent: contextMenuContentRef.instance,
         });
       });
 
@@ -700,10 +695,10 @@ describe('Component: ContextMenuComponent', () => {
           parentContextMenu: TestBed.createComponent(
             ContextMenuContentComponent
           ).componentInstance,
-          item: {},
+          value: {},
           dir: undefined,
           menuClass: '',
-          menuDirectives: [],
+          menuItemDirectives: [],
         };
         context.parentContextMenu.dir = 'rtl';
         component.openContextMenu(context);
@@ -750,7 +745,7 @@ describe('Component: ContextMenuComponent', () => {
 
         expect(contextMenuStackService.push).toHaveBeenCalledWith({
           overlayRef,
-          contextMenuComponent: contextMenuContentRef.instance,
+          contextMenuContentComponent: contextMenuContentRef.instance,
         });
       });
     });
@@ -761,7 +756,7 @@ describe('Component: ContextMenuComponent', () => {
       let c: ContextMenuItemDirective<unknown>;
       let d: ContextMenuItemDirective<unknown>;
       let context: IContextMenuContext<unknown>;
-      let item: unknown;
+      let value: unknown;
 
       beforeEach(() => {
         a = {
@@ -777,7 +772,7 @@ describe('Component: ContextMenuComponent', () => {
           visible: (item: unknown) => true,
         } as ContextMenuItemDirective<unknown>;
 
-        item = { id: 'a' };
+        value = { id: 'a' };
         const menuItems = new QueryList<ContextMenuItemDirective<unknown>>();
         menuItems.reset([a, b, c, d]);
         component.menuItems = menuItems;
@@ -789,16 +784,16 @@ describe('Component: ContextMenuComponent', () => {
           y: 0,
           contextMenu:
             TestBed.createComponent(ContextMenuComponent).componentInstance,
-          item,
+          value,
           dir: 'rtl',
           menuClass: 'menu-class',
-          menuDirectives: [a, b, c, d],
+          menuItemDirectives: [a, b, c, d],
         };
       });
 
       it('should set contextMenuContentComponent properties', () => {
         component.openContextMenu(context);
-        expect(contextMenuContentRef.instance.item).toEqual({ id: 'a' });
+        expect(contextMenuContentRef.instance.value).toEqual({ id: 'a' });
         expect(contextMenuContentRef.instance.menuDirectives).toEqual([
           a,
           b,
@@ -818,10 +813,7 @@ describe('Component: ContextMenuComponent', () => {
           item: { id: 'a' },
           menuDirective: a,
         };
-        const close = jasmine.createSpy('subscriber');
-        component.close.subscribe(close);
         contextMenuContentRef.instance.execute.next(event);
-        expect(close).toHaveBeenCalledWith({ eventType: 'execute', ...event });
         expect(contextMenuStackService.closeAll).toHaveBeenCalled();
       });
 
@@ -832,10 +824,7 @@ describe('Component: ContextMenuComponent', () => {
           item: { id: 'a' },
           menuDirective: a,
         };
-        const close = jasmine.createSpy('subscriber');
-        component.close.subscribe(close);
         contextMenuContentRef.instance.closeAllMenus.next(event);
-        expect(close).toHaveBeenCalledWith({ eventType: 'cancel', ...event });
         expect(contextMenuStackService.closeAll).toHaveBeenCalled();
       });
 
@@ -845,13 +834,10 @@ describe('Component: ContextMenuComponent', () => {
           event: new MouseEvent('click'),
           excludeRootMenu: true,
         };
-        const close = jasmine.createSpy('subscriber');
-        component.close.subscribe(close);
         (contextMenuStackService.closeLeafMenu as jasmine.Spy).and.returnValue(
           true
         );
         contextMenuContentRef.instance.closeLeafMenu.next(event);
-        expect(close).toHaveBeenCalledWith({ eventType: 'cancel' });
         expect(contextMenuStackService.closeLeafMenu).toHaveBeenCalledWith(
           true
         );
@@ -905,6 +891,14 @@ describe('Component: ContextMenuComponent', () => {
         expect(b.isActive).toEqual(false);
         expect(c.isActive).toEqual(false);
         expect(d.isActive).toEqual(false);
+      });
+
+      it('should close all menu items when instance is destroyed', () => {
+        component.openContextMenu(context);
+        const close = jasmine.createSpy('subscriber');
+        component.close.subscribe(close);
+        (contextMenuContentRef.onDestroy as jasmine.Spy).calls.argsFor(0)[0]();
+        expect(close).toHaveBeenCalled();
       });
 
       it('should detect changes on created instance', () => {

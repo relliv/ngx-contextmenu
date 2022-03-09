@@ -49,7 +49,7 @@ describe('Directive: ContextMenuDirective', () => {
     it('should show attached context menu', () => {
       directive.contextMenu =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
-      directive.contextMenuItem = { id: 'a' };
+      directive.contextMenuValue = { id: 'a' };
       const event = new MouseEvent('contextmenu', { clientX: 42, clientY: 34 });
       directive.onContextMenu(event);
       expect(onShow).toHaveBeenCalledWith({
@@ -57,7 +57,7 @@ describe('Directive: ContextMenuDirective', () => {
         contextMenu: directive.contextMenu,
         x: 42,
         y: 34,
-        item: directive.contextMenuItem,
+        value: directive.contextMenuValue,
       });
     });
 
@@ -65,14 +65,14 @@ describe('Directive: ContextMenuDirective', () => {
       directive.contextMenu =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
       directive.contextMenu.disabled = true;
-      directive.contextMenuItem = { id: 'a' };
+      directive.contextMenuValue = { id: 'a' };
       const event = new MouseEvent('contextmenu');
       directive.onContextMenu(event);
       expect(onShow).not.toHaveBeenCalled();
     });
 
     it('should show nothing if not context menu is attached', () => {
-      directive.contextMenuItem = { id: 'a' };
+      directive.contextMenuValue = { id: 'a' };
       const event = new MouseEvent('contextmenu');
       directive.onContextMenu(event);
       expect(onShow).not.toHaveBeenCalled();

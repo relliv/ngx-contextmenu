@@ -7,6 +7,10 @@ export { ContextMenuModule } from './lib/ngx-contextmenu.module';
  * Components
  */
 export { ContextMenuComponent } from './lib/components/context-menu/context-menu.component';
+export {
+  ContextMenuCloseEvent,
+  ContextMenuOpenEvent,
+} from './lib/components/context-menu/context-menu.component.interface';
 /**
  * Directives
  */
@@ -16,7 +20,3 @@ export { ContextMenuDirective } from './lib/directives/context-menu/context-menu
  * Services
  */
 export { ContextMenuService } from './lib/services/context-menu/context-menu.service';
-/**
- * Models
- */
-export { IContextMenuOptions } from './lib/context-menu.options';

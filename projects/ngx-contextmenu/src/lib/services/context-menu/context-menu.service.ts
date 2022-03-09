@@ -6,7 +6,7 @@ export interface ContextMenuOpenAtPositionOptions<T> {
   /**
    * Optional associated data to the context menu, will be emitted when a menu item is selected
    */
-  item?: T;
+  value?: T;
   /**
    * The horizontal position of the menu
    */
@@ -20,7 +20,7 @@ export interface ContextMenuOpenAtElementOptions<T> {
   /**
    * Optional associated data to the context menu, will be emitted when a menu item is selected
    */
-  item?: T;
+  value?: T;
   /**
    * The horizontal position of the menu
    */
@@ -48,8 +48,8 @@ export class ContextMenuService<T> {
   ) {
     this.contextMenuEventService.show({
       anchoredTo: 'position',
-      contextMenu: contextMenu,
-      item: options.item,
+      contextMenu,
+      value: options.value,
       x: options.x,
       y: options.y,
     });

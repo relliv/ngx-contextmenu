@@ -14,9 +14,7 @@ import { ChildTwoComponent } from './components/child2.component';
   imports: [
     BrowserModule,
     CommonModule,
-    ContextMenuModule.forRoot({
-      autoFocus: true,
-    }),
+    ContextMenuModule,
     RouterModule.forRoot([
       {
         path: 'two',

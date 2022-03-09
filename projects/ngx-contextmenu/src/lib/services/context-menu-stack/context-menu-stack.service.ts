@@ -4,7 +4,7 @@ import { ContextMenuContentComponent } from '../../components/context-menu-conte
 
 export interface ContextMenuStackItem<T> {
   overlayRef: OverlayRef;
-  contextMenuComponent: ContextMenuContentComponent<T>;
+  contextMenuContentComponent: ContextMenuContentComponent<T>;
 }
 
 @Injectable({
@@ -83,7 +83,7 @@ export class ContextMenuStackService<T> {
     const newValue = this.disposeLastDetached();
 
     if (newValue) {
-      newValue.contextMenuComponent.isLeaf = true;
+      newValue.contextMenuContentComponent.isLeaf = true;
     }
 
     return false;

@@ -7,10 +7,10 @@ import { ContextMenuEventService } from '../../services/context-menu-event/conte
 })
 export class ContextMenuDirective<T> {
   /**
-   * The item related to the context menu
+   * The value related to the context menu
    */
   @Input()
-  public contextMenuItem?: T;
+  public contextMenuValue?: T;
 
   /**
    * The component holding the menu item directive templates
@@ -24,13 +24,6 @@ export class ContextMenuDirective<T> {
   @Input()
   @HostBinding('attr.tabindex')
   public tabindex = 0;
-
-  /**
-   * Optionally add a class to make it stylable
-   */
-  @Input()
-  @HostBinding('class.ngx-context-menu-focusable')
-  public contextMenuFocusableCSSClass = true;
 
   /**
    * Accessibility
@@ -53,7 +46,7 @@ export class ContextMenuDirective<T> {
         contextMenu: this.contextMenu,
         x: event.clientX,
         y: event.clientY,
-        item: this.contextMenuItem,
+        value: this.contextMenuValue,
       });
       event.preventDefault();
       event.stopPropagation();

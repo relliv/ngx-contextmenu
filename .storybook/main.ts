@@ -19,7 +19,7 @@ const config: StorybookConfig = {
     },
   ],
   framework: '@storybook/angular',
-  staticDirs: ['./public'],
+  staticDirs: ['./public', { from: '../src/stories/assets', to: '/assets' }],
   core: {
     builder: 'webpack5',
   },

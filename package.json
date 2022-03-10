@@ -3,13 +3,16 @@
   "version": "8.0.0",
   "description": "Context menu for Angular",
   "keywords": [
-    "angular2",
-    "contextmenu",
-    "angular2-contextmenu",
-    "ngx-contextmenu",
+    "angular",
     "ngx",
     "ng2",
-    "ng2-contextmenu"
+    "contextmenu",
+    "ngx-contextmenu",
+    "right click",
+    "contextual",
+    "shortcut",
+    "pop-up",
+    "pop-up menu"
   ],
   "contributors": [
     "Isaac Mann <isaacplmann@gmail.com>",

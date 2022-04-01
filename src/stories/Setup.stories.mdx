@@ -37,7 +37,7 @@ You can import it either in the main `styles.scss`, for example `./src/styles.sc
 
 ```css
 @import '@angular/cdk/overlay-prebuilt.css';
-@import '@perfectmemory/ngx-contextmenu/src/assets/stylesheets/base.scss';
+@import './node_modules/@perfectmemory/ngx-contextmenu/src/assets/stylesheets/base.scss';
 ```
 
 Or in the `angular.json`
@@ -49,9 +49,9 @@ Or in the `angular.json`
     "build": {
       "options": {
         "styles": [
+          "@angular/cdk/overlay-prebuilt.css",
+          "./node_modules/@perfectmemory/ngx-contextmenu/src/assets/stylesheets/base.scss",
           "src/styles.scss",
-          "@angular/cdk/overlay-prebuilt.css"
-          "@perfectmemory/ngx-contextmenu/src/assets/stylesheets/base.scss",
         ],
       },
     },

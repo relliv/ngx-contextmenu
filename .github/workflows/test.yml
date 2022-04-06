@@ -17,9 +17,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14'
-      - run: npm install
-      - run: npm run build:lib
-      - run: npm run ci:test
+      - run: yarn
+      - run: yarn run build:lib
+      - run: yarn run ci:test
       - uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -37,6 +37,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14'
-      - run: npm install
-      - run: npm run build:lib
-      - run: npm run ci:test
+      - run: yarn
+      - run: yarn run build:lib
+      - run: yarn run ci:test

@@ -286,10 +286,10 @@ export class ContextMenuContentComponent<T>
         value: this.value,
         parentContextMenu: this,
       });
-    } else if (event.target) {
+    } else if (event.currentTarget) {
       this.openSubMenu.emit({
         anchoredTo: 'element',
-        anchorElement: event.target,
+        anchorElement: event.currentTarget,
         contextMenu: menuItem.subMenu,
         value: this.value,
         parentContextMenu: this,

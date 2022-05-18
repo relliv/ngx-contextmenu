@@ -1067,14 +1067,16 @@ describe('Component: ContextMenuContentComponent', () => {
       });
     });
 
-    it('should emit on openSubMenu anchored to element on mouse event with target', () => {
+    it('should emit on openSubMenu anchored to element on mouse event with currentTarget', () => {
       const event = new MouseEvent('mousedown');
-      const target = document.createElement('div');
-      spyOnProperty(event, 'target', 'get').and.returnValue(target);
+      const currentTarget = document.createElement('div');
+      spyOnProperty(event, 'currentTarget', 'get').and.returnValue(
+        currentTarget
+      );
       component.onOpenSubMenu(directive, event);
       expect(openSubMenu).toHaveBeenCalledWith({
         anchoredTo: 'element',
-        anchorElement: target,
+        anchorElement: currentTarget,
         contextMenu: directive.subMenu,
         value: component.value,
         parentContextMenu: component,

@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [8.0.1] - 2022-05-18
+
 ### Fixed
 
 - Submenu wrongly positioned when parent menu has HTML content [(#3)](https://github.com/PerfectMemory/ngx-contextmenu/issues/3)

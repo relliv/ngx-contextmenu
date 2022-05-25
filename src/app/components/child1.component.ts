@@ -15,10 +15,7 @@ import { Component, OnInit } from '@angular/core';
       </li>
     </ul>
     <context-menu #routingMenu>
-      <ng-template
-        contextMenuItem
-        (execute)="showMessage('Hi, ' + $event.item.name); go($event.item)"
-      >
+      <ng-template contextMenuItem (execute)="showMessage('Hi, ' + $event)">
         Go!
       </ng-template>
     </context-menu>

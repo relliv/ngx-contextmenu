@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- `tabindex` property should be a string to properly work with native `tabindex` attribute
+
 ## [8.0.1] - 2022-05-18
 
 ### Fixed

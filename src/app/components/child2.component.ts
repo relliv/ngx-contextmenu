@@ -15,17 +15,14 @@ import { Router } from '@angular/router';
       </li>
     </ul>
     <context-menu #routingMenu>
-      <ng-template
-        contextMenuItem
-        (execute)="showMessage('Hi, ' + $event.item.name); go($event.item)"
-      >
+      <ng-template contextMenuItem (execute)="showMessage('Hi, ' + $event)">
         Go!
       </ng-template>
     </context-menu>
   `,
 })
 export class ChildTwoComponent {
-  public items: any[] = [
+  public items = [
     {
       name: 'One',
       url: '/one',

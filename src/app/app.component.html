@@ -16,11 +16,12 @@
         <h3>Base Case</h3>
         <ul>
           <li
-            *ngFor="let item of items"
+            *ngFor="let item of items; let i=index"
             [contextMenu]="basicMenu"
             [contextMenuValue]="item"
+            tabindex="10"
           >
-            Right Click ltr: {{ item?.name }}
+            Right Click ltr: {{ item }}
           </li>
         </ul>
         <ul dir="rtl">
@@ -28,8 +29,9 @@
             *ngFor="let item of items"
             [contextMenu]="basicMenuRtl"
             [contextMenuValue]="item"
+            tabindex="5"
           >
-            Right Click rtl: {{ item?.name }}
+            Right Click rtl: {{ item }}
           </li>
         </ul>
         <a href (click)="disableBasicMenu = !disableBasicMenu"
@@ -38,7 +40,7 @@
         <h3>Static</h3>
         <ul>
           <li *ngFor="let item of items" [contextMenu]="static">
-            Right Click: {{ item?.name }}
+            Right Click: {{ item }}
           </li>
         </ul>
         <context-menu
@@ -82,7 +84,7 @@
               [contextMenu]="enableAndVisible"
               [contextMenuValue]="item"
             >
-              Right Click: {{ item?.name }}
+              Right Click: {{ item }}
             </li>
           </ul>
           <context-menu
@@ -94,15 +96,15 @@
               let-item
               [visible]="true"
               [enabled]="false"
-              (execute)="showMessage('Hi, ' + $event.item.name)"
+              (execute)="showMessage('Hi, ' + $event)"
             >
-              Say hi, {{ item?.name }}! With access to the outside context:
+              Say hi, {{ item }}! With access to the outside context:
               {{ outsideValue }}
             </ng-template>
             <ng-template
               contextMenuItem
               [visible]="false"
-              (execute)="showMessage('Hi, ' + $event.item.name)"
+              (execute)="showMessage('Hi, ' + $event)"
             >
               This will never show...
             </ng-template>
@@ -114,11 +116,11 @@
               [enabled]="true"
               (execute)="
                 showMessage(
-                  $event.item.name + ' said: ' + $event.item.otherProperty
+                  $event + ' said: ' + $event
                 )
               "
             >
-              Bye, {{ item?.name }}
+              Bye, {{ item }}
             </ng-template>
             <ng-template contextMenuItem>Filler</ng-template>
             <ng-template contextMenuItem>Filler</ng-template>
@@ -156,21 +158,21 @@
             [contextMenu]="withFunctions"
             [contextMenuValue]="item"
           >
-            Right Click: {{ item?.name }}
+            Right Click: {{ item }}
           </li>
         </ul>
         <context-menu #withFunctions>
           <ng-template
             contextMenuItem
             [enabled]="onlyJohn"
-            (execute)="showMessage('Hi, ' + $event.item.name)"
+            (execute)="showMessage('Hi, ' + $event)"
           >
             Say hi! (enabled for John)
           </ng-template>
           <ng-template
             contextMenuItem
             [visible]="onlyJoe"
-            (execute)="showMessage('Hi, ' + $event.item.name)"
+            (execute)="showMessage('Hi, ' + $event)"
           >
             Say hi! (visible for Joe)
           </ng-template>
@@ -179,11 +181,11 @@
             let-item
             (execute)="
               showMessage(
-                $event.item.name + ' said: ' + $event.item.otherProperty
+                $event + ' said: ' + $event
               )
             "
           >
-            Bye, {{ item?.name }}
+            Bye, {{ item }}
           </ng-template>
         </context-menu>
         <br />
@@ -217,56 +219,56 @@
     <context-menu #sayHiSubMenu>
       <ng-template
         contextMenuItem
-        (execute)="showMessage('Hi, ' + $event.item.name)"
+        (execute)="showMessage('Hi, ' + $event)"
       >
         ...hi!
       </ng-template>
       <ng-template
         contextMenuItem
-        (execute)="showMessage('Hola, ' + $event.item.name)"
+        (execute)="showMessage('Hola, ' + $event)"
       >
         ...hola!
       </ng-template>
       <ng-template
         contextMenuItem
-        (execute)="showMessage('Salut, ' + $event.item.name)"
+        (execute)="showMessage('Salut, ' + $event)"
       >
         ...salut!
       </ng-template>
     </context-menu>
     <ng-template
       contextMenuItem
-      (execute)="showMessage('Hola, ' + $event.item.name)"
+      (execute)="showMessage('Hola, ' + $event)"
     >
       ...hola!
     </ng-template>
     <ng-template
       contextMenuItem
-      (execute)="showMessage('Salut, ' + $event.item.name)"
+      (execute)="showMessage('Salut, ' + $event)"
     >
       ...salut!
     </ng-template>
   </context-menu>
   <ng-template contextMenuItem let-item [subMenu]="byeSubMenu">
-    Bye, {{ item?.name }}
+    Bye, {{ item }}
   </ng-template>
   <ng-template contextMenuItem let-item [divider]="true"></ng-template>
   <context-menu #byeSubMenu>
     <ng-template
       contextMenuItem
-      (execute)="showMessage('Bye, ' + $event.item.name)"
+      (execute)="showMessage('Bye, ' + $event)"
     >
       ...bye!
     </ng-template>
     <ng-template
       contextMenuItem
-      (execute)="showMessage('Ciao, ' + $event.item.name)"
+      (execute)="showMessage('Ciao, ' + $event)"
     >
       ...ciao!
     </ng-template>
     <ng-template
       contextMenuItem
-      (execute)="showMessage('Au revoir, ' + $event.item.name)"
+      (execute)="showMessage('Au revoir, ' + $event)"
     >
       ...au revoir!
     </ng-template>
@@ -299,56 +301,56 @@
     <context-menu #sayHiSubMenu>
       <ng-template
         contextMenuItem
-        (execute)="showMessage('Hi, ' + $event.item.name)"
+        (execute)="showMessage('Hi, ' + $event)"
       >
         ...hi!
       </ng-template>
       <ng-template
         contextMenuItem
-        (execute)="showMessage('Hola, ' + $event.item.name)"
+        (execute)="showMessage('Hola, ' + $event)"
       >
         ...hola!
       </ng-template>
       <ng-template
         contextMenuItem
-        (execute)="showMessage('Salut, ' + $event.item.name)"
+        (execute)="showMessage('Salut, ' + $event)"
       >
         ...salut!
       </ng-template>
     </context-menu>
     <ng-template
       contextMenuItem
-      (execute)="showMessage('Hola, ' + $event.item.name)"
+      (execute)="showMessage('Hola, ' + $event)"
     >
       ...hola!
     </ng-template>
     <ng-template
       contextMenuItem
-      (execute)="showMessage('Salut, ' + $event.item.name)"
+      (execute)="showMessage('Salut, ' + $event)"
     >
       ...salut!
     </ng-template>
   </context-menu>
   <ng-template contextMenuItem let-item [subMenu]="byeSubMenu">
-    Bye, {{ item?.name }}
+    Bye, {{ item }}
   </ng-template>
   <ng-template contextMenuItem let-item [divider]="true"></ng-template>
   <context-menu #byeSubMenu>
     <ng-template
       contextMenuItem
-      (execute)="showMessage('Bye, ' + $event.item.name)"
+      (execute)="showMessage('Bye, ' + $event)"
     >
       ...bye!
     </ng-template>
     <ng-template
       contextMenuItem
-      (execute)="showMessage('Ciao, ' + $event.item.name)"
+      (execute)="showMessage('Ciao, ' + $event)"
     >
       ...ciao!
     </ng-template>
     <ng-template
       contextMenuItem
-      (execute)="showMessage('Au revoir, ' + $event.item.name)"
+      (execute)="showMessage('Au revoir, ' + $event)"
     >
       ...au revoir!
     </ng-template>
@@ -400,7 +402,7 @@
     <context-menu #componentMenu>
       <ng-template
         contextMenuItem
-        (execute)="showMessage('Hi, ' + $event.item.name)"
+        (execute)="showMessage('Hi, ' + $event)"
       >
         Say hi!
       </ng-template>
@@ -409,7 +411,7 @@
         let-item
         (execute)="showMessage($event.event)"
       >
-        Bye, {{ item?.name }}
+        Bye, {{ item }}
       </ng-template>
     </context-menu>
   </div>
@@ -429,7 +431,7 @@
         [visible]="action.visible"
         [enabled]="action.enabled"
         [divider]="action.divider"
-        (execute)="action.execute($event.item)"
+        (execute)="action.execute($event)"
       >
         {{ action.html(item) }}
       </ng-template>

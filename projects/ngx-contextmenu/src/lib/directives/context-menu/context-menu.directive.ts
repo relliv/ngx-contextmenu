@@ -23,7 +23,7 @@ export class ContextMenuDirective<T> {
    */
   @Input()
   @HostBinding('attr.tabindex')
-  public tabindex = 0;
+  public tabindex: string | number = '0';
 
   /**
    * Accessibility

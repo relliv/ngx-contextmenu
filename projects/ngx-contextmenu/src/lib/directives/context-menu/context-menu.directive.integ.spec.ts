@@ -35,7 +35,7 @@ describe('Integ: ContextMenuDirective', () => {
     it('should open context menu', () => {
       host = createHost(
         `
-        <div [contextMenu]="static" [contextMenuValue]="item">Right click</div>
+        <div [contextMenu]="static" tabindex="1" [contextMenuValue]="item">Right click</div>
         <context-menu #static>
           <ng-template contextMenuItem [visible]="true" [disabled]="true">A</ng-template>
           <ng-template contextMenuItem [visible]="false"                 >B</ng-template>

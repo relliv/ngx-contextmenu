@@ -13,7 +13,6 @@ import {
   OnInit,
   Output,
   QueryList,
-  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { Subscription } from 'rxjs';

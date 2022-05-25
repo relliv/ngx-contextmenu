@@ -249,17 +249,11 @@ export class ContextMenuComponent<T> implements OnDestroy {
   }
 
   private closeAllContextMenus(closeEvent: ContextMenuCloseEvent): void {
-    // this.close.next(closeEvent);
     this.contextMenuStack.closeAll();
   }
 
   private destroyLeafMenu(excludeRootMenu: boolean): void {
-    const hasDestroyedRoot =
-      this.contextMenuStack.closeLeafMenu(excludeRootMenu);
-
-    /*     if (hasDestroyedRoot) {
-      this.close.next({ eventType: 'cancel' });
-    } */
+    this.contextMenuStack.closeLeafMenu(excludeRootMenu);
   }
 
   private isMenuItemVisible(menuItem: ContextMenuItemDirective<T>): boolean {

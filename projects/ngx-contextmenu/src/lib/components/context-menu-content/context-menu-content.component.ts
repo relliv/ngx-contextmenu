@@ -125,7 +125,8 @@ export class ContextMenuContentComponent<T>
   private keyManager!: ActiveDescendantKeyManager<ContextMenuItemDirective<T>>;
   private subscription: Subscription = new Subscription();
 
-  constructor(private elementRef: ElementRef<HTMLElement>) {}
+  // TODO: should be private but issue in spec with NullInjectorError: No provider for ElementRef!
+  constructor(public _elementRef: ElementRef<HTMLElement>) {}
 
   /**
    * @internal
@@ -234,7 +235,7 @@ export class ContextMenuContentComponent<T>
       return;
     }
 
-    if (this.elementRef.nativeElement.contains(event.target as Node)) {
+    if (this._elementRef.nativeElement.contains(event.target as Node)) {
       return;
     }
 

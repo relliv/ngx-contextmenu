@@ -1,5 +1,6 @@
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { CommonModule } from '@angular/common';
 import {
   ElementRef,
   EventEmitter,
@@ -817,10 +818,13 @@ describe('Component: ContextMenuContentComponent', () => {
       mouseEvent = new MouseEvent('click');
       const target = document.createElement('div');
       spyOnProperty(mouseEvent, 'target', 'get').and.returnValue(target);
-      const elementRef = fixture.debugElement.injector.get(ElementRef);
-      spyOn(elementRef.nativeElement, 'contains').and.returnValue(true);
+      spyOn(component._elementRef.nativeElement, 'contains').and.returnValue(
+        true
+      );
       component.onClickOrRightClick(mouseEvent);
-      expect(elementRef.nativeElement.contains).toHaveBeenCalledWith(target);
+      expect(component._elementRef.nativeElement.contains).toHaveBeenCalledWith(
+        target
+      );
       expect(subscriber).not.toHaveBeenCalled();
     });
   });

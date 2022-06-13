@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [14.0.0] - 2022-06-13
+
 ### BREAKING CHANGES
 
 - **Dependency**: Require Angular 14

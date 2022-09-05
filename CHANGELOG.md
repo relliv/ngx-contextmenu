@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [8.1.0] - 2022-09-05
+
 ### Added
 
 - `ContextMenuDirective` is now exported as `ngxContextMenu` [(#10)](https://github.com/PerfectMemory/ngx-contextmenu/issues/10)

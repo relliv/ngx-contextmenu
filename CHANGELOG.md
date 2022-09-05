@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [14.1.0] - 2022-09-05
+
 ### Added
 
 - Forward port changes from 8.1.0

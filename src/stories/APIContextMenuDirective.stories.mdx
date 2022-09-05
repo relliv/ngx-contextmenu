@@ -12,3 +12,9 @@ A `contextMenu` directive to apply to any HTML element where a right click shoul
 | `[contextMenuValue]` | `T` (Generic)                 | The value related to the context menu                   |
 | `[tabindex]`         | `number` <br />(default: `0`) | The default tabindex for the directive to be accessible |
 
+| `Output()` | Parameters                      | Description                                                                                                                        |
+| :--------- | :------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------- |
+| `open()`   | `event?: MouseEvent` (optional) | Programmatically opens the context menu. If a MousEvent is passed, it will be used to position the menu next to the mouse position |
+| `close()`  |                                 | Programmatically closes the context menu                                                                                           |
+
+> NB: `open` and `close` methods are for advanced use cases and are not necessary for usual right click

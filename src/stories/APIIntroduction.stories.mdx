@@ -87,6 +87,25 @@ export class Component {
 </context-menu>
 ```
 
+## Programmatically open and close a context menu
+
+By default the context menu opens when an `contextmenu` event is triggered with a right mouse click or when the context menu keyboard key is pressed. The menu closes when clicking outside or when selecting a menu item.
+
+However, in some cases you may want to open or close programmatically. You can access `open` and `close` methods of the `[contextMenu]` directive. Below is an example where the menu is opened when left clicking or when `shift + Y` is pressed while being focused on the menu. When `shift + Z` is pressed anywhere on the page the menu closes.
+
+```html
+<span
+  #ngxContextMenu="ngxContextMenu"
+  [contextMenu]="oneContextMenu"
+  [contextMenuValue]="value"
+  tabindex="10"
+  (click)="ngxContextMenu.open($event)"
+  (keydown.shift.Y)="ngxContextMenu.open()"
+  (window:keydown.shift.Z)="ngxContextMenu.close()"
+  >You can right click on this text</span
+>
+```
+
 ## Generic
 
 > A `contextMenuItem` can be passed to a `[contextMenu]` directive via the `[contextMenuValue]` input and then will be emitted by [contextMenuItem] via the `(execute)` output when clicked.

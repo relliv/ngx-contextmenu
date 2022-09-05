@@ -60,14 +60,23 @@ export interface ContextMenuCloseLeafEvent {
   event?: MouseEvent | KeyboardEvent;
 }
 
+/**
+ * @deprecated Not used any more
+ */
 export interface ContextMenuCancelEvent {
   eventType: 'cancel';
 }
+/**
+ * @deprecated Not used any more
+ */
 export interface ContextMenuExecuteEvent<T extends Object = any> {
   eventType: 'execute';
   item?: T;
   menuDirective: ContextMenuItemDirective<T>;
 }
+/**
+ * @deprecated Not used any more
+ */
 export type ContextMenuCloseEvent<T extends Object = any> =
   | ContextMenuExecuteEvent<T>
   | ContextMenuCancelEvent;

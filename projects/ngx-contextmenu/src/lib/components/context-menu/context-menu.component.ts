@@ -27,7 +27,6 @@ import {
   getPositionsToXY,
 } from './context-menu.component.helpers';
 import {
-  ContextMenuCloseEvent,
   ContextMenuOpenEvent,
   IContextMenuContext,
 } from './context-menu.component.interface';
@@ -126,7 +125,7 @@ export class ContextMenuComponent<T> implements OnDestroy {
           y: context.y,
         })
         .withPositions(getPositionsToXY(context.dir));
-      this.closeAllContextMenus({ eventType: 'cancel' });
+      this.closeAllContextMenus();
     } else {
       const { anchorElement, parentContextMenu } = context;
       positionStrategy = this.overlay
@@ -187,7 +186,6 @@ export class ContextMenuComponent<T> implements OnDestroy {
     contextMenuContentComponent.isLeaf = true;
     contextMenuContentComponent.menuClass = this.getMenuClass(context);
     contextMenuContentComponent.dir = this.getDir(context);
-    contextMenuContentRef.changeDetectorRef.detectChanges;
 
     this.contextMenuStack.push({
       overlayRef,
@@ -196,13 +194,13 @@ export class ContextMenuComponent<T> implements OnDestroy {
 
     const subscriptions: Subscription = new Subscription();
     subscriptions.add(
-      contextMenuContentComponent.execute.subscribe((executeEvent) =>
-        this.closeAllContextMenus({ eventType: 'execute', ...executeEvent })
+      contextMenuContentComponent.execute.subscribe(() =>
+        this.closeAllContextMenus()
       )
     );
     subscriptions.add(
-      contextMenuContentComponent.closeAllMenus.subscribe((closeAllEvent) =>
-        this.closeAllContextMenus({ eventType: 'cancel', ...closeAllEvent })
+      contextMenuContentComponent.closeAllMenus.subscribe(() =>
+        this.closeAllContextMenus()
       )
     );
     subscriptions.add(
@@ -248,7 +246,7 @@ export class ContextMenuComponent<T> implements OnDestroy {
     );
   }
 
-  private closeAllContextMenus(closeEvent: ContextMenuCloseEvent): void {
+  private closeAllContextMenus(): void {
     this.contextMenuStack.closeAll();
   }
 

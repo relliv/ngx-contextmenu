@@ -17,9 +17,13 @@
         <ul>
           <li
             *ngFor="let item of items; let i=index"
+            #ngxContextMenu="ngxContextMenu"
             [contextMenu]="basicMenu"
             [contextMenuValue]="item"
             tabindex="10"
+            (click)="log({$event, ngxContextMenu}); ngxContextMenu.open($event)"
+            (keydown.shift.Y)="ngxContextMenu.open()"
+            (window:keydown.shift.Z)="ngxContextMenu.close()"
           >
             Right Click ltr: {{ item }}
           </li>
@@ -29,7 +33,11 @@
             *ngFor="let item of items"
             [contextMenu]="basicMenuRtl"
             [contextMenuValue]="item"
-            tabindex="5"
+            tabindex="11"
+            #ngxContextMenu2="ngxContextMenu"
+            (click)="log({$event, ngxContextMenu2}); ngxContextMenu2.open($event)"
+            (keydown.shift.Y)="ngxContextMenu2.open()"
+            (window:keydown.shift.Z)="ngxContextMenu2.close()"
           >
             Right Click rtl: {{ item }}
           </li>
@@ -51,7 +59,7 @@
           <ng-template
             contextMenuItem
             [visible]="true"
-            [enabled]="false"
+            [disabled]="true"
             (execute)="showMessage('Hi, someone')"
           >
             Say hi
@@ -67,7 +75,7 @@
           <ng-template
             contextMenuItem
             [visible]="true"
-            [enabled]="true"
+            [disabled]="false"
             (execute)="showMessage('Someone said: something')"
           >
             Bye, someone
@@ -95,7 +103,7 @@
               contextMenuItem
               let-item
               [visible]="true"
-              [enabled]="false"
+              [disabled]="true"
               (execute)="showMessage('Hi, ' + $event)"
             >
               Say hi, {{ item }}! With access to the outside context:
@@ -113,7 +121,7 @@
               contextMenuItem
               let-item
               [visible]="true"
-              [enabled]="true"
+              [disabled]="false"
               (execute)="
                 showMessage(
                   $event + ' said: ' + $event
@@ -164,7 +172,7 @@
         <context-menu #withFunctions>
           <ng-template
             contextMenuItem
-            [enabled]="onlyJohn"
+            [disabled]="!onlyJohn"
             (execute)="showMessage('Hi, ' + $event)"
           >
             Say hi! (enabled for John)
@@ -275,7 +283,7 @@
   </context-menu>
   <ng-template
     contextMenuItem
-    [enabled]="false"
+    [disabled]="true"
     (execute)="showMessage('Simple')"
   >
     I am disabled
@@ -357,7 +365,7 @@
   </context-menu>
   <ng-template
     contextMenuItem
-    [enabled]="false"
+    [disabled]="true"
     (execute)="showMessage('Simple')"
   >
     I am disabled
@@ -429,7 +437,7 @@
         contextMenuItem
         let-item
         [visible]="action.visible"
-        [enabled]="action.enabled"
+        [disabled]="action.enabled"
         [divider]="action.divider"
         (execute)="action.execute($event)"
       >

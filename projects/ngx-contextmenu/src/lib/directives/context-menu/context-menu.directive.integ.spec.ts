@@ -175,4 +175,107 @@ describe('Integ: ContextMenuDirective', () => {
       });
     });
   });
+
+  describe('programmatically open and close menu', () => {
+    it('should open the menu when clicking and close when typing z', () => {
+      host = createHost(
+        `
+        <div
+          #ngxContextMenu="ngxContextMenu"
+          [contextMenu]="static"
+          [contextMenuValue]="item"
+          (click)="ngxContextMenu.open($event)"
+          (window:keydown.y)="ngxContextMenu.open()"
+          (window:keydown.z)="ngxContextMenu.close()">Right click</div>
+        <context-menu #static>
+          <ng-template contextMenuItem [visible]="true"                    >A</ng-template>
+          <ng-template contextMenuItem [visible]="true"                    >B</ng-template>
+          <ng-template contextMenuItem [divider]="true"                    >C</ng-template>
+          <ng-template contextMenuItem [visible]="true" [subMenu]="subMenu">D</ng-template>
+          <context-menu #subMenu>
+            <ng-template contextMenuItem [visible]="true">DD</ng-template>
+          </context-menu>
+        </context-menu>
+    `,
+        { hostProps: { item: { id: 'item-id' } } }
+      );
+      host.dispatchMouseEvent(host.debugElement, 'click');
+      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
+        key: 'ArrowDown',
+        keyCode: 40,
+      });
+      expect(
+        host.query(
+          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(1)',
+          {
+            root: true,
+          }
+        )
+      ).toHaveClass('active');
+      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
+        key: 'z',
+        keyCode: 90,
+      });
+      expect(
+        host.query(
+          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(1)',
+          {
+            root: true,
+          }
+        )
+      ).not.toHaveClass('active');
+    });
+
+    it('should open the menu when typing y and close when typing z', () => {
+      host = createHost(
+        `
+        <div
+          #ngxContextMenu="ngxContextMenu"
+          [contextMenu]="static"
+          [contextMenuValue]="item"
+          (click)="ngxContextMenu.open($event)"
+          (window:keydown.y)="ngxContextMenu.open()"
+          (window:keydown.z)="ngxContextMenu.close()">Right click</div>
+        <context-menu #static>
+          <ng-template contextMenuItem [visible]="true"                    >A</ng-template>
+          <ng-template contextMenuItem [visible]="true"                    >B</ng-template>
+          <ng-template contextMenuItem [divider]="true"                    >C</ng-template>
+          <ng-template contextMenuItem [visible]="true" [subMenu]="subMenu">D</ng-template>
+          <context-menu #subMenu>
+            <ng-template contextMenuItem [visible]="true">DD</ng-template>
+          </context-menu>
+        </context-menu>
+    `,
+        { hostProps: { item: { id: 'item-id' } } }
+      );
+      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
+        key: 'y',
+        keyCode: 90,
+      });
+      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
+        key: 'ArrowDown',
+        keyCode: 40,
+      });
+      expect(
+        host.query(
+          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(1)',
+          {
+            root: true,
+          }
+        )
+      ).toHaveClass('active');
+      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
+        key: 'z',
+        keyCode: 90,
+      });
+      expect(
+        host.query(
+          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(1)',
+          {
+            root: true,
+          }
+        )
+      ).not.toHaveClass('active');
+    });
+  });
 });

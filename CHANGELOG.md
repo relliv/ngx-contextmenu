@@ -8,6 +8,14 @@
 
 - **Dependency**: Require Angular 14
 
+## [8.1.0] - 2022-09-05
+
+### Added
+
+- `ContextMenuDirective` is now exported as `ngxContextMenu` [(#10)](https://github.com/PerfectMemory/ngx-contextmenu/issues/10)
+- Add `open` and `close` methods to the `ContextMenuDirective` [(#10)](https://github.com/PerfectMemory/ngx-contextmenu/issues/10)
+- Deprecated `ContextMenuCancelEvent`, `ContextMenuExecuteEvent` and `ContextMenuCloseEvent`
+
 ## [8.0.2] - 2022-05-25
 
 ### Fixed

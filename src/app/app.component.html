@@ -16,7 +16,7 @@
         <h3>Base Case</h3>
         <ul>
           <li
-            *ngFor="let item of items; let i=index"
+            *ngFor="let item of items; let i = index"
             #ngxContextMenu="ngxContextMenu"
             [contextMenu]="basicMenu"
             [contextMenuValue]="item"
@@ -122,11 +122,7 @@
               let-item
               [visible]="true"
               [disabled]="false"
-              (execute)="
-                showMessage(
-                  $event + ' said: ' + $event
-                )
-              "
+              (execute)="showMessage($event + ' said: ' + $event)"
             >
               Bye, {{ item }}
             </ng-template>
@@ -187,11 +183,7 @@
           <ng-template
             contextMenuItem
             let-item
-            (execute)="
-              showMessage(
-                $event + ' said: ' + $event
-              )
-            "
+            (execute)="showMessage($event + ' said: ' + $event)"
           >
             Bye, {{ item }}
           </ng-template>
@@ -221,57 +213,38 @@
   [disabled]="disableBasicMenu"
   style="pointer-events: all"
 >
-  <ng-template contextMenuItem [subMenu]="saySubMenu"> Say... </ng-template>
+  <ng-template contextMenuItem [subMenu]="saySubMenu" let-value>
+    Say... {{ value.name  }}</ng-template
+  >
   <context-menu #saySubMenu>
     <ng-template contextMenuItem [subMenu]="sayHiSubMenu"> ...hi! </ng-template>
     <context-menu #sayHiSubMenu>
-      <ng-template
-        contextMenuItem
-        (execute)="showMessage('Hi, ' + $event)"
-      >
+      <ng-template contextMenuItem (execute)="showMessage('Hi, ' + $event)">
         ...hi!
       </ng-template>
-      <ng-template
-        contextMenuItem
-        (execute)="showMessage('Hola, ' + $event)"
-      >
+      <ng-template contextMenuItem (execute)="showMessage('Hola, ' + $event)">
         ...hola!
       </ng-template>
-      <ng-template
-        contextMenuItem
-        (execute)="showMessage('Salut, ' + $event)"
-      >
+      <ng-template contextMenuItem (execute)="showMessage('Salut, ' + $event)">
         ...salut!
       </ng-template>
     </context-menu>
-    <ng-template
-      contextMenuItem
-      (execute)="showMessage('Hola, ' + $event)"
-    >
+    <ng-template contextMenuItem (execute)="showMessage('Hola, ' + $event)">
       ...hola!
     </ng-template>
-    <ng-template
-      contextMenuItem
-      (execute)="showMessage('Salut, ' + $event)"
-    >
+    <ng-template contextMenuItem (execute)="showMessage('Salut, ' + $event)">
       ...salut!
     </ng-template>
   </context-menu>
-  <ng-template contextMenuItem let-item [subMenu]="byeSubMenu">
-    Bye, {{ item }}
+  <ng-template contextMenuItem let-item [subMenu]="byeSubMenu" let-value>
+    Bye, {{ value.name }}
   </ng-template>
   <ng-template contextMenuItem let-item [divider]="true"></ng-template>
   <context-menu #byeSubMenu>
-    <ng-template
-      contextMenuItem
-      (execute)="showMessage('Bye, ' + $event)"
-    >
+    <ng-template contextMenuItem (execute)="showMessage('Bye, ' + $event)">
       ...bye!
     </ng-template>
-    <ng-template
-      contextMenuItem
-      (execute)="showMessage('Ciao, ' + $event)"
-    >
+    <ng-template contextMenuItem (execute)="showMessage('Ciao, ' + $event)">
       ...ciao!
     </ng-template>
     <ng-template
@@ -307,35 +280,20 @@
   <context-menu #saySubMenu>
     <ng-template contextMenuItem [subMenu]="sayHiSubMenu"> ...hi! </ng-template>
     <context-menu #sayHiSubMenu>
-      <ng-template
-        contextMenuItem
-        (execute)="showMessage('Hi, ' + $event)"
-      >
+      <ng-template contextMenuItem (execute)="showMessage('Hi, ' + $event)">
         ...hi!
       </ng-template>
-      <ng-template
-        contextMenuItem
-        (execute)="showMessage('Hola, ' + $event)"
-      >
+      <ng-template contextMenuItem (execute)="showMessage('Hola, ' + $event)">
         ...hola!
       </ng-template>
-      <ng-template
-        contextMenuItem
-        (execute)="showMessage('Salut, ' + $event)"
-      >
+      <ng-template contextMenuItem (execute)="showMessage('Salut, ' + $event)">
         ...salut!
       </ng-template>
     </context-menu>
-    <ng-template
-      contextMenuItem
-      (execute)="showMessage('Hola, ' + $event)"
-    >
+    <ng-template contextMenuItem (execute)="showMessage('Hola, ' + $event)">
       ...hola!
     </ng-template>
-    <ng-template
-      contextMenuItem
-      (execute)="showMessage('Salut, ' + $event)"
-    >
+    <ng-template contextMenuItem (execute)="showMessage('Salut, ' + $event)">
       ...salut!
     </ng-template>
   </context-menu>
@@ -344,16 +302,10 @@
   </ng-template>
   <ng-template contextMenuItem let-item [divider]="true"></ng-template>
   <context-menu #byeSubMenu>
-    <ng-template
-      contextMenuItem
-      (execute)="showMessage('Bye, ' + $event)"
-    >
+    <ng-template contextMenuItem (execute)="showMessage('Bye, ' + $event)">
       ...bye!
     </ng-template>
-    <ng-template
-      contextMenuItem
-      (execute)="showMessage('Ciao, ' + $event)"
-    >
+    <ng-template contextMenuItem (execute)="showMessage('Ciao, ' + $event)">
       ...ciao!
     </ng-template>
     <ng-template
@@ -408,10 +360,7 @@
       {{ item.name }}
     </div>
     <context-menu #componentMenu>
-      <ng-template
-        contextMenuItem
-        (execute)="showMessage('Hi, ' + $event)"
-      >
+      <ng-template contextMenuItem (execute)="showMessage('Hi, ' + $event)">
         Say hi!
       </ng-template>
       <ng-template

@@ -6,6 +6,10 @@
 
 - Forward port changes from 8.1.0
 
+### Documentation
+
+- Add `let-value` example in the documentation related to the `contextMenuItem` directive [(#11)](https://github.com/PerfectMemory/ngx-contextmenu/issues/11)
+
 ## [14.0.0] - 2022-06-13
 
 ### BREAKING CHANGES

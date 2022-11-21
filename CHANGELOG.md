@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### BREAKING CHANGES
+
+- **Dependency**: Require Angular 15
+
 ## [14.1.0] - 2022-09-05
 
 ### Added

@@ -24,7 +24,7 @@
     "url": "git+ssh://git@github.com:PerfectMemory/ngx-contextmenu.git"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=14.20"
   },
   "scripts": {
     "ng": "ng",

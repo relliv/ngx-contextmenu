@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [15.0.0] - 2022-11-21
+
 ### BREAKING CHANGES
 
 - **Dependency**: Require Angular 15

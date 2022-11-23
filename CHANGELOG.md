@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [15.0.1] - 2022-11-23
+
 ### Fixed
 
 - Update Angular CDK dependency to ^15.0.0

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix dependencies in `/projects/ngx-contextmenu/package.json`
+
 ## [15.0.1] - 2022-11-23
 
 ### Fixed

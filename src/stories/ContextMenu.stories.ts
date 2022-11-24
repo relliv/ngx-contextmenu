@@ -66,8 +66,10 @@ export default {
       },
     },
     demoMode: {
+      name: 'Mode',
+      description: 'Display context menu with form elements',
       table: {
-        disable: true,
+        disable: false,
       },
     },
   },
@@ -80,8 +82,8 @@ const Template: Story<NgxContextMenuComponent> = (
   props: args,
 });
 
-export const Simple = Template.bind({});
-export const Form = Template.bind({});
-Form.args = {
+/* export const Simple = Template.bind({}); */
+export const Demo = Template.bind({});
+/* Form.args = {
   demoMode: 'form',
-};
+}; */

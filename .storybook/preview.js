@@ -18,7 +18,6 @@ export const parameters = {
           'Introduction',
           'Installation and setup',
           'Demo',
-          ['Simple', 'Form'],
           'Documentation',
           [
             'In a nutshell',

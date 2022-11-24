@@ -109,6 +109,12 @@ export class ContextMenuContentComponent<T>
   public closeLeafMenu: EventEmitter<ContextMenuCloseLeafEvent> = new EventEmitter();
 
   /**
+   * Emit when sub menus are closed
+   */
+  @Output()
+  public closeSubMenus: EventEmitter<void> = new EventEmitter();
+
+  /**
    * Emit when all menus is closed
    */
   @Output()
@@ -270,6 +276,10 @@ export class ContextMenuContentComponent<T>
     menuItem: ContextMenuItemDirective<T>,
     event: MouseEvent | KeyboardEvent
   ): void {
+    if (!menuItem.subMenu) {
+      this.closeSubMenus.next();
+    }
+
     if (this.keyManager.activeItemIndex === null || !menuItem.subMenu) {
       return;
     }

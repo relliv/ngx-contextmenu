@@ -45,6 +45,7 @@ describe('Component: ContextMenuComponent', () => {
         closeAllMenus: new Subject(),
         closeLeafMenu: new Subject(),
         openSubMenu: new Subject(),
+        closeSubMenus: new Subject(),
       },
       onDestroy: jasmine.createSpy('onDestroy'),
       changeDetectorRef: {
@@ -858,6 +859,24 @@ describe('Component: ContextMenuComponent', () => {
         expect(close).not.toHaveBeenCalled();
         expect(contextMenuStackService.closeLeafMenu).toHaveBeenCalledWith(
           false
+        );
+      });
+
+      it('should close sub menus when instance closeSubMenus', () => {
+        component.openContextMenu(context);
+        const event = {
+          event: new MouseEvent('click'),
+          excludeRootMenu: false,
+        };
+        const close = jasmine.createSpy('subscriber');
+        component.close.subscribe(close);
+        (
+          contextMenuStackService.destroySubMenus as jasmine.Spy
+        ).and.returnValue(false);
+        contextMenuContentRef.instance.closeSubMenus.next();
+        expect(close).not.toHaveBeenCalled();
+        expect(contextMenuStackService.destroySubMenus).toHaveBeenCalledWith(
+          contextMenuContentRef.instance
         );
       });
 

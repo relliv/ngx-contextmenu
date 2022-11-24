@@ -1,6 +1,5 @@
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
 import {
   ElementRef,
   EventEmitter,
@@ -1031,6 +1030,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
   describe('#onOpenSubMenu', () => {
     let openSubMenu: jasmine.Spy<jasmine.Func>;
+    let closeSubMenus: jasmine.Spy<jasmine.Func>;
     let directive: ContextMenuItemDirective<unknown>;
     let nativeElement: HTMLElement;
 
@@ -1052,6 +1052,8 @@ describe('Component: ContextMenuContentComponent', () => {
       component.value = { id: 'a' };
       openSubMenu = jasmine.createSpy('openSubMenu');
       component.openSubMenu.subscribe(openSubMenu);
+      closeSubMenus = jasmine.createSpy('closeSubMenus');
+      component.closeSubMenus.subscribe(closeSubMenus);
     });
 
     it('should not emit on openSubMenu if keyManager as no active element', () => {
@@ -1097,6 +1099,19 @@ describe('Component: ContextMenuContentComponent', () => {
         contextMenu: directive.subMenu,
         value: component.value,
       });
+    });
+
+    it('should not emit on closeSubMenus if menu item has subMenu', () => {
+      (keyManager.activeItemIndex as any) = null;
+      component.onOpenSubMenu(directive, new KeyboardEvent('keydown'));
+      expect(closeSubMenus).not.toHaveBeenCalled();
+    });
+
+    it('should emit on closeSubMenus if menu item has not subMenu', () => {
+      (keyManager.activeItemIndex as any) = null;
+      delete directive.subMenu;
+      component.onOpenSubMenu(directive, new KeyboardEvent('keydown'));
+      expect(closeSubMenus).toHaveBeenCalled();
     });
   });
 

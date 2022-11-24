@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Opened sub menus close when hovering other menu, even without submenu themselves
+
 ## [14.1.0] - 2022-09-05
 
 ### Added

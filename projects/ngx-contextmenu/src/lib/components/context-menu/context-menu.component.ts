@@ -222,6 +222,11 @@ export class ContextMenuComponent<T> implements OnDestroy {
         }
       )
     );
+    subscriptions.add(
+      contextMenuContentComponent.closeSubMenus.subscribe(() => {
+        this.contextMenuStack.destroySubMenus(contextMenuContentComponent);
+      })
+    );
     contextMenuContentRef.onDestroy(() => {
       this.close.next();
       menuItemDirectives.forEach((menuItem) => (menuItem.isActive = false));

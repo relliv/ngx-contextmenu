@@ -23,6 +23,9 @@ const config: StorybookConfig = {
   core: {
     builder: 'webpack5',
   },
+  features: {
+    modernInlineRender: true,
+  },
 };
 
 module.exports = config;

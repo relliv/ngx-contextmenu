@@ -1,5 +1,15 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ContextMenuOpenEvent } from '@perfectmemory/ngx-contextmenu';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import {
+  ContextMenuComponent,
+  ContextMenuDirective,
+  ContextMenuOpenEvent,
+} from '@perfectmemory/ngx-contextmenu';
 
 @Component({
   selector: 'storybook-ngx-contextmenu',
@@ -22,6 +32,9 @@ export default class NgxContextMenuComponent {
   @Input()
   public demoMode: 'simple' | 'form' = 'simple';
 
+  @Input()
+  public programmaticOpen = false;
+
   @Output()
   public onOpen = new EventEmitter<ContextMenuOpenEvent<unknown>>();
 
@@ -30,6 +43,12 @@ export default class NgxContextMenuComponent {
 
   @Output()
   public onMenuItemExecuted = new EventEmitter<string>();
+
+  /**
+   * @internal
+   */
+  @ViewChild(ContextMenuDirective)
+  public contextMenuDirective?: ContextMenuDirective<void>;
 
   /**
    * @internal

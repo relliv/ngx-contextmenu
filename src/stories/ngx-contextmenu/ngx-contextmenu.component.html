@@ -1,6 +1,7 @@
 <span
   *ngIf="!disabled; else disabledTemplate"
   class="ngx-context-menu-focusable"
+  #ngxContextMenu="ngxContextMenu"
   [contextMenu]="contextMenu"
   [contextMenuValue]="item"
 >
@@ -108,3 +109,10 @@
     >Paste unformatted</ng-template
   >
 </context-menu>
+<br>
+<br>
+<br>
+<br>
+<button class="button" *ngIf="programmaticOpen" (click)="contextMenuDirective?.open($event)">
+  Click here to show the context menu normally attached to the text above
+</button>

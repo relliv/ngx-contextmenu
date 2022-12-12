@@ -72,6 +72,13 @@ export default {
         disable: false,
       },
     },
+    programmaticOpen: {
+      name: 'Programmatically open',
+      description: 'Programmatically open the contextmenu from a button',
+      table: {
+        disable: false,
+      },
+    },
   },
 } as Meta;
 

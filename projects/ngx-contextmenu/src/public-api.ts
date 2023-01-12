@@ -20,4 +20,3 @@ export { ContextMenuDirective } from './lib/directives/context-menu/context-menu
  * Services
  */
 export { ContextMenuService } from './lib/services/context-menu/context-menu.service';
-export { ContextMenuStackService } from './lib/services/context-menu/context-menu-stack.service';

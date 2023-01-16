@@ -93,6 +93,8 @@ export class Component {
 
 By default the context menu opens when an `contextmenu` event is triggered with a right mouse click or when the context menu keyboard key is pressed. The menu closes when clicking outside or when selecting a menu item.
 
+### By reusing directive
+
 However, in some cases you may want to open or close programmatically. You can access `open` and `close` methods of the `[contextMenu]` directive. Below is an example where the menu is opened when left clicking or when `shift + Y` is pressed while being focused on the menu. When `shift + Z` is pressed anywhere on the page the menu closes.
 
 ```html
@@ -107,6 +109,10 @@ However, in some cases you may want to open or close programmatically. You can a
   >You can right click on this text</span
 >
 ```
+
+### By using context menu service
+
+The `ContextMenuService` provides a `closeAll` method that will close any open context menu. It also provides an `hasOpenMenu` to check if there is at leaset one.
 
 ## Generic
 

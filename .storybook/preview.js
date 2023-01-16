@@ -24,6 +24,7 @@ export const parameters = {
             '[contextMenu]',
             '<context-menu>',
             '[contextMenuItem]',
+            'ContextMenuService',
             'Styling',
             'Keyboard navigation',
           ],

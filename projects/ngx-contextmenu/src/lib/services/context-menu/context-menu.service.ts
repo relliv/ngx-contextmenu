@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
 import { ContextMenuEventService } from '../context-menu-event/context-menu-event.service';
+import { ContextMenuStackService } from '../context-menu-stack/context-menu-stack.service';
 
 export interface ContextMenuOpenAtPositionOptions<T> {
   /**
@@ -38,7 +39,8 @@ export interface ContextMenuOpenAtElementOptions<T> {
   providedIn: 'root',
 })
 export class ContextMenuService<T> {
-  constructor(private contextMenuEventService: ContextMenuEventService<T>) {}
+  constructor(private contextMenuEventService: ContextMenuEventService<T>,
+              private contextMenuStackService: ContextMenuStackService<T>) {}
   /**
    * Show the given `ContextMenuComponent` at a specified X/Y position
    */
@@ -53,5 +55,19 @@ export class ContextMenuService<T> {
       x: options.x,
       y: options.y,
     });
+  }
+
+  /**
+   * Close all open `ContextMenuComponent`
+   */
+  public closeAll(): void {
+    this.contextMenuStackService.closeAll();
+  }
+
+  /**
+   * Return true if any `ContextMenuComponent` is open
+   */
+  public hasOpenMenu(): boolean {
+    return !this.contextMenuStackService.isEmpty();
   }
 }

@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [15.1.0] - 2023-01-16
+
 ### Added
 
 - Add `closeAll` and `hasOpenMenu` methods to the `ContextMenuService`

@@ -33,6 +33,12 @@
   .ngx-contextmenu--dropdown-menu:empty {
     display: none;
   }
+  
+  .ngx-contextmenu--dropdown-menu {
+    max-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 }
 
 context-menu-content {

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Constraint context menu height to 100vh, can be changed with the `--ngx-contextmenu-max-height` CSS property
+
 ## [15.1.0] - 2023-01-16
 
 ### Added

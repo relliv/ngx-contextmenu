@@ -17,6 +17,7 @@
   --ngx-contextmenu-padding: 5px 0;
   --ngx-contextmenu-text-color: #70757e;
   --ngx-contextmenu-text-disabled-color: #8a909a;
+  --ngx-contextmenu-max-height: 100vh;
 
   // Styling of context menu items
   --ngx-contextmenu-item-arrow-left: '◀';
@@ -32,6 +33,12 @@
 .ngx-contextmenu {
   .ngx-contextmenu--dropdown-menu:empty {
     display: none;
+  }
+  
+  .ngx-contextmenu--dropdown-menu {
+    max-height: var(--ngx-contextmenu-max-height);
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }
 

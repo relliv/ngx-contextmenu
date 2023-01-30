@@ -2,6 +2,7 @@
 
 [![Angular](https://img.shields.io/badge/Angular-B52E31?logo=angular)](https://angular.io/)
 [![Test](https://github.com/PerfectMemory/ngx-contextmenu/actions/workflows/test.yml/badge.svg)](https://github.com/PerfectMemory/ngx-contextmenu/actions/workflows/test.yml) [![codecov](https://codecov.io/gh/PerfectMemory/ngx-contextmenu/branch/master/graph/badge.svg?token=5DSYMY9C9A)](https://codecov.io/gh/PerfectMemory/ngx-contextmenu) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![NPM](https://img.shields.io/badge/NPM-D70012?logo=npm)](https://www.npmjs.com/package/@perfectmemory/ngx-contextmenu)
 
 A context menu component for Angular.
 

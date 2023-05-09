@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [16.0.0-alpha.0] - 2023-05-09
+
 ### BREAKING CHANGES
 
 - **Dependency**: Require Angular 16

@@ -2250,7 +2250,7 @@
     process "^0.11.10"
     util "^0.12.4"
 
-"@storybook/builder-webpack5@7.1.0-alpha.13", "@storybook/builder-webpack5@^7.1.0-alpha.13":
+"@storybook/builder-webpack5@7.1.0-alpha.13":
   version "7.1.0-alpha.13"
   resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/builder-webpack5/-/builder-webpack5-7.1.0-alpha.13.tgz#329c133a5516244cced456915303174c3501efb8"
   integrity sha512-TC4Mker7Jr5o/TaulKOZyHE1GAalPvHfmfUcdihgQkOyEuN8/OX6Ti9JLqfyOZWMiCsiIG+MIwi2j/tUpUxcxA==
@@ -2299,6 +2299,18 @@
     webpack-hot-middleware "^2.25.1"
     webpack-virtual-modules "^0.4.3"
 
+"@storybook/channel-postmessage@7.0.9":
+  version "7.0.9"
+  resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/channel-postmessage/-/channel-postmessage-7.0.9.tgz#cb810026b40603fbaefbcd263291a467cba48076"
+  integrity sha512-6zsUPlsD3GVhKNq4UZ5MePJPjiMcPs/K02mH5/uVTN2JSgLdWgbLhZ4VYit4HgwE+d98bd9zWbgNgSOXpTArag==
+  dependencies:
+    "@storybook/channels" "7.0.9"
+    "@storybook/client-logger" "7.0.9"
+    "@storybook/core-events" "7.0.9"
+    "@storybook/global" "^5.0.0"
+    qs "^6.10.0"
+    telejson "^7.0.3"
+
 "@storybook/channel-postmessage@7.1.0-alpha.13":
   version "7.1.0-alpha.13"
   resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/channel-postmessage/-/channel-postmessage-7.1.0-alpha.13.tgz#51aef889683358aa6178b7b40d0d5320dc4dca47"
@@ -2322,6 +2334,11 @@
     "@storybook/global" "^5.0.0"
     telejson "^7.0.3"
     tiny-invariant "^1.3.1"
+
+"@storybook/channels@7.0.9":
+  version "7.0.9"
+  resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/channels/-/channels-7.0.9.tgz#0308c6a714daf1088228b554fd56dc72f2921b76"
+  integrity sha512-LF/Mkr0/+VOawEAospLGUcfZIPak3yV/ZjEAe/lubvLPJ6s2FFOjDUsyDIa2oM4ZE9TI6AGVN51kddVToelM8A==
 
 "@storybook/channels@7.1.0-alpha.13":
   version "7.1.0-alpha.13"
@@ -2380,17 +2397,17 @@
     "@storybook/client-logger" "7.1.0-alpha.13"
     "@storybook/preview-api" "7.1.0-alpha.13"
 
+"@storybook/client-logger@7.0.9", "@storybook/client-logger@^7.0.0-beta.0 || ^7.0.0-rc.0 || ^7.0.0":
+  version "7.0.9"
+  resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/client-logger/-/client-logger-7.0.9.tgz#2f94d4378912c753e27e647880d429bb1ed23104"
+  integrity sha512-EJnXWvpTFEj462ixZbDouTN9X/FinRgaKKN6zXdhSSZUnm5PcZBtnoX5S+982z3LiAjdNIuAdZE/4vwBIAF88A==
+  dependencies:
+    "@storybook/global" "^5.0.0"
+
 "@storybook/client-logger@7.1.0-alpha.13":
   version "7.1.0-alpha.13"
   resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/client-logger/-/client-logger-7.1.0-alpha.13.tgz#a7d55725f7f10a8d4b563895c1d680006a9dc6be"
   integrity sha512-k/1vp6QPDmoDhZSC8ecCx46l5VZLexfflN3XRlNLDXwBsPMG5zxMf/UUgGKWOQ4VDgPMlhB7k4IK2cjRdnZ8rQ==
-  dependencies:
-    "@storybook/global" "^5.0.0"
-
-"@storybook/client-logger@^7.0.0-beta.0 || ^7.0.0-rc.0 || ^7.0.0":
-  version "7.0.9"
-  resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/client-logger/-/client-logger-7.0.9.tgz#2f94d4378912c753e27e647880d429bb1ed23104"
-  integrity sha512-EJnXWvpTFEj462ixZbDouTN9X/FinRgaKKN6zXdhSSZUnm5PcZBtnoX5S+982z3LiAjdNIuAdZE/4vwBIAF88A==
   dependencies:
     "@storybook/global" "^5.0.0"
 
@@ -2450,6 +2467,11 @@
     pretty-hrtime "^1.0.3"
     resolve-from "^5.0.0"
     ts-dedent "^2.0.0"
+
+"@storybook/core-events@7.0.9":
+  version "7.0.9"
+  resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/core-events/-/core-events-7.0.9.tgz#4aa5913cfa3ccb40b83bf4ffbb6ef832aa8f5402"
+  integrity sha512-xJiyX7Gq/TgDdBv+8KbfTJ4Sc7fCMeIEUqWTtnYCHWB7Mp6Iui37+caDX3aGQRTz7FVgb7aL5QkQES9Ihc1+dg==
 
 "@storybook/core-events@7.1.0-alpha.13":
   version "7.1.0-alpha.13"
@@ -2568,7 +2590,7 @@
   resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/global/-/global-5.0.0.tgz#b793d34b94f572c1d7d9e0f44fac4e0dbc9572ed"
   integrity sha512-FcOqPAXACP0I3oJ/ws6/rrPT9WGhu915Cg8D02a9YxLo0DE9zI+a9A5gRGvmQ09fiWPukqI8ZAEoQEdWUKMQdQ==
 
-"@storybook/instrumenter@7.1.0-alpha.13", "@storybook/instrumenter@^7.0.0-beta.0 || ^7.0.0-rc.0 || ^7.0.0", "@storybook/instrumenter@^7.1.0-alpha.13":
+"@storybook/instrumenter@7.1.0-alpha.13":
   version "7.1.0-alpha.13"
   resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/instrumenter/-/instrumenter-7.1.0-alpha.13.tgz#feb97278e0de42dea62f214eb48658367a7426b4"
   integrity sha512-U3RiYBx0jtdjbL9/tNhqMcRSxNuUOzvX8WSDqatMaUZmFQiIBmkQORA4hD+Cc18p6XyXkbsjzZZ60l1R0HbJqw==
@@ -2578,6 +2600,17 @@
     "@storybook/core-events" "7.1.0-alpha.13"
     "@storybook/global" "^5.0.0"
     "@storybook/preview-api" "7.1.0-alpha.13"
+
+"@storybook/instrumenter@^7.0.0-beta.0 || ^7.0.0-rc.0 || ^7.0.0":
+  version "7.0.9"
+  resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/instrumenter/-/instrumenter-7.0.9.tgz#6df11365c75606c4a2263526e71306577ab84ad6"
+  integrity sha512-ly/vLeQIGbcw3RLQv4vPugvlaMah7+rsYZtwN/ocseBbsDfFBqxI7NbJNBXSTo44eTTbzQUkeOZWqf6dZzRm0Q==
+  dependencies:
+    "@storybook/channels" "7.0.9"
+    "@storybook/client-logger" "7.0.9"
+    "@storybook/core-events" "7.0.9"
+    "@storybook/global" "^5.0.0"
+    "@storybook/preview-api" "7.0.9"
 
 "@storybook/manager-api@7.1.0-alpha.13":
   version "7.1.0-alpha.13"
@@ -2629,6 +2662,27 @@
   version "1.0.3"
   resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/preset-scss/-/preset-scss-1.0.3.tgz#8ac834545c642dada0f64f510ef08dfb882e9737"
   integrity sha512-o9Iz6wxPeNENrQa2mKlsDKynBfqU2uWaRP80HeWp4TkGgf7/x3DVF2O7yi9N0x/PI1qzzTTpxlQ90D62XmpiTw==
+
+"@storybook/preview-api@7.0.9":
+  version "7.0.9"
+  resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/preview-api/-/preview-api-7.0.9.tgz#59fbf99e3f4d94263a65ba486f3e5be853ba4fee"
+  integrity sha512-cLyhq2nk0eiMOUwIIKhgDgZoS1ecRGojl92hR0agZDzNJrb1lvXK6uIkJh/Anl2Jbir28lAjQGU54voPODwTUA==
+  dependencies:
+    "@storybook/channel-postmessage" "7.0.9"
+    "@storybook/channels" "7.0.9"
+    "@storybook/client-logger" "7.0.9"
+    "@storybook/core-events" "7.0.9"
+    "@storybook/csf" "^0.1.0"
+    "@storybook/global" "^5.0.0"
+    "@storybook/types" "7.0.9"
+    "@types/qs" "^6.9.5"
+    dequal "^2.0.2"
+    lodash "^4.17.21"
+    memoizerific "^1.11.3"
+    qs "^6.10.0"
+    synchronous-promise "^2.0.15"
+    ts-dedent "^2.0.0"
+    util-deprecate "^1.0.2"
 
 "@storybook/preview-api@7.1.0-alpha.13":
   version "7.1.0-alpha.13"
@@ -2714,7 +2768,17 @@
     "@storybook/global" "^5.0.0"
     memoizerific "^1.11.3"
 
-"@storybook/types@7.1.0-alpha.13", "@storybook/types@^7.1.0-alpha.13":
+"@storybook/types@7.0.9":
+  version "7.0.9"
+  resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/types/-/types-7.0.9.tgz#745c74ab88ed911dd75246de3ec3f84e71844f76"
+  integrity sha512-6aKrrsX3wgPMg9Nu3AK1GYmCZQiHqHv7l24ywNxZPv0T63rcpS86kWK4qVAywoaXGFc9GtRT+dz1rK8Fx50J9Q==
+  dependencies:
+    "@storybook/channels" "7.0.9"
+    "@types/babel__core" "^7.0.0"
+    "@types/express" "^4.7.0"
+    file-system-cache "^2.0.0"
+
+"@storybook/types@7.1.0-alpha.13":
   version "7.1.0-alpha.13"
   resolved "https://artefacts.si.perfect-memory.com/repository/npm-all/@storybook/types/-/types-7.1.0-alpha.13.tgz#1a4d2fe40c3a361c0504991e2346d0aae5423c42"
   integrity sha512-/spiOrSbCIhfTnus2IjygmClQFHo+s3FfyrTeWo7FfbP77xY/Itx+4QRifr7dbppro5iIvsKvOi+AHBzfygDgg==

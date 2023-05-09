@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix peerDependencies
+
 ## [16.0.0-alpha.0] - 2023-05-09
 
 ### BREAKING CHANGES

@@ -11,7 +11,9 @@
       *ngFor="let menuDirective of menuDirectives; let i = index"
       [class.disabled]="isMenuItemDisabled(menuDirective)"
       [class.divider]="menuDirective.divider"
-      [class.active]="menuDirective.isActive && !isMenuItemDisabled(menuDirective)"
+      [class.active]="
+        menuDirective.isActive && !isMenuItemDisabled(menuDirective)
+      "
       [attr.role]="menuDirective.divider ? 'separator' : undefined"
       role="none"
     >
@@ -23,7 +25,9 @@
         class="ngx-contextmenu--item-content"
         [attr.aria-haspopup]="!!menuDirective.subMenu"
         [class.ngx-contextmenu--parent-menu]="!!menuDirective.subMenu"
-        [class.active]="menuDirective.isActive && !isMenuItemDisabled(menuDirective)"
+        [class.active]="
+          menuDirective.isActive && !isMenuItemDisabled(menuDirective)
+        "
         [class.disabled]="isMenuItemDisabled(menuDirective)"
         [attr.disabled]="isMenuItemDisabled(menuDirective) ? 'disabled' : null"
         (click)="onMenuItemSelect(menuDirective, $event)"
@@ -31,13 +35,15 @@
       >
         <ng-template
           [ngTemplateOutlet]="menuDirective.template"
-          [ngTemplateOutletContext]="{ $implicit: value }"
+          [ngTemplateOutletContext]="{ item: value }"
         ></ng-template>
       </button>
 
       <span
         *ngIf="!menuDirective.divider && menuDirective.passive"
-        class="ngx-contextmenu--item-content ngx-contextmenu--item-content-passive"
+        class="
+          ngx-contextmenu--item-content ngx-contextmenu--item-content-passive
+        "
         role="menuitem"
         (click)="stopEvent($event)"
         (contextmenu)="stopEvent($event)"
@@ -45,7 +51,7 @@
       >
         <ng-template
           [ngTemplateOutlet]="menuDirective.template"
-          [ngTemplateOutletContext]="{ $implicit: value }"
+          [ngTemplateOutletContext]="{ item: value }"
         ></ng-template>
       </span>
     </li>

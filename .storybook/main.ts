@@ -1,9 +1,10 @@
-import { StorybookConfig } from '@storybook/core-common';
+import { StorybookConfig } from '@storybook/angular';
+import remarkGfm from 'remark-gfm';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
-    '@storybook/addon-controls',
+    // '@storybook/addon-controls',
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     // '@storybook/addon-interactions',
@@ -15,17 +16,31 @@ const config: StorybookConfig = {
         babelOptions: {},
         sourceLoaderOptions: null,
         transcludeMarkdown: true,
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        },
       },
     },
   ],
-  framework: '@storybook/angular',
-  staticDirs: ['./public', { from: '../src/stories/assets', to: '/assets' }],
-  core: {
-    builder: 'webpack5',
+  framework: {
+    name: '@storybook/angular',
+    options: {},
   },
+  staticDirs: [
+    './public',
+    {
+      from: '../src/stories/assets',
+      to: '/assets',
+    },
+  ],
+  core: {},
   features: {
-    modernInlineRender: true,
+    // modernInlineRender: true,
+  },
+  docs: {
+    autodocs: 'tag',
   },
 };
-
 module.exports = config;

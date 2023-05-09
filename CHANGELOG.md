@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### BREAKING CHANGES
+
+- **Dependency**: Require Angular 16
+
 ## [15.1.1] - 2023-01-30
 
 ### Fixed

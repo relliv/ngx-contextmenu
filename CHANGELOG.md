@@ -2,14 +2,6 @@
 
 ## [Unreleased]
 
-## [16.0.0-alpha.1] - 2023-05-09
-
-### Fixed
-
-- Fix peerDependencies
-
-## [16.0.0-alpha.0] - 2023-05-09
-
 ### BREAKING CHANGES
 
 - **Dependency**: Require Angular 16

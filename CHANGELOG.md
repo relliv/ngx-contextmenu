@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [16.0.1] - 2023-07-03
+
 ### Fixed
 
 - Remove erroneous `aria-labelledby="menubutton"` on `ContextMenuContentComponent`

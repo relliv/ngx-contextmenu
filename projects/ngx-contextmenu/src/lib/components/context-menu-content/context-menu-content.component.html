@@ -1,11 +1,5 @@
 <div class="ngx-contextmenu" [ngClass]="menuClass" [attr.dir]="dir">
-  <ul
-    #menu
-    class="ngx-contextmenu--dropdown-menu"
-    role="menu"
-    aria-labelledby="menubutton"
-    tabindex="0"
-  >
+  <ul #menu class="ngx-contextmenu--dropdown-menu" role="menu" tabindex="0">
     <li
       #li
       *ngFor="let menuDirective of menuDirectives; let i = index"
@@ -41,9 +35,7 @@
 
       <span
         *ngIf="!menuDirective.divider && menuDirective.passive"
-        class="
-          ngx-contextmenu--item-content ngx-contextmenu--item-content-passive
-        "
+        class="ngx-contextmenu--item-content ngx-contextmenu--item-content-passive"
         role="menuitem"
         (click)="stopEvent($event)"
         (contextmenu)="stopEvent($event)"

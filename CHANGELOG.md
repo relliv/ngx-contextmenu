@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [16.0.2] - 2023-08-29
+
 ### Fixed
 
 - Documentation on `[contextMenuItem]` `let-value` was not correct. Fixed code to properly reflect the documentation

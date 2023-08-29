@@ -242,7 +242,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should open active sub menu', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         component.ngOnInit();
@@ -257,7 +257,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not close active sub menu', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         const closeLeafMenu = jasmine.createSpy('subscriber');
@@ -271,7 +271,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not open active if activeItemIndex is null', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         (keyManager.activeItemIndex as any) = null;
@@ -284,7 +284,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not open active sub menu if this is not leaf', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         component.ngOnInit();
@@ -313,7 +313,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not open active sub menu', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         component.ngOnInit();
@@ -325,7 +325,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should close active sub menu', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         const closeLeafMenu = jasmine.createSpy('subscriber');
@@ -342,7 +342,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not close active sub menu if activeItemIndex is null', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         (keyManager.activeItemIndex as any) = null;
@@ -357,7 +357,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should close active sub menu', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         const closeLeafMenu = jasmine.createSpy('subscriber');
@@ -374,7 +374,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not close active sub menu if this is not leaf', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         const closeLeafMenu = jasmine.createSpy('subscriber');
@@ -401,7 +401,7 @@ describe('Component: ContextMenuContentComponent', () => {
       mockActiveDescendantKeyManager();
       configureTestingModule();
       const directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ item: any }>
+        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
       );
       (keyManager.activeItem as any) = directive;
       spyOn(component, 'onOpenSubMenu');
@@ -423,7 +423,7 @@ describe('Component: ContextMenuContentComponent', () => {
         mockActiveDescendantKeyManager();
         configureTestingModule();
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         spyOn(component, 'onOpenSubMenu');
@@ -453,7 +453,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should open active sub menu', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         component.ngOnInit();
@@ -468,7 +468,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not close active sub menu', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         const closeLeafMenu = jasmine.createSpy('subscriber');
@@ -482,7 +482,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not open active sub menu if this is not leaf', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         component.ngOnInit();
@@ -510,7 +510,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not open active sub menu', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         component.ngOnInit();
@@ -522,7 +522,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should close active sub menu', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         const closeLeafMenu = jasmine.createSpy('subscriber');
@@ -539,7 +539,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should close active sub menu', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         const closeLeafMenu = jasmine.createSpy('subscriber');
@@ -556,7 +556,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not close active sub menu if this is not leaf', () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         const closeLeafMenu = jasmine.createSpy('subscriber');
@@ -583,7 +583,7 @@ describe('Component: ContextMenuContentComponent', () => {
       mockActiveDescendantKeyManager();
       configureTestingModule();
       const directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ item: any }>
+        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
       );
       (keyManager.activeItem as any) = directive;
       spyOn(component, 'onOpenSubMenu');
@@ -605,7 +605,7 @@ describe('Component: ContextMenuContentComponent', () => {
         mockActiveDescendantKeyManager();
         configureTestingModule();
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         spyOn(component, 'onOpenSubMenu');
@@ -633,7 +633,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
     it('should open active sub menu', () => {
       const directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ item: any }>
+        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
       );
       (keyManager.activeItem as any) = directive;
       component.ngOnInit();
@@ -648,7 +648,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
     it('should not open active sub menu if this is not leaf', () => {
       const directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ item: any }>
+        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
       );
       (keyManager.activeItem as any) = directive;
       component.ngOnInit();
@@ -668,7 +668,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
     it('should cancel event', () => {
       const directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ item: any }>
+        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
       );
       (keyManager.activeItem as any) = directive;
       component.ngOnInit();
@@ -687,7 +687,7 @@ describe('Component: ContextMenuContentComponent', () => {
     ['input', 'textarea', 'select'].forEach((tagName) => {
       it(`should not cancel event if event target is "${tagName}"`, () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         component.ngOnInit();
@@ -714,7 +714,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
     it('should close active sub menu', () => {
       const directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ item: any }>
+        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
       );
       (keyManager.activeItem as any) = directive;
       const closeLeafMenu = jasmine.createSpy('subscriber');
@@ -731,7 +731,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
     it('should not close active sub menu if this is not leaf', () => {
       const directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ item: any }>
+        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
       );
       (keyManager.activeItem as any) = directive;
       const closeLeafMenu = jasmine.createSpy('subscriber');
@@ -755,7 +755,7 @@ describe('Component: ContextMenuContentComponent', () => {
 
     it('should cancel event', () => {
       const directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ item: any }>
+        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
       );
       (keyManager.activeItem as any) = directive;
       component.ngOnInit();
@@ -774,7 +774,7 @@ describe('Component: ContextMenuContentComponent', () => {
     ['input', 'textarea', 'select'].forEach((tagName) => {
       it(`should not cancel event if event target is "${tagName}"`, () => {
         const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ item: any }>
+          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
         );
         (keyManager.activeItem as any) = directive;
         component.ngOnInit();
@@ -1040,7 +1040,7 @@ describe('Component: ContextMenuContentComponent', () => {
       configureTestingModule();
       component.ngOnInit();
       directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ item: any }>
+        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
       );
       nativeElement = document.createElement('li');
       component.liElementRefs = new QueryList<ElementRef>();

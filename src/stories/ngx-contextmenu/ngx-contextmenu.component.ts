@@ -6,7 +6,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  ContextMenuComponent,
   ContextMenuDirective,
   ContextMenuOpenEvent,
 } from '@perfectmemory/ngx-contextmenu';
@@ -27,7 +26,7 @@ export default class NgxContextMenuComponent {
   public dir: 'ltr' | 'rtl' | undefined;
 
   @Input()
-  public item: unknown = 'a user defined item';
+  public value: unknown = 'a user defined item';
 
   @Input()
   public demoMode: 'simple' | 'form' = 'simple';

@@ -29,7 +29,7 @@
       >
         <ng-template
           [ngTemplateOutlet]="menuDirective.template"
-          [ngTemplateOutletContext]="{ item: value }"
+          [ngTemplateOutletContext]="{ $implicit: value }"
         ></ng-template>
       </button>
 
@@ -43,7 +43,7 @@
       >
         <ng-template
           [ngTemplateOutlet]="menuDirective.template"
-          [ngTemplateOutletContext]="{ item: value }"
+          [ngTemplateOutletContext]="{ $implicit: value }"
         ></ng-template>
       </span>
     </li>

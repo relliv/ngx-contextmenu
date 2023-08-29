@@ -77,7 +77,7 @@ export class ContextMenuItemDirective<T> implements Highlightable {
 
   constructor(
     @Optional()
-    public template: TemplateRef<{ item: T }>
+    public template: TemplateRef<{ $implicit?: T }>
   ) {}
 
   public setActiveStyles(): void {

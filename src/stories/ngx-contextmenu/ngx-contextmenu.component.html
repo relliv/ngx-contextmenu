@@ -3,7 +3,7 @@
   class="ngx-context-menu-focusable"
   #ngxContextMenu="ngxContextMenu"
   [contextMenu]="contextMenu"
-  [contextMenuValue]="item"
+  [contextMenuValue]="value"
 >
   <ng-container *ngIf="demoMode === 'simple'">
     When you right click on this text, a context menu will appear
@@ -19,7 +19,7 @@
   <span
     class="ngx-context-menu-focusable"
     [contextMenu]="contextMenu"
-    [contextMenuValue]="item"
+    [contextMenuValue]="value"
   >
     When you right click on this text, no context menu will appear because it is
     disabled
@@ -41,19 +41,22 @@
     *ngIf="demoMode === 'simple'"
     contextMenuItem
     (execute)="execute('Cut', $event)"
-    >Cut</ng-template
+    let-value
+    >Cut "{{ value }}"</ng-template
   >
   <ng-template
     *ngIf="demoMode === 'simple'"
     contextMenuItem
     (execute)="execute('Copy', $event)"
-    >Copy</ng-template
+    let-value
+    >Copy "{{ value }}"</ng-template
   >
   <ng-template
     *ngIf="demoMode === 'simple'"
     contextMenuItem
     (execute)="execute('Paste', $event)"
-    >Paste</ng-template
+    let-value
+    >Paste "{{ value }}"</ng-template
   >
   <ng-template *ngIf="demoMode === 'simple'" contextMenuItem [disabled]="true"
     >Disabled menu item</ng-template

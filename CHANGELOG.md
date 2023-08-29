@@ -5,6 +5,7 @@
 ### Fixed
 
 - Documentation on `[contextMenuItem]` `let-value` was not correct. Fixed code to properly reflect the documentation
+- Fix documentation on `[passive]=true`
 
 ## [16.0.1] - 2023-07-03
 

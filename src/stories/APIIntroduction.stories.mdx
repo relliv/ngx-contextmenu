@@ -40,12 +40,12 @@ export class Component {
 <!-- component delares itself via the #oneContextMenu template variable -->
 <context-menu #oneContextMenu>
   <!-- each menu item is a <ng-template>... -->
-  <ng-template contextMenuItem passive="true">
+  <ng-template contextMenuItem [passive]="true">
     <!-- ...that can contain any HTML with specific styling -->
     <span class="menu-item-title">Context menu title</span>
   </ng-template>
   <!-- ...not the `let-value` to access the context menu value inside the template -->
-  <ng-template contextMenuItem passive="true" let-value>This is the context menu value "{{ value }}"</ng-template>
+  <ng-template contextMenuItem [passive]="true" let-value>This is the context menu value "{{ value }}"</ng-template>
   <!-- ...or just text, the (execute) output is called when the menu item is clicked -->
   <ng-template contextMenuItem (execute)="execute('Cut', $event)" let-value>Cut {{ value }}</ng-template>
   <ng-template contextMenuItem (execute)="execute('Copy', $event)" let-value>Copy {{ value }}</ng-template>

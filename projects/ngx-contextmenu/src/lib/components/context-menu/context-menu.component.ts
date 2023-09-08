@@ -59,13 +59,13 @@ export class ContextMenuComponent<T> implements OnDestroy {
    * Emit when the menu is opened
    */
   @Output()
-  public open: EventEmitter<ContextMenuOpenEvent<T>> = new EventEmitter();
+  public open = new EventEmitter<ContextMenuOpenEvent<T>>();
 
   /**
    * Emit when the menu is closed
    */
   @Output()
-  public close: EventEmitter<void> = new EventEmitter();
+  public close = new EventEmitter<void>();
 
   /**
    * The menu item directives defined inside the component

@@ -89,38 +89,37 @@ export class ContextMenuContentComponent<T>
    * Emit when a menu item is selected
    */
   @Output()
-  public execute: EventEmitter<{
+  public execute = new EventEmitter<{
     event: MouseEvent | KeyboardEvent;
     value?: T;
     menuDirective: ContextMenuItemDirective<T>;
-  }> = new EventEmitter();
+  }>();
 
   /**
    * Emit when a sub menu is opened
    */
   @Output()
-  public openSubMenu: EventEmitter<ContextMenuOpenEvent<T>> =
-    new EventEmitter();
+  public openSubMenu = new EventEmitter<ContextMenuOpenEvent<T>>();
 
   /**
    * Emit when a leaf menu is closed
    */
   @Output()
-  public closeLeafMenu: EventEmitter<ContextMenuCloseLeafEvent> = new EventEmitter();
+  public closeLeafMenu = new EventEmitter<ContextMenuCloseLeafEvent>();
 
   /**
    * Emit when sub menus are closed
    */
   @Output()
-  public closeSubMenus: EventEmitter<void> = new EventEmitter();
+  public closeSubMenus = new EventEmitter<void>();
 
   /**
    * Emit when all menus is closed
    */
   @Output()
-  public closeAllMenus: EventEmitter<{
-    event: MouseEvent;
-  }> = new EventEmitter();
+  public closeAllMenus = new EventEmitter<{
+    event: MouseEvent | KeyboardEvent;
+  }>();
 
   /**
    * @internal

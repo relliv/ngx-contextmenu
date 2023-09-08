@@ -58,10 +58,10 @@ export class ContextMenuItemDirective<T> implements Highlightable {
    * Emits event and item
    */
   @Output()
-  public execute: EventEmitter<{
+  public execute = new EventEmitter<{
     event: MouseEvent | KeyboardEvent;
     value?: T;
-  }> = new EventEmitter();
+  }>();
 
   /**
    * @internal

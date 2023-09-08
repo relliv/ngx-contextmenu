@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [16.1.0-alpha.0] - 2023-09-08
+
 ### Changed
 
 - Improved ARIA navigation support when opening a context menu, impact some HTML attributs, thus some styling

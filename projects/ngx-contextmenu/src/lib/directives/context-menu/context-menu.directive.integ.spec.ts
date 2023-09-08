@@ -72,7 +72,7 @@ describe('Integ: ContextMenuDirective', () => {
       ).toHaveClass('divider');
       expect(
         host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(2)',
+          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(2) hr',
           {
             root: true,
           }

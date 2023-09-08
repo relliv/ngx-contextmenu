@@ -820,12 +820,7 @@ describe('Component: ContextMenuComponent', () => {
 
       it('should close all context menu when instance closeAllMenus', () => {
         component.openContextMenu(context);
-        const event = {
-          event: new MouseEvent('click'),
-          item: { id: 'a' },
-          menuDirective: a,
-        };
-        contextMenuContentRef.instance.closeAllMenus.next(event);
+        contextMenuContentRef.instance.closeAllMenus.next();
         expect(contextMenuStackService.closeAll).toHaveBeenCalled();
       });
 

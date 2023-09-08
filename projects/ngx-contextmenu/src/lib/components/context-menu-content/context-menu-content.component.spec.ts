@@ -706,89 +706,20 @@ describe('Component: ContextMenuContentComponent', () => {
   });
 
   describe('#onKeyArrowEscape', () => {
+    let subscriber: jasmine.Spy<jasmine.Func>;
+
     beforeEach(() => {
       mockActiveDescendantKeyManager();
       configureTestingModule();
       spyOn(component, 'onOpenSubMenu');
+
+      subscriber = jasmine.createSpy('subscriber');
+      component.closeAllMenus.subscribe(subscriber);
     });
 
-    it('should close active sub menu', () => {
-      const directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
-      );
-      (keyManager.activeItem as any) = directive;
-      const closeLeafMenu = jasmine.createSpy('subscriber');
-      component.closeLeafMenu.subscribe(closeLeafMenu);
-      component.ngOnInit();
-      const event = new KeyboardEvent('mousedown');
-      component.isLeaf = true;
-      component.onKeyArrowEscape(event);
-      expect(closeLeafMenu).toHaveBeenCalledWith({
-        event,
-        excludeRootMenu: false,
-      });
-    });
-
-    it('should not close active sub menu if this is not leaf', () => {
-      const directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
-      );
-      (keyManager.activeItem as any) = directive;
-      const closeLeafMenu = jasmine.createSpy('subscriber');
-      component.closeLeafMenu.subscribe(closeLeafMenu);
-      component.ngOnInit();
-      const event = new KeyboardEvent('mousedown');
-      component.isLeaf = false;
-      component.onKeyArrowEscape(event);
-      expect(closeLeafMenu).not.toHaveBeenCalledWith();
-    });
-
-    it('should not close active sub menu if there is no active item', () => {
-      const closeLeafMenu = jasmine.createSpy('subscriber');
-      component.closeLeafMenu.subscribe(closeLeafMenu);
-      component.ngOnInit();
-      const event = new KeyboardEvent('mousedown');
-      component.isLeaf = true;
-      component.onKeyArrowEscape(event);
-      expect(closeLeafMenu).not.toHaveBeenCalledWith();
-    });
-
-    it('should cancel event', () => {
-      const directive = new ContextMenuItemDirective(
-        undefined as unknown as TemplateRef<{ $implicit?: unknown }>
-      );
-      (keyManager.activeItem as any) = directive;
-      component.ngOnInit();
-      const event = new KeyboardEvent('mousedown');
-      spyOnProperty(event, 'target', 'get').and.returnValue(
-        document.createElement('div')
-      );
-      spyOn(event, 'preventDefault');
-      spyOn(event, 'stopPropagation');
-      component.isLeaf = true;
-      component.onKeyArrowEscape(event);
-      expect(event.preventDefault).toHaveBeenCalledWith();
-      expect(event.stopPropagation).toHaveBeenCalledWith();
-    });
-
-    ['input', 'textarea', 'select'].forEach((tagName) => {
-      it(`should not cancel event if event target is "${tagName}"`, () => {
-        const directive = new ContextMenuItemDirective(
-          undefined as unknown as TemplateRef<{ $implicit?: unknown }>
-        );
-        (keyManager.activeItem as any) = directive;
-        component.ngOnInit();
-        const event = new KeyboardEvent('mousedown');
-        spyOnProperty(event, 'target', 'get').and.returnValue(
-          document.createElement(tagName)
-        );
-        spyOn(event, 'preventDefault');
-        spyOn(event, 'stopPropagation');
-        component.isLeaf = true;
-        component.onKeyArrowEscape(event);
-        expect(event.preventDefault).not.toHaveBeenCalledWith();
-        expect(event.stopPropagation).not.toHaveBeenCalledWith();
-      });
+    it('should close all menus', () => {
+      component.onKeyArrowEscape();
+      expect(subscriber).toHaveBeenCalledWith(undefined);
     });
   });
 
@@ -797,6 +728,8 @@ describe('Component: ContextMenuContentComponent', () => {
     let subscriber: jasmine.Spy<jasmine.Func>;
 
     beforeEach(() => {
+      mockActiveDescendantKeyManager();
+      configureTestingModule();
       subscriber = jasmine.createSpy('subscriber');
       component.closeAllMenus.subscribe(subscriber);
     });
@@ -804,7 +737,7 @@ describe('Component: ContextMenuContentComponent', () => {
     it('should close all menus', () => {
       mouseEvent = new MouseEvent('click');
       component.onClickOrRightClick(mouseEvent);
-      expect(subscriber).toHaveBeenCalledWith({ event: mouseEvent });
+      expect(subscriber).toHaveBeenCalledWith(undefined);
     });
 
     it('should not close all menus if this is a click event with right button (not the same as contextmenu event)', () => {
@@ -1018,13 +951,13 @@ describe('Component: ContextMenuContentComponent', () => {
     it('should notify close all menus if event is not a click', () => {
       const event = new MouseEvent('mousedown', { button: 2 });
       component.onClickOrRightClick(event);
-      expect(closeAllMenus).toHaveBeenCalledWith({ event });
+      expect(closeAllMenus).toHaveBeenCalledWith(undefined);
     });
 
     it('should notify close all menus if event is not a right click', () => {
       const event = new MouseEvent('click', { button: 1 });
       component.onClickOrRightClick(event);
-      expect(closeAllMenus).toHaveBeenCalledWith({ event });
+      expect(closeAllMenus).toHaveBeenCalledWith(undefined);
     });
   });
 

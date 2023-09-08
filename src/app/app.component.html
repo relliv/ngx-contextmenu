@@ -1,5 +1,5 @@
 <h1>@perfectmemory/ngx-contextmenu</h1>
-<button (click)="requestFullScreen()">fullscreen</button>
+<!-- <button (click)="requestFullScreen()">fullscreen</button> -->
 <div
   (click)="$event.preventDefault()"
   style="margin: 20px; padding: 20px; background-color: white"
@@ -28,7 +28,7 @@
             Right Click ltr: {{ item }}
           </li>
         </ul>
-        <ul dir="rtl">
+<!--         <ul dir="rtl">
           <li
             *ngFor="let item of items"
             [contextMenu]="basicMenuRtl"
@@ -50,7 +50,7 @@
           <li *ngFor="let item of items" [contextMenu]="static">
             Right Click: {{ item }}
           </li>
-        </ul>
+        </ul> -->
         <context-menu
           #static
           (close)="showMessage('closed static', $event)"
@@ -81,7 +81,7 @@
             Bye, someone
           </ng-template>
         </context-menu>
-        <div
+<!--         <div
           style="height: 100px; border: solid 1px #ccc; overflow: auto"
           cdkScrollable
         >
@@ -154,9 +154,9 @@
           <br />
           <br />
           <br />
-        </div>
-        <h3>Enabled and Visible as Functions</h3>
-        <ul>
+        </div> -->
+<!--         <h3>Enabled and Visible as Functions</h3> -->
+<!--         <ul>
           <li
             *ngFor="let item of items"
             [contextMenu]="withFunctions"
@@ -164,7 +164,7 @@
           >
             Right Click: {{ item }}
           </li>
-        </ul>
+        </ul> -->
         <context-menu #withFunctions>
           <ng-template
             contextMenuItem
@@ -189,8 +189,8 @@
           </ng-template>
         </context-menu>
         <br />
-        <h3>Custom styling</h3>
-        <ul>
+<!--         <h3>Custom styling</h3> -->
+<!--         <ul>
           <li
             *ngFor="let item of items"
             [contextMenu]="customClassMenu"
@@ -198,7 +198,7 @@
           >
             Right click to see styled menu
           </li>
-        </ul>
+        </ul> -->
       </div>
     </div>
   </div>
@@ -347,7 +347,7 @@
   </ng-template>
 </context-menu>
 
-<div class="dashboardContainer" style="pointer-events: none">
+<!-- <div class="dashboardContainer" style="pointer-events: none">
   <div class="componentsContainer">
     <div
       class="componentContainer"
@@ -372,8 +372,8 @@
       </ng-template>
     </context-menu>
   </div>
-</div>
-<ul>
+</div> -->
+<!-- <ul>
   <li
     *ngFor="let item of items"
     [contextMenu]="itemContextMenu"
@@ -415,55 +415,5 @@
       </context-menu>
     </context-menu>
   </li>
-</ul>
-<router-outlet></router-outlet>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
+</ul> -->
+

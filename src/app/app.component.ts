@@ -63,7 +63,7 @@ export class AppComponent {
         },
       ],
     },
-    /*    {
+    {
       name: 'Joe',
       otherProperty: 'Bar',
       layout: {
@@ -82,7 +82,7 @@ export class AppComponent {
           visible: true,
         },
       ],
-    }, */
+    },
   ];
   public outsideValue = 'something';
 

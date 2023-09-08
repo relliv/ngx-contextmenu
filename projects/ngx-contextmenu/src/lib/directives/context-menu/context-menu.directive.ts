@@ -38,8 +38,16 @@ export class ContextMenuDirective<T> {
    *
    * @internal
    */
+  @HostBinding('attr.role')
+  public role = 'button';
+
+  /**
+   * Accessibility
+   *
+   * @internal
+   */
   @HostBinding('attr.aria-haspopup')
-  public ariaHasPopup = 'true';
+  public ariaHasPopup = 'menu';
 
   constructor(
     private contextMenuEventService: ContextMenuEventService<T>,

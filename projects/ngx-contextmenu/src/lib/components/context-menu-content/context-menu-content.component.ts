@@ -1,5 +1,6 @@
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { OverlayRef } from '@angular/cdk/overlay';
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -8,6 +9,7 @@ import {
   EventEmitter,
   HostBinding,
   HostListener,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
@@ -37,6 +39,10 @@ export const TESTING_WRAPPER = {
   selector: 'context-menu-content',
   templateUrl: './context-menu-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    tabindex: '0',
+    role: 'dialog',
+  },
 })
 export class ContextMenuContentComponent<T>
   implements OnInit, OnDestroy, AfterViewInit
@@ -117,9 +123,7 @@ export class ContextMenuContentComponent<T>
    * Emit when all menus is closed
    */
   @Output()
-  public closeAllMenus = new EventEmitter<{
-    event: MouseEvent | KeyboardEvent;
-  }>();
+  public closeAllMenus = new EventEmitter<void>();
 
   /**
    * @internal
@@ -127,17 +131,39 @@ export class ContextMenuContentComponent<T>
   @ViewChildren('li')
   public liElementRefs!: QueryList<ElementRef>;
 
+  /**
+   * Accessibility
+   *
+   * @internal
+   */
+  @HostBinding('attr.role')
+  public role = 'menu';
+  /**
+   * Accessibility
+   *
+   * @internal
+   */
+  @HostBinding('aria-orientation')
+  public ariaOrientation = 'vertical';
+
   private keyManager!: ActiveDescendantKeyManager<ContextMenuItemDirective<T>>;
   private subscription: Subscription = new Subscription();
+  private activeElement?: HTMLElement | null;
 
   // TODO: should be private but issue in spec with NullInjectorError: No provider for ElementRef!
-  constructor(public _elementRef: ElementRef<HTMLElement>) {}
+  constructor(
+    public _elementRef: ElementRef<HTMLElement>,
+    @Inject(DOCUMENT)
+    public document: Document
+  ) {}
 
   /**
    * @internal
    */
   public ngOnInit(): void {
     this.setupDirectives();
+    this.activeElement = this.document.activeElement as HTMLElement | null;
+    this._elementRef.nativeElement.focus();
   }
 
   /**
@@ -151,6 +177,7 @@ export class ContextMenuContentComponent<T>
    * @internal
    */
   public ngOnDestroy() {
+    this.activeElement?.focus();
     this.subscription.unsubscribe();
   }
 
@@ -221,13 +248,9 @@ export class ContextMenuContentComponent<T>
   /**
    * @internal
    */
-  @HostListener('window:keydown.Escape', ['$event'])
-  public onKeyArrowEscape(event: KeyboardEvent): void {
-    if (!this.isLeaf) {
-      return;
-    }
-
-    this.closeActiveItemSubMenu(event);
+  @HostListener('window:keydown.Escape')
+  public onKeyArrowEscape(): void {
+    this.closeAllMenus.emit();
   }
 
   /**
@@ -244,7 +267,7 @@ export class ContextMenuContentComponent<T>
       return;
     }
 
-    this.closeAllMenus.emit({ event });
+    this.closeAllMenus.emit();
   }
 
   /**

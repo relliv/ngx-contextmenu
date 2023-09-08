@@ -1,5 +1,5 @@
 <div class="ngx-contextmenu" [ngClass]="menuClass" [attr.dir]="dir">
-  <ul #menu class="ngx-contextmenu--dropdown-menu" role="menu" tabindex="0">
+  <ul #menu class="ngx-contextmenu--dropdown-menu">
     <li
       #li
       *ngFor="let menuDirective of menuDirectives; let i = index"
@@ -8,16 +8,15 @@
       [class.active]="
         menuDirective.isActive && !isMenuItemDisabled(menuDirective)
       "
-      [attr.role]="menuDirective.divider ? 'separator' : undefined"
-      role="none"
+      role="menuitem"
     >
       <hr *ngIf="menuDirective.divider" role="separator" />
       <button
         *ngIf="!menuDirective.divider && !menuDirective.passive"
         type="button"
-        role="menuitem"
+        role="button"
         class="ngx-contextmenu--item-content"
-        [attr.aria-haspopup]="!!menuDirective.subMenu"
+        [attr.aria-haspopup]="!!menuDirective.subMenu ? 'menu' : null"
         [class.ngx-contextmenu--parent-menu]="!!menuDirective.subMenu"
         [class.active]="
           menuDirective.isActive && !isMenuItemDisabled(menuDirective)
@@ -36,7 +35,8 @@
       <span
         *ngIf="!menuDirective.divider && menuDirective.passive"
         class="ngx-contextmenu--item-content ngx-contextmenu--item-content-passive"
-        role="menuitem"
+        role="button"
+        [attr.aria-disabled]="isMenuItemDisabled(menuDirective)"
         (click)="stopEvent($event)"
         (contextmenu)="stopEvent($event)"
         [class.disabled]="isMenuItemDisabled(menuDirective)"

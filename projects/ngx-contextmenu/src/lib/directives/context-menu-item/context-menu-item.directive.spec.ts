@@ -62,20 +62,6 @@ describe('Directive: ContextMenuItemDirective', () => {
     });
   });
 
-  describe('#setActiveStyles', () => {
-    it('should activate the directive', () => {
-      directive.setActiveStyles();
-      expect(directive.isActive).toEqual(true);
-    });
-  });
-
-  describe('#setInactiveStyles', () => {
-    it('should deactivate the directive', () => {
-      directive.setInactiveStyles();
-      expect(directive.isActive).toEqual(false);
-    });
-  });
-
   describe('#triggerExecute', () => {
     let subscriber: jasmine.Spy<jasmine.Func>;
 

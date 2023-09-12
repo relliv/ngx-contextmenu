@@ -1,4 +1,3 @@
-import { Highlightable } from '@angular/cdk/a11y';
 import {
   Directive,
   EventEmitter,
@@ -13,7 +12,7 @@ import { evaluateIfFunction } from '../../helper/evaluate';
 @Directive({
   selector: '[contextMenuItem]',
 })
-export class ContextMenuItemDirective<T> implements Highlightable {
+export class ContextMenuItemDirective<T> {
   /**
    * Optional subMenu component ref
    */
@@ -68,25 +67,12 @@ export class ContextMenuItemDirective<T> implements Highlightable {
    */
   public value?: T;
 
-  /**
-   * @internal
-   */
-  public isActive = false;
-
   #disabled: boolean | ((value?: T) => boolean) = false;
 
   constructor(
     @Optional()
     public template: TemplateRef<{ $implicit?: T }>
   ) {}
-
-  public setActiveStyles(): void {
-    this.isActive = true;
-  }
-
-  public setInactiveStyles(): void {
-    this.isActive = false;
-  }
 
   /**
    * @internal

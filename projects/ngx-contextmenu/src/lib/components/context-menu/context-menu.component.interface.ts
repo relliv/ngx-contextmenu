@@ -1,13 +1,8 @@
 import { ContextMenuItemDirective } from '../../directives/context-menu-item/context-menu-item.directive';
 import { ContextMenuContentComponent } from '../context-menu-content/context-menu-content.component';
-import { ContextMenuComponent } from './context-menu.component';
 
 export interface ContextMenuBaseEvent<T> {
   anchoredTo: 'position' | 'element';
-  /**
-   * ContextMenuComponent instance to display
-   */
-  contextMenu: ContextMenuComponent<T>;
   /**
    * Optional associated data to the context menu, will be emitted when a menu item is selected
    */
@@ -55,28 +50,3 @@ export type IContextMenuContext<T> = ContextMenuOpenEvent<T> & {
   menuClass: string;
   dir: 'ltr' | 'rtl' | undefined;
 };
-export interface ContextMenuCloseLeafEvent {
-  excludeRootMenu?: boolean;
-  event?: MouseEvent | KeyboardEvent;
-}
-
-/**
- * @deprecated Not used any more
- */
-export interface ContextMenuCancelEvent {
-  eventType: 'cancel';
-}
-/**
- * @deprecated Not used any more
- */
-export interface ContextMenuExecuteEvent<T extends Object = any> {
-  eventType: 'execute';
-  item?: T;
-  menuDirective: ContextMenuItemDirective<T>;
-}
-/**
- * @deprecated Not used any more
- */
-export type ContextMenuCloseEvent<T extends Object = any> =
-  | ContextMenuExecuteEvent<T>
-  | ContextMenuCancelEvent;

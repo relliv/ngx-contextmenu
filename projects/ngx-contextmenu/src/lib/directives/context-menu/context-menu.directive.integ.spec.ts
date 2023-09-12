@@ -5,6 +5,7 @@ import { ContextMenuComponent } from '../../components/context-menu/context-menu
 import { ContextMenuItemDirective } from '../../directives/context-menu-item/context-menu-item.directive';
 import { ContextMenuService } from '../../services/context-menu/context-menu.service';
 import { ContextMenuDirective } from './context-menu.directive';
+import { ContextMenuContentItemDirective } from '../context-menu-content-item/context-menu-content-item.directive';
 
 describe('Integ: ContextMenuDirective', () => {
   let host: SpectatorHost<ContextMenuDirective<unknown>>;
@@ -15,6 +16,7 @@ describe('Integ: ContextMenuDirective', () => {
       ContextMenuItemDirective,
       ContextMenuComponent,
       ContextMenuContentComponent,
+      ContextMenuContentItemDirective,
     ],
     providers: [ContextMenuService],
     imports: [OverlayModule],
@@ -49,30 +51,26 @@ describe('Integ: ContextMenuDirective', () => {
         { hostProps: { item: { id: 'item-id' } } }
       );
       host.dispatchMouseEvent(host.debugElement, 'contextmenu');
+
       expect(
-        host.query('.cdk-overlay-container context-menu-content', {
-          root: true,
-        })
+        host.query(
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content',
+          {
+            root: true,
+          }
+        )
       ).toExist();
       expect(
-        host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(1)',
+        host.queryAll(
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content > *:nth-child(1)',
           {
             root: true,
           }
         )
-      ).toHaveClass('disabled');
+      ).toHaveAttribute('disabled', 'disabled');
       expect(
         host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(2)',
-          {
-            root: true,
-          }
-        )
-      ).toHaveClass('divider');
-      expect(
-        host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(2) hr',
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content > *:nth-child(2)',
           {
             root: true,
           }
@@ -80,7 +78,7 @@ describe('Integ: ContextMenuDirective', () => {
       ).toHaveAttribute('role', 'separator');
       expect(
         host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(3) button',
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content > *:nth-child(3)',
           {
             root: true,
           }
@@ -98,49 +96,72 @@ describe('Integ: ContextMenuDirective', () => {
           <ng-template contextMenuItem [divider]="true"                    >C</ng-template>
           <ng-template contextMenuItem [visible]="true" [subMenu]="subMenu">D</ng-template>
           <context-menu #subMenu>
-            <ng-template contextMenuItem [visible]="true">DD</ng-template>
+            <ng-template contextMenuItem [visible]="true"><span class="submenu-item">DD</span></ng-template>
           </context-menu>
         </context-menu>
     `,
         { hostProps: { item: { id: 'item-id' } } }
       );
+      console.log('A', document.activeElement);
       host.dispatchMouseEvent(host.debugElement, 'contextmenu');
-      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
-        key: 'ArrowDown',
-        keyCode: 40,
-      });
       expect(
         host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(1)',
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content',
           {
             root: true,
           }
         )
-      ).toHaveClass('active');
-      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
-        key: 'ArrowDown',
-        keyCode: 40,
-      });
+      ).toEqual(document.activeElement);
+      console.log('B', document.activeElement);
+      host.dispatchKeyboardEvent(
+        document.activeElement as HTMLElement,
+        'keydown',
+        {
+          key: 'ArrowDown',
+          keyCode: 40,
+        }
+      );
+      console.log('C', document.activeElement);
       expect(
         host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(2)',
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content > *:nth-child(1)',
           {
             root: true,
           }
         )
-      ).toHaveClass('active');
-      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
-        key: 'ArrowDown',
-        keyCode: 40,
-      });
+      ).toEqual(document.activeElement);
+      host.dispatchKeyboardEvent(
+        document.activeElement as HTMLElement,
+        'keydown',
+        {
+          key: 'ArrowDown',
+          keyCode: 40,
+        }
+      );
       expect(
         host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(4)',
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content > *:nth-child(2)',
           {
             root: true,
           }
         )
-      ).toHaveClass('active');
+      ).toEqual(document.activeElement);
+      host.dispatchKeyboardEvent(
+        document.activeElement as HTMLElement,
+        'keydown',
+        {
+          key: 'ArrowDown',
+          keyCode: 40,
+        }
+      );
+      expect(
+        host.query(
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content > *:nth-child(4)',
+          {
+            root: true,
+          }
+        )
+      ).toEqual(document.activeElement);
       expect(
         host.query(
           '.cdk-overlay-container .cdk-overlay-connected-position-bounding-box:nth-child(2)',
@@ -149,30 +170,27 @@ describe('Integ: ContextMenuDirective', () => {
           }
         )
       ).not.toExist();
-      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
-        key: 'ArrowRight',
-        keyCode: 39,
-      });
+      host.dispatchKeyboardEvent(
+        document.activeElement as HTMLElement,
+        'keydown',
+        {
+          key: 'ArrowRight',
+          keyCode: 39,
+        }
+      );
+      host.dispatchKeyboardEvent(
+        document.activeElement as HTMLElement,
+        'keydown',
+        {
+          key: 'ArrowDown',
+          keyCode: 40,
+        }
+      );
       expect(
-        host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(4)',
-          {
-            root: true,
-          }
-        )
-      ).toHaveClass('active');
-      expect(
-        host.query(
-          '.cdk-overlay-container .cdk-overlay-connected-position-bounding-box:nth-child(2)',
-          {
-            root: true,
-          }
-        )
-      ).toExist();
-      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
-        key: 'ArrowLeft',
-        keyCode: 37,
-      });
+        host.query('.submenu-item', {
+          root: true,
+        })?.parentElement
+      ).toEqual(document.activeElement as HTMLElement);
     });
   });
 
@@ -200,30 +218,38 @@ describe('Integ: ContextMenuDirective', () => {
         { hostProps: { item: { id: 'item-id' } } }
       );
       host.dispatchMouseEvent(host.debugElement, 'click');
-      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
-        key: 'ArrowDown',
-        keyCode: 40,
-      });
+      host.dispatchKeyboardEvent(
+        document.activeElement as HTMLElement,
+        'keydown',
+        {
+          key: 'ArrowDown',
+          keyCode: 40,
+        }
+      );
       expect(
         host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(1)',
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content > *:nth-child(1)',
           {
             root: true,
           }
         )
-      ).toHaveClass('active');
-      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
-        key: 'z',
-        keyCode: 90,
-      });
+      ).toEqual(document.activeElement);
+      host.dispatchKeyboardEvent(
+        document.activeElement as HTMLElement,
+        'keydown',
+        {
+          key: 'z',
+          keyCode: 90,
+        }
+      );
       expect(
         host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(1)',
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content > *:nth-child(1)',
           {
             root: true,
           }
         )
-      ).not.toHaveClass('active');
+      ).not.toEqual(document.activeElement);
     });
 
     it('should open the menu when typing y and close when typing z', () => {
@@ -248,34 +274,46 @@ describe('Integ: ContextMenuDirective', () => {
     `,
         { hostProps: { item: { id: 'item-id' } } }
       );
-      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
-        key: 'y',
-        keyCode: 90,
-      });
-      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
-        key: 'ArrowDown',
-        keyCode: 40,
-      });
+      host.dispatchKeyboardEvent(
+        document.activeElement as HTMLElement,
+        'keydown',
+        {
+          key: 'y',
+          keyCode: 90,
+        }
+      );
+      host.dispatchKeyboardEvent(
+        document.activeElement as HTMLElement,
+        'keydown',
+        {
+          key: 'ArrowDown',
+          keyCode: 40,
+        }
+      );
       expect(
         host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(1)',
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content > *:nth-child(1)',
           {
             root: true,
           }
         )
-      ).toHaveClass('active');
-      host.dispatchKeyboardEvent(host.debugElement, 'keydown', {
-        key: 'z',
-        keyCode: 90,
-      });
+      ).toEqual(document.activeElement);
+      host.dispatchKeyboardEvent(
+        document.activeElement as HTMLElement,
+        'keydown',
+        {
+          key: 'z',
+          keyCode: 90,
+        }
+      );
       expect(
         host.query(
-          '.cdk-overlay-container context-menu-content .ngx-contextmenu li:nth-child(1)',
+          '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content > *:nth-child(1)',
           {
             root: true,
           }
         )
-      ).not.toHaveClass('active');
+      ).not.toEqual(document.activeElement);
     });
   });
 });

@@ -1,23 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
-import { ContextMenuEventService } from '../context-menu-event/context-menu-event.service';
-import { ContextMenuStackService } from '../context-menu-stack/context-menu-stack.service';
+import { ContextMenuOverlaysService } from '../context-menu-overlays/context-menu-overlays.service';
 
 export interface ContextMenuOpenAtPositionOptions<T> {
-  /**
-   * Optional associated data to the context menu, will be emitted when a menu item is selected
-   */
-  value?: T;
-  /**
-   * The horizontal position of the menu
-   */
-  x: number;
-  /**
-   * The vertical position of the menu
-   */
-  y: number;
-}
-export interface ContextMenuOpenAtElementOptions<T> {
   /**
    * Optional associated data to the context menu, will be emitted when a menu item is selected
    */
@@ -39,8 +24,7 @@ export interface ContextMenuOpenAtElementOptions<T> {
   providedIn: 'root',
 })
 export class ContextMenuService<T> {
-  constructor(private contextMenuEventService: ContextMenuEventService<T>,
-              private contextMenuStackService: ContextMenuStackService<T>) {}
+  constructor(private contextMenuOverlaysService: ContextMenuOverlaysService) {}
   /**
    * Show the given `ContextMenuComponent` at a specified X/Y position
    */
@@ -48,9 +32,8 @@ export class ContextMenuService<T> {
     contextMenu: ContextMenuComponent<T>,
     options: ContextMenuOpenAtPositionOptions<T> = { x: 0, y: 0 }
   ) {
-    this.contextMenuEventService.show({
+    contextMenu.show({
       anchoredTo: 'position',
-      contextMenu,
       value: options.value,
       x: options.x,
       y: options.y,
@@ -61,13 +44,13 @@ export class ContextMenuService<T> {
    * Close all open `ContextMenuComponent`
    */
   public closeAll(): void {
-    this.contextMenuStackService.closeAll();
+    this.contextMenuOverlaysService.closeAll();
   }
 
   /**
    * Return true if any `ContextMenuComponent` is open
    */
   public hasOpenMenu(): boolean {
-    return !this.contextMenuStackService.isEmpty();
+    return !this.contextMenuOverlaysService.isEmpty();
   }
 }

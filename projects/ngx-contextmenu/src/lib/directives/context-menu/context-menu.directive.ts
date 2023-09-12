@@ -6,12 +6,14 @@ import {
   Input,
 } from '@angular/core';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
-import { ContextMenuEventService } from '../../services/context-menu-event/context-menu-event.service';
-import { ContextMenuStackService } from '../../services/context-menu-stack/context-menu-stack.service';
 
 @Directive({
   selector: '[contextMenu]',
   exportAs: 'ngxContextMenu',
+  host: {
+    role: 'button',
+    'attr.aria-haspopup': 'menu',
+  },
 })
 export class ContextMenuDirective<T> {
   /**
@@ -24,7 +26,7 @@ export class ContextMenuDirective<T> {
    * The component holding the menu item directive templates
    */
   @Input()
-  public contextMenu!: ContextMenuComponent<T>;
+  public contextMenu?: ContextMenuComponent<T>;
 
   /**
    * The directive must have a tabindex for being accessible
@@ -34,26 +36,45 @@ export class ContextMenuDirective<T> {
   public tabindex: string | number = '0';
 
   /**
-   * Accessibility
-   *
-   * @internal
+   * Return true if the context menu is opened, false otherwise
    */
-  @HostBinding('attr.role')
-  public role = 'button';
+  @HostBinding('attr.aria-expanded')
+  public get isOpen(): boolean {
+    return this.contextMenu?.isOpen ?? false;
+  }
+
+  constructor(private elementRef: ElementRef<HTMLElement>) {}
 
   /**
-   * Accessibility
-   *
    * @internal
    */
-  @HostBinding('attr.aria-haspopup')
-  public ariaHasPopup = 'menu';
+  @HostListener('contextmenu', ['$event'])
+  public onContextMenu(event: MouseEvent): void {
+    if (!this.canOpen()) {
+      return;
+    }
 
-  constructor(
-    private contextMenuEventService: ContextMenuEventService<T>,
-    private elementRef: ElementRef<HTMLElement>,
-    private contextMenuStackService: ContextMenuStackService<T>
-  ) {}
+    this.close();
+
+    this.contextMenu?.show({
+      anchoredTo: 'position',
+      x: event.clientX,
+      y: event.clientY,
+      value: this.contextMenuValue,
+    });
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  /**
+   * @internal
+   */
+  @HostListener('window:contextmenu')
+  @HostListener('window:keydown.Escape')
+  public onKeyArrowEscape(): void {
+    this.close();
+  }
 
   /**
    * Programmatically open the context menu
@@ -71,11 +92,10 @@ export class ContextMenuDirective<T> {
     const { x, y, height } =
       this.elementRef.nativeElement.getBoundingClientRect();
 
-    this.contextMenuEventService.show({
+    this.contextMenu?.show({
       anchoredTo: 'position',
       x,
       y: y + height,
-      contextMenu: this.contextMenu,
       value: this.contextMenuValue,
     });
   }
@@ -84,30 +104,10 @@ export class ContextMenuDirective<T> {
    * Programmatically close the context menu
    */
   public close(): void {
-    this.contextMenuStackService.closeAll();
-  }
-
-  /**
-   * @internal
-   */
-  @HostListener('contextmenu', ['$event'])
-  public onContextMenu(event: MouseEvent): void {
-    if (!this.canOpen()) {
-      return;
-    }
-
-    this.contextMenuEventService.show({
-      anchoredTo: 'position',
-      contextMenu: this.contextMenu,
-      x: event.clientX,
-      y: event.clientY,
-      value: this.contextMenuValue,
-    });
-    event.preventDefault();
-    event.stopPropagation();
+    this.contextMenu?.hide();
   }
 
   private canOpen(): boolean {
-    return this.contextMenu && !this.contextMenu.disabled;
+    return (this.contextMenu && !this.contextMenu.disabled) ?? false;
   }
 }

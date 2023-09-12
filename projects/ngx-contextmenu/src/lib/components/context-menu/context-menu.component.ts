@@ -19,8 +19,7 @@ import {
 import { Subscription } from 'rxjs';
 import { ContextMenuItemDirective } from '../../directives/context-menu-item/context-menu-item.directive';
 import { evaluateIfFunction } from '../../helper/evaluate';
-import { ContextMenuEventService } from '../../services/context-menu-event/context-menu-event.service';
-import { ContextMenuStackService } from '../../services/context-menu-stack/context-menu-stack.service';
+import { ContextMenuOverlaysService } from '../../services/context-menu-overlays/context-menu-overlays.service';
 import { ContextMenuContentComponent } from '../context-menu-content/context-menu-content.component';
 import {
   getPositionsToAnchorElement,
@@ -71,7 +70,14 @@ export class ContextMenuComponent<T> implements OnDestroy {
    * The menu item directives defined inside the component
    */
   @ContentChildren(ContextMenuItemDirective)
-  public menuItems!: QueryList<ContextMenuItemDirective<T>>;
+  public menuItems?: QueryList<ContextMenuItemDirective<T>>;
+
+  /**
+   * Returns true if the context menu is opened, false otherwise
+   */
+  public get isOpen(): boolean {
+    return this.#isOpen;
+  }
 
   /**
    * @internal
@@ -82,79 +88,46 @@ export class ContextMenuComponent<T> implements OnDestroy {
    */
   public value?: T;
 
-  private subscription: Subscription = new Subscription();
+  private subscriptions: Subscription = new Subscription();
+  private overlayRef?: OverlayRef;
+  private contextMenuContentComponent?: ContextMenuContentComponent<T>;
+  #isOpen: boolean = false;
 
   constructor(
     private overlay: Overlay,
     private scrollStrategy: ScrollStrategyOptions,
-    private contextMenuStack: ContextMenuStackService<T>,
-    private contextMenuEventService: ContextMenuEventService<T>
+    private contextMenuOverlaysService: ContextMenuOverlaysService
   ) {}
 
   /**
    * @internal
    */
   public ngOnInit(): void {
-    const subscription = this.contextMenuEventService.onShow.subscribe(
-      (menuEvent) => {
-        this.onMenuEvent(menuEvent);
+    const subscription = this.contextMenuOverlaysService.allClosed.subscribe(
+      () => {
+        this.#isOpen = false;
       }
     );
 
-    this.subscription.add(subscription);
+    this.subscriptions.add(subscription);
   }
 
   /**
    * @internal
    */
   public ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   /**
-   * Open context menu
+   * @internal
    */
-  public openContextMenu(context: IContextMenuContext<T>) {
-    let positionStrategy: FlexibleConnectedPositionStrategy;
-
-    if (context.anchoredTo === 'position') {
-      positionStrategy = this.overlay
-        .position()
-        .flexibleConnectedTo({
-          x: context.x,
-          y: context.y,
-        })
-        .withPositions(getPositionsToXY(context.dir));
-      this.closeAllContextMenus();
-    } else {
-      const { anchorElement, parentContextMenu } = context;
-      positionStrategy = this.overlay
-        .position()
-        .flexibleConnectedTo(new ElementRef(anchorElement))
-        .withPositions(getPositionsToAnchorElement(parentContextMenu.dir));
-      this.contextMenuStack.destroySubMenus(parentContextMenu);
-    }
-
-    const overlayRef = this.overlay.create({
-      positionStrategy,
-      panelClass: 'ngx-contextmenu',
-      scrollStrategy: this.scrollStrategy.close(),
-    });
-    this.attachContextMenu(overlayRef, context);
-  }
-
-  private onMenuEvent(event: ContextMenuOpenEvent<T>): void {
+  public show(event: ContextMenuOpenEvent<T>): void {
     if (this.disabled) {
       return;
     }
 
-    const { contextMenu, value } = event;
-
-    if (contextMenu && contextMenu !== this) {
-      return;
-    }
-
-    this.value = value;
+    this.value = event.value;
     this.setVisibleMenuItems();
 
     this.openContextMenu({
@@ -167,70 +140,90 @@ export class ContextMenuComponent<T> implements OnDestroy {
     this.open.next(event);
   }
 
-  private attachContextMenu(
-    overlayRef: OverlayRef,
-    context: IContextMenuContext<T>
-  ): void {
+  /**
+   * @internal
+   */
+  public hide(): void {
+    this.contextMenuContentComponent?.menuDirectives.forEach(
+      (menuDirective) => {
+        menuDirective.subMenu?.hide();
+      }
+    );
+    this.overlayRef?.detach();
+    this.overlayRef?.dispose();
+    this.#isOpen = false;
+  }
+
+  /**
+   * @internal
+   */
+  public openContextMenu(context: IContextMenuContext<T>) {
+    let positionStrategy: FlexibleConnectedPositionStrategy;
+
+    if (context.anchoredTo === 'position') {
+      positionStrategy = this.overlay
+        .position()
+        .flexibleConnectedTo({
+          x: context.x,
+          y: context.y,
+        })
+        .withPositions(getPositionsToXY(context.dir));
+    } else {
+      const { anchorElement, parentContextMenu } = context;
+      positionStrategy = this.overlay
+        .position()
+        .flexibleConnectedTo(new ElementRef(anchorElement))
+        .withPositions(getPositionsToAnchorElement(parentContextMenu.dir));
+    }
+
+    this.overlayRef = this.overlay.create({
+      positionStrategy,
+      panelClass: 'ngx-contextmenu-overlay',
+      scrollStrategy: this.scrollStrategy.close(),
+    });
+    this.contextMenuOverlaysService.push(this.overlayRef);
+    this.attachContextMenu(context);
+
+    this.#isOpen = true;
+  }
+
+  private attachContextMenu(context: IContextMenuContext<T>): void {
     const { value, menuItemDirectives } = context;
-    const contextMenuContentRef = overlayRef.attach(
+    const contextMenuContentRef = this.overlayRef?.attach(
       new ComponentPortal<ContextMenuContentComponent<T>>(
         ContextMenuContentComponent
       )
     );
+    const contextMenuContentComponent = contextMenuContentRef?.instance;
 
-    const { instance: contextMenuContentComponent } = contextMenuContentRef;
+    if (!contextMenuContentComponent) {
+      return;
+    }
+
+    this.contextMenuContentComponent = contextMenuContentComponent;
 
     contextMenuContentComponent.value = value;
     contextMenuContentComponent.menuDirectives = menuItemDirectives;
-    contextMenuContentComponent.overlayRef = overlayRef;
-    contextMenuContentComponent.isLeaf = true;
     contextMenuContentComponent.menuClass = this.getMenuClass(context);
     contextMenuContentComponent.dir = this.getDir(context);
 
-    this.contextMenuStack.push({
-      overlayRef,
-      contextMenuContentComponent,
-    });
+    const closeSubscription = contextMenuContentComponent.close.subscribe(
+      () => {
+        this.overlayRef?.detach();
+        this.overlayRef?.dispose();
+      }
+    );
 
-    const subscriptions: Subscription = new Subscription();
-    subscriptions.add(
-      contextMenuContentComponent.execute.subscribe(() =>
-        this.closeAllContextMenus()
-      )
+    const executeSubscription = contextMenuContentComponent.execute.subscribe(
+      () => {
+        this.contextMenuOverlaysService.closeAll();
+      }
     );
-    subscriptions.add(
-      contextMenuContentComponent.closeAllMenus.subscribe(() =>
-        this.closeAllContextMenus()
-      )
-    );
-    subscriptions.add(
-      contextMenuContentComponent.closeLeafMenu.subscribe(
-        (closeLeafMenuEvent) =>
-          this.destroyLeafMenu(!!closeLeafMenuEvent.excludeRootMenu)
-      )
-    );
-    subscriptions.add(
-      contextMenuContentComponent.openSubMenu.subscribe(
-        (openSubMenuEvent: ContextMenuOpenEvent<T>) => {
-          this.contextMenuStack.destroySubMenus(contextMenuContentComponent);
-          if (!openSubMenuEvent.contextMenu) {
-            contextMenuContentComponent.isLeaf = true;
-            return;
-          }
-          contextMenuContentComponent.isLeaf = false;
-          this.contextMenuEventService.show(openSubMenuEvent);
-        }
-      )
-    );
-    subscriptions.add(
-      contextMenuContentComponent.closeSubMenus.subscribe(() => {
-        this.contextMenuStack.destroySubMenus(contextMenuContentComponent);
-      })
-    );
+
     contextMenuContentRef.onDestroy(() => {
-      this.close.next();
-      menuItemDirectives.forEach((menuItem) => (menuItem.isActive = false));
-      subscriptions.unsubscribe();
+      this.close.emit();
+      closeSubscription.unsubscribe();
+      executeSubscription.unsubscribe();
     });
     contextMenuContentRef.changeDetectorRef.detectChanges();
   }
@@ -251,21 +244,13 @@ export class ContextMenuComponent<T> implements OnDestroy {
     );
   }
 
-  private closeAllContextMenus(): void {
-    this.contextMenuStack.closeAll();
-  }
-
-  private destroyLeafMenu(excludeRootMenu: boolean): void {
-    this.contextMenuStack.closeLeafMenu(excludeRootMenu);
-  }
-
   private isMenuItemVisible(menuItem: ContextMenuItemDirective<T>): boolean {
     return evaluateIfFunction(menuItem.visible, this.value);
   }
 
   private setVisibleMenuItems(): void {
-    this.visibleMenuItems = this.menuItems.filter((menuItem) =>
-      this.isMenuItemVisible(menuItem)
-    );
+    this.visibleMenuItems =
+      this.menuItems?.filter((menuItem) => this.isMenuItemVisible(menuItem)) ??
+      [];
   }
 }

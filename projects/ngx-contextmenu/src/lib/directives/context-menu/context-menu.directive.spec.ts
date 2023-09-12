@@ -3,9 +3,6 @@ import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
-import { ContextMenuEventService } from '../../services/context-menu-event/context-menu-event.service';
-import { ContextMenuStackService } from '../../services/context-menu-stack/context-menu-stack.service';
-import { ContextMenuService } from '../../services/context-menu/context-menu.service';
 import { ContextMenuDirective } from './context-menu.directive';
 
 @Component({
@@ -16,15 +13,11 @@ class TestHostComponent {}
 describe('Directive: ContextMenuDirective', () => {
   let fixture: ComponentFixture<TestHostComponent>;
   let directive: ContextMenuDirective<unknown>;
-  let contextMenuEventService: ContextMenuEventService<unknown>;
-  let contextMenuStackService: ContextMenuStackService<unknown>;
-  let onShow: jasmine.Spy<jasmine.Func>;
   let directiveEl: DebugElement;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [OverlayModule],
-      providers: [ContextMenuEventService],
       declarations: [ContextMenuDirective, TestHostComponent],
     });
 
@@ -33,10 +26,6 @@ describe('Directive: ContextMenuDirective', () => {
       By.directive(ContextMenuDirective)
     );
     directive = directiveEl.injector.get(ContextMenuDirective);
-    contextMenuEventService = TestBed.inject(ContextMenuEventService);
-    contextMenuStackService = TestBed.inject(ContextMenuStackService);
-    onShow = jasmine.createSpy('onShow');
-    contextMenuEventService.onShow.subscribe(onShow);
   });
 
   afterEach(() => {
@@ -50,53 +39,75 @@ describe('Directive: ContextMenuDirective', () => {
   });
 
   describe('#onContextMenu', () => {
-    it('should show attached context menu', () => {
-      directive.contextMenu =
+    let contextMenu: ContextMenuComponent<unknown>;
+    beforeEach(() => {
+      contextMenu =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
+
+      spyOn(contextMenu, 'show');
+    });
+
+    it('should show attached context menu', () => {
+      directive.contextMenu = contextMenu;
       directive.contextMenuValue = { id: 'a' };
       const event = new MouseEvent('contextmenu', { clientX: 42, clientY: 34 });
       directive.onContextMenu(event);
-      expect(onShow).toHaveBeenCalledWith({
+      expect(directive.contextMenu.show).toHaveBeenCalledWith({
         anchoredTo: 'position',
-        contextMenu: directive.contextMenu,
         x: 42,
         y: 34,
         value: directive.contextMenuValue,
       });
     });
 
+    it('should prevent default and stop propagation', () => {
+      directive.contextMenu = contextMenu;
+      directive.contextMenuValue = { id: 'a' };
+      const event = new MouseEvent('contextmenu', { clientX: 42, clientY: 34 });
+      spyOn(event, 'preventDefault');
+      spyOn(event, 'stopPropagation');
+      directive.onContextMenu(event);
+      expect(event.preventDefault).toHaveBeenCalledWith();
+      expect(event.stopPropagation).toHaveBeenCalledWith();
+    });
+
     it('should not show attached context menu if it is disabled', () => {
-      directive.contextMenu =
-        TestBed.createComponent(ContextMenuComponent).componentInstance;
+      directive.contextMenu = contextMenu;
       directive.contextMenu.disabled = true;
       directive.contextMenuValue = { id: 'a' };
       const event = new MouseEvent('contextmenu');
       directive.onContextMenu(event);
-      expect(onShow).not.toHaveBeenCalled();
+      expect(directive.contextMenu.show).not.toHaveBeenCalled();
     });
 
     it('should show nothing if not context menu is attached', () => {
       directive.contextMenuValue = { id: 'a' };
       const event = new MouseEvent('contextmenu');
       directive.onContextMenu(event);
-      expect(onShow).not.toHaveBeenCalled();
+      expect(contextMenu.show).not.toHaveBeenCalled();
     });
   });
 
   describe('#open', () => {
     describe('when using mouse event', () => {
-      it('should show attached context menu', () => {
-        directive.contextMenu =
+      let contextMenu: ContextMenuComponent<unknown>;
+      beforeEach(() => {
+        contextMenu =
           TestBed.createComponent(ContextMenuComponent).componentInstance;
+
+        spyOn(contextMenu, 'show');
+      });
+
+      it('should show attached context menu', () => {
+        directive.contextMenu = contextMenu;
         directive.contextMenuValue = { id: 'a' };
         const event = new MouseEvent('contextmenu', {
           clientX: 42,
           clientY: 34,
         });
         directive.open(event);
-        expect(onShow).toHaveBeenCalledWith({
+        expect(directive.contextMenu.show).toHaveBeenCalledWith({
           anchoredTo: 'position',
-          contextMenu: directive.contextMenu,
           x: 42,
           y: 34,
           value: directive.contextMenuValue,
@@ -104,27 +115,33 @@ describe('Directive: ContextMenuDirective', () => {
       });
 
       it('should not show attached context menu if it is disabled', () => {
-        directive.contextMenu =
-          TestBed.createComponent(ContextMenuComponent).componentInstance;
+        directive.contextMenu = contextMenu;
         directive.contextMenu.disabled = true;
         directive.contextMenuValue = { id: 'a' };
         const event = new MouseEvent('contextmenu');
         directive.open(event);
-        expect(onShow).not.toHaveBeenCalled();
+        expect(directive.contextMenu.show).not.toHaveBeenCalled();
       });
 
       it('should show nothing if not context menu is attached', () => {
         directive.contextMenuValue = { id: 'a' };
         const event = new MouseEvent('contextmenu');
         directive.open(event);
-        expect(onShow).not.toHaveBeenCalled();
+        expect(contextMenu.show).not.toHaveBeenCalled();
       });
     });
 
     describe('when using no event', () => {
+      let contextMenu: ContextMenuComponent<unknown>;
+      beforeEach(() => {
+        contextMenu =
+          TestBed.createComponent(ContextMenuComponent).componentInstance;
+
+        spyOn(contextMenu, 'show');
+      });
+
       it('should show attached context menu', () => {
-        const fixture = TestBed.createComponent(ContextMenuComponent);
-        directive.contextMenu = fixture.componentInstance;
+        directive.contextMenu = contextMenu;
         spyOn(
           directiveEl.nativeElement as HTMLElement,
           'getBoundingClientRect'
@@ -135,9 +152,8 @@ describe('Directive: ContextMenuDirective', () => {
         } as DOMRect);
         directive.contextMenuValue = { id: 'a' };
         directive.open();
-        expect(onShow).toHaveBeenCalledWith({
+        expect(contextMenu.show).toHaveBeenCalledWith({
           anchoredTo: 'position',
-          contextMenu: directive.contextMenu,
           x: 100,
           y: 220,
           value: directive.contextMenuValue,
@@ -145,27 +161,28 @@ describe('Directive: ContextMenuDirective', () => {
       });
 
       it('should not show attached context menu if it is disabled', () => {
-        directive.contextMenu =
-          TestBed.createComponent(ContextMenuComponent).componentInstance;
+        directive.contextMenu = contextMenu;
         directive.contextMenu.disabled = true;
         directive.contextMenuValue = { id: 'a' };
         directive.open();
-        expect(onShow).not.toHaveBeenCalled();
+        expect(contextMenu.show).not.toHaveBeenCalled();
       });
 
       it('should show nothing if not context menu is attached', () => {
         directive.contextMenuValue = { id: 'a' };
         directive.open();
-        expect(onShow).not.toHaveBeenCalled();
+        expect(contextMenu.show).not.toHaveBeenCalled();
       });
     });
   });
 
   describe('#close', () => {
     it('should close all context menu', () => {
-      spyOn(contextMenuStackService, 'closeAll');
+      directive.contextMenu =
+        TestBed.createComponent(ContextMenuComponent).componentInstance;
+      spyOn(directive.contextMenu, 'hide');
       directive.close();
-      expect(contextMenuStackService.closeAll).toHaveBeenCalledWith();
+      expect(directive.contextMenu.hide).toHaveBeenCalledWith();
     });
   });
 });

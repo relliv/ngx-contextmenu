@@ -1,7 +1,13 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
 import {
-  ContextMenuService,
-  ContextMenuComponent,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import {
+  ContextMenuDirective,
+  ContextMenuOpenEvent,
 } from '@perfectmemory/ngx-contextmenu';
 
 @Component({
@@ -30,105 +36,58 @@ import {
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  @ViewChild('wrapper')
-  private wrapper?: ElementRef<HTMLDivElement>;
+  @Input()
+  public menuClass = '';
 
-  public disableBasicMenu = false;
-  public items: any[] = [
-    {
-      name: 'John',
-      otherProperty: 'Foo',
-      layout: {
-        height: '90px',
-        left: '0px',
-        top: '0px',
-        width: '98px',
-      },
-      actions: [
-        {
-          enabled: true,
-          execute: (item: any): void => console.log(item),
-          html: (item: any): string => `John custom: ${item.name}`,
-          visible: true,
-        },
-        {
-          divider: true,
-          visible: true,
-        },
-        {
-          enabled: true,
-          execute: (item: any): void => console.log(item),
-          html: (item: any): string => `John custom: ${item.name}`,
-          visible: true,
-        },
-      ],
-    },
-    {
-      name: 'Joe',
-      otherProperty: 'Bar',
-      layout: {
-        height: '90px',
-        left: '98px',
-        top: '0px',
-        width: '98px',
-      },
-      actions: [
-        {
-          enabled: true,
-          execute: (item: any): void => {
-            (<any>window).fake.doesntexist = 2;
-          },
-          html: (item: any): string => `Joe something: ${item.name}`,
-          visible: true,
-        },
-      ],
-    },
-  ];
-  public outsideValue = 'something';
+  @Input()
+  public disabled = false;
 
-  @ViewChild('basicMenu', { static: true })
-  public basicMenu?: ContextMenuComponent<any>;
-  /*   @ViewChild('enableAndVisible', { static: true })
-  public enableAndVisible?: ContextMenuComponent;
-  @ViewChild('withFunctions', { static: true })
-  public withFunctions?: ContextMenuComponent; */
+  @Input()
+  public dir: 'ltr' | 'rtl' | undefined;
 
-  constructor(private contextMenuService: ContextMenuService<any>) {}
+  @Input()
+  public value: unknown = 'a user defined item';
 
-  public canUseFullScreen(): boolean {
-    return !!this.wrapper?.nativeElement.requestFullscreen;
+  @Input()
+  public demoMode: 'simple' | 'form' = 'simple';
+
+  @Input()
+  public programmaticOpen = false;
+
+  @Output()
+  public onOpen = new EventEmitter<ContextMenuOpenEvent<unknown>>();
+
+  @Output()
+  public onClose = new EventEmitter<'void'>();
+
+  @Output()
+  public onMenuItemExecuted = new EventEmitter<string>();
+
+  /**
+   * @internal
+   */
+  @ViewChild(ContextMenuDirective)
+  public contextMenuDirective?: ContextMenuDirective<void>;
+
+  /**
+   * @internal
+   */
+  public execute(text: string, value: any) {
+    console.log(value);
+    this.onMenuItemExecuted.next(`${text}: ${value.value}`);
   }
 
-  public requestFullScreen(): void {
-    if (this.canUseFullScreen()) {
-      this.wrapper?.nativeElement.requestFullscreen();
-    } else {
-      console.log('cant use fullscreen');
-    }
+  /**
+   * @internal
+   */
+  public open(value: ContextMenuOpenEvent<unknown>) {
+    this.onOpen.next(value);
   }
 
-  /*   public onContextMenu(event: MouseEvent, item: any): void {
-    this.contextMenuService.display({
-      kind: 'mouse',
-      event: event,
-      item: item,
-    });
-    event.preventDefault();
-  } */
-
-  public showMessage(message: any, data?: any): void {
-    console.log(message, data);
-  }
-
-  public onlyJohn(item: any): boolean {
-    return item.name === 'John';
-  }
-
-  public onlyJoe(item: any): boolean {
-    return item.name === 'Joe';
-  }
-
-  public log(message: any): void {
-    console.log(message);
+  /**
+   * @internal
+   */
+  public close() {
+    this.onClose.next('void');
   }
 }

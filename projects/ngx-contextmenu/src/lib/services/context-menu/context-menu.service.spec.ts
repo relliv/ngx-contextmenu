@@ -1,23 +1,18 @@
-import { OverlayModule } from '@angular/cdk/overlay';
 import { TestBed } from '@angular/core/testing';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
-import { ContextMenuEventService } from '../context-menu-event/context-menu-event.service';
-import { ContextMenuStackService } from '../context-menu-stack/context-menu-stack.service';
+import { ContextMenuOverlaysService } from '../context-menu-overlays/context-menu-overlays.service';
 import { ContextMenuService } from './context-menu.service';
 
 describe('Service: ContextMenuService', () => {
   let service: ContextMenuService<unknown>;
-  let eventService: ContextMenuEventService<unknown>;
-  let stackService: ContextMenuStackService<unknown>;
+  let contextMenuOverlaysService: ContextMenuOverlaysService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ContextMenuComponent],
-      imports: [OverlayModule],
     });
     service = TestBed.inject(ContextMenuService);
-    eventService = TestBed.inject(ContextMenuEventService);
-    stackService = TestBed.inject(ContextMenuStackService);
+    contextMenuOverlaysService = TestBed.inject(ContextMenuOverlaysService);
   });
 
   it('should be created', () => {
@@ -26,13 +21,12 @@ describe('Service: ContextMenuService', () => {
 
   describe('#show', () => {
     it('should emit a show event', () => {
-      spyOn(eventService, 'show');
       const component =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
+      spyOn(component, 'show');
       service.show(component);
-      expect(eventService.show).toHaveBeenCalledWith({
+      expect(component.show).toHaveBeenCalledWith({
         anchoredTo: 'position',
-        contextMenu: component,
         x: 0,
         y: 0,
         value: undefined,
@@ -40,13 +34,12 @@ describe('Service: ContextMenuService', () => {
     });
 
     it('should emit a show event with options', () => {
-      spyOn(eventService, 'show');
       const component =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
+      spyOn(component, 'show');
       service.show(component, { x: 42, y: 34, value: { any: 'thing' } });
-      expect(eventService.show).toHaveBeenCalledWith({
+      expect(component.show).toHaveBeenCalledWith({
         anchoredTo: 'position',
-        contextMenu: component,
         x: 42,
         y: 34,
         value: { any: 'thing' },
@@ -56,17 +49,21 @@ describe('Service: ContextMenuService', () => {
 
   describe('#closeAll', () => {
     it('should trigger closeAll', () => {
-      spyOn(stackService, 'closeAll');
+      spyOn(contextMenuOverlaysService, 'closeAll');
       service.closeAll();
-      expect(stackService.closeAll).toHaveBeenCalled();
+      expect(contextMenuOverlaysService.closeAll).toHaveBeenCalled();
     });
   });
 
   describe('#hasOpenMenu', () => {
-    it('should trigger isEmpty', () => {
-      spyOn(stackService, 'isEmpty');
-      service.hasOpenMenu();
-      expect(stackService.isEmpty).toHaveBeenCalled();
+    it('should get information from overlays service', () => {
+      const spy = spyOn(contextMenuOverlaysService, 'isEmpty').and.returnValue(
+        true
+      );
+      expect(service.hasOpenMenu()).toEqual(false);
+      spy.and.returnValue(false);
+      expect(service.hasOpenMenu()).toEqual(true);
+      expect(contextMenuOverlaysService.isEmpty).toHaveBeenCalledTimes(2);
     });
   });
 });

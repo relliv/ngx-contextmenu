@@ -10,16 +10,14 @@ import { ComponentRef, ElementRef, QueryList } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { ContextMenuItemDirective } from '../../directives/context-menu-item/context-menu-item.directive';
-import { ContextMenuEventService } from '../../services/context-menu-event/context-menu-event.service';
-import { ContextMenuStackService } from '../../services/context-menu-stack/context-menu-stack.service';
+import { ContextMenuOverlaysService } from '../../services/context-menu-overlays/context-menu-overlays.service';
 import { ContextMenuContentComponent } from '../context-menu-content/context-menu-content.component';
 import { ContextMenuComponent } from './context-menu.component';
-import { IContextMenuContext } from './context-menu.component.interface';
+import { ContextMenuOpenEvent } from './context-menu.component.interface';
 
 describe('Component: ContextMenuComponent', () => {
   let component: ContextMenuComponent<unknown>;
   let fixture: ComponentFixture<ContextMenuComponent<unknown>>;
-  let contextMenuEventService: ContextMenuEventService<unknown>;
   let scrollStrategyClose: jasmine.Spy<jasmine.Func>;
   let overlayPosition: jasmine.Spy<jasmine.Func>;
   let overlayFlexibleConnectedTo: jasmine.Spy<jasmine.Func>;
@@ -32,18 +30,17 @@ describe('Component: ContextMenuComponent', () => {
   let overlayRef: OverlayRef;
   let contextMenuContentRef: ComponentRef<ContextMenuContentComponent<unknown>>;
   let closeScrollStrategy: CloseScrollStrategy;
+  let contextMenuOverlaysService: ContextMenuOverlaysService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OverlayModule],
-      providers: [ContextMenuEventService],
       declarations: [ContextMenuComponent],
     }).compileComponents();
     contextMenuContentRef = {
       instance: {
         execute: new Subject(),
-        closeAllMenus: new Subject(),
-        closeLeafMenu: new Subject(),
+        close: new Subject(),
         openSubMenu: new Subject(),
         closeSubMenus: new Subject(),
       },
@@ -85,7 +82,6 @@ describe('Component: ContextMenuComponent', () => {
     TestBed.configureTestingModule({
       imports: [OverlayModule],
       providers: [
-        ContextMenuEventService,
         {
           provide: Overlay,
           useValue: {
@@ -102,9 +98,11 @@ describe('Component: ContextMenuComponent', () => {
       ],
     });
     fixture = TestBed.createComponent(ContextMenuComponent);
-    contextMenuEventService = TestBed.inject(ContextMenuEventService);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    contextMenuOverlaysService = TestBed.inject(ContextMenuOverlaysService);
+    spyOn(contextMenuOverlaysService, 'push').and.callThrough();
+    spyOn(contextMenuOverlaysService, 'closeAll').and.callThrough();
   });
 
   it('should create', () => {
@@ -112,228 +110,29 @@ describe('Component: ContextMenuComponent', () => {
   });
 
   describe('#ngOnInit', () => {
-    describe('#onMenuEvent', () => {
-      let open: jasmine.Spy<jasmine.Func>;
-      let close: jasmine.Spy<jasmine.Func>;
-      let a: ContextMenuItemDirective<unknown>;
-      let b: ContextMenuItemDirective<unknown>;
-      let c: ContextMenuItemDirective<unknown>;
-      let d: ContextMenuItemDirective<unknown>;
-      let value: unknown;
+    it('should listen to overlays allClosed', () => {
+      component.show({ anchoredTo: 'position', x: 0, y: 0 });
+      expect(component.isOpen).toEqual(true);
 
-      beforeEach(() => {
-        a = {
-          visible: false,
-        } as ContextMenuItemDirective<unknown>;
-        b = {
-          visible: true,
-        } as ContextMenuItemDirective<unknown>;
-        c = {
-          visible: (item: unknown) => false,
-        } as ContextMenuItemDirective<unknown>;
-        d = {
-          visible: (item: unknown) => true,
-        } as ContextMenuItemDirective<unknown>;
-        spyOn(component, 'openContextMenu');
-        open = jasmine.createSpy('open');
-        component.open.subscribe(open);
-        close = jasmine.createSpy('close');
-        component.close.subscribe(close);
+      contextMenuOverlaysService.closeAll();
 
-        value = { id: 'a' };
-        const menuItems = new QueryList<ContextMenuItemDirective<unknown>>();
-        menuItems.reset([a, b, c, d]);
-        component.menuItems = menuItems;
-        component.menuClass = 'custom-class';
-        component.dir = 'rtl';
-        component.ngOnInit();
-      });
-
-      describe('with all required properties', () => {
-        beforeEach(() => {
-          TestBed.inject(ContextMenuEventService).show({
-            anchoredTo: 'position',
-            x: 0,
-            y: 0,
-            contextMenu: component,
-            value,
-          });
-        });
-
-        it('should set item', () => {
-          expect(component.value).toEqual(value);
-        });
-
-        it('should open context menu', () => {
-          expect(component.openContextMenu).toHaveBeenCalledWith({
-            anchoredTo: 'position',
-            x: 0,
-            y: 0,
-            contextMenu: component,
-            value,
-            dir: 'rtl',
-            menuItemDirectives: [b, d],
-            menuClass: 'custom-class',
-          });
-        });
-
-        it('should notify open menu', () => {
-          expect(open).toHaveBeenCalledWith({
-            anchoredTo: 'position',
-            x: 0,
-            y: 0,
-            contextMenu: component,
-            value,
-          });
-        });
-      });
-
-      describe('with contextMenu not defined', () => {
-        beforeEach(() => {
-          TestBed.inject(ContextMenuEventService).show({
-            anchoredTo: 'position',
-            x: 0,
-            y: 0,
-            contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
-            value,
-          });
-        });
-
-        it('should set item', () => {
-          expect(component.value).toEqual(value);
-        });
-
-        it('should set visible items', () => {
-          expect(component.visibleMenuItems).toEqual([b, d]);
-        });
-
-        it('should open context menu', () => {
-          expect(component.openContextMenu).toHaveBeenCalledWith({
-            anchoredTo: 'position',
-            x: 0,
-            y: 0,
-            value,
-            contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
-            menuItemDirectives: [b, d],
-            menuClass: 'custom-class',
-            dir: 'rtl',
-          });
-        });
-
-        it('should notify open menu', () => {
-          expect(open).toHaveBeenCalledWith({
-            anchoredTo: 'position',
-            x: 0,
-            y: 0,
-            value,
-            contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
-          });
-        });
-      });
-
-      describe('when disabled', () => {
-        beforeEach(() => {
-          component.disabled = true;
-          TestBed.inject(ContextMenuEventService).show({
-            anchoredTo: 'position',
-            x: 0,
-            y: 0,
-            contextMenu: undefined as unknown as ContextMenuComponent<unknown>,
-            value,
-          });
-        });
-
-        it('should not set item', () => {
-          expect(component.value).toBeUndefined();
-        });
-
-        it('should set visible items', () => {
-          expect(component.visibleMenuItems).toEqual([]);
-        });
-
-        it('should open context menu', () => {
-          expect(component.openContextMenu).not.toHaveBeenCalled();
-        });
-
-        it('should notify open menu', () => {
-          expect(open).not.toHaveBeenCalled();
-        });
-      });
-
-      describe('when contextMenu being another component instance', () => {
-        beforeEach(() => {
-          TestBed.inject(ContextMenuEventService).show({
-            anchoredTo: 'position',
-            x: 0,
-            y: 0,
-            contextMenu:
-              TestBed.createComponent(ContextMenuComponent).componentInstance,
-            value,
-          });
-        });
-
-        it('should not set item', () => {
-          expect(component.value).toBeUndefined();
-        });
-
-        it('should set visible items', () => {
-          expect(component.visibleMenuItems).toEqual([]);
-        });
-
-        it('should open context menu', () => {
-          expect(component.openContextMenu).not.toHaveBeenCalled();
-        });
-
-        it('should notify open menu', () => {
-          expect(open).not.toHaveBeenCalled();
-        });
-      });
+      expect(component.isOpen).toEqual(false);
     });
   });
 
-  describe('#openContextMenu', () => {
-    let contextMenuStackService: ContextMenuStackService<unknown>;
-
-    beforeEach(() => {
-      contextMenuStackService = TestBed.inject(ContextMenuStackService);
-      spyOn(contextMenuStackService, 'push');
-      spyOn(contextMenuStackService, 'closeAll');
-      spyOn(contextMenuStackService, 'destroySubMenus');
-      spyOn(contextMenuStackService, 'closeLeafMenu');
-    });
-
+  describe('#show', () => {
     describe('when open anchoredTo position', () => {
-      it('should close all other menus', () => {
-        const context: IContextMenuContext<unknown> = {
-          anchoredTo: 'position',
-          x: 0,
-          y: 0,
-          contextMenu:
-            TestBed.createComponent(ContextMenuComponent).componentInstance,
-          value: {},
-          dir: 'rtl',
-          menuClass: '',
-          menuItemDirectives: [],
-        };
-        const subscriber = jasmine.createSpy('subscriber');
-        component.close.subscribe(subscriber);
-        component.openContextMenu(context);
-        expect(contextMenuStackService.closeAll).toHaveBeenCalled();
-      });
-
       it('should get a position strategy with position and create an overlay from it', () => {
-        const context: IContextMenuContext<unknown> = {
+        const context: ContextMenuOpenEvent<unknown> = {
           anchoredTo: 'position',
           x: 0,
           y: 0,
-          contextMenu:
-            TestBed.createComponent(ContextMenuComponent).componentInstance,
           value: {},
-          dir: undefined,
-          menuClass: '',
-          menuItemDirectives: [],
         };
-        component.openContextMenu(context);
+        component.dir = undefined;
+        component.menuClass = '';
+        component.visibleMenuItems = [];
+        component.show(context);
 
         expect(overlayPosition).toHaveBeenCalled();
         expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith({
@@ -380,29 +179,26 @@ describe('Component: ContextMenuComponent', () => {
         ]);
         expect(overlayCreate).toHaveBeenCalledWith({
           positionStrategy,
-          panelClass: 'ngx-contextmenu',
+          panelClass: 'ngx-contextmenu-overlay',
           scrollStrategy: closeScrollStrategy,
         });
 
-        expect(contextMenuStackService.push).toHaveBeenCalledWith({
-          overlayRef,
-          contextMenuContentComponent: contextMenuContentRef.instance,
-        });
+        expect(contextMenuOverlaysService.push).toHaveBeenCalledWith(
+          overlayRef
+        );
       });
 
       it('should get a position strategy with position LTR and create an overlay from it', () => {
-        const context: IContextMenuContext<unknown> = {
+        const context: ContextMenuOpenEvent<unknown> = {
           anchoredTo: 'position',
           x: 0,
           y: 0,
-          contextMenu:
-            TestBed.createComponent(ContextMenuComponent).componentInstance,
           value: {},
-          dir: 'ltr',
-          menuClass: '',
-          menuItemDirectives: [],
         };
-        component.openContextMenu(context);
+        component.dir = 'ltr';
+        component.menuClass = '';
+        component.visibleMenuItems = [];
+        component.show(context);
 
         expect(overlayPosition).toHaveBeenCalled();
         expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith({
@@ -449,32 +245,25 @@ describe('Component: ContextMenuComponent', () => {
         ]);
         expect(overlayCreate).toHaveBeenCalledWith({
           positionStrategy,
-          panelClass: 'ngx-contextmenu',
+          panelClass: 'ngx-contextmenu-overlay',
           scrollStrategy: closeScrollStrategy,
         });
 
-        expect(contextMenuStackService.push).toHaveBeenCalledWith({
-          overlayRef,
-          contextMenuContentComponent: contextMenuContentRef.instance,
-        });
+        expect(contextMenuOverlaysService.push).toHaveBeenCalledWith(
+          overlayRef
+        );
       });
 
-      /*       it('should get a position strategy with position parent LTR and create an overlay from it', () => {
-        const context: IContextMenuContext<unknown> = {
+      it('should get a position strategy with position parent LTR and create an overlay from it', () => {
+        const context: ContextMenuOpenEvent<unknown> = {
           anchoredTo: 'position',
           x: 0,
           y: 0,
-          contextMenu:
-            TestBed.createComponent(ContextMenuComponent).componentInstance,
-          parentContextMenu: {
-            dir: 'ltr',
-          } as unknown as ContextMenuContentComponent<unknown>,
-          item: {},
-          dir: 'ltr',
-          menuClass: '',
-          menuDirectives: [],
         };
-        component.openContextMenu(context);
+        component.dir = 'ltr';
+        component.menuClass = '';
+        component.visibleMenuItems = [];
+        component.show(context);
 
         expect(overlayPosition).toHaveBeenCalled();
         expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith({
@@ -521,29 +310,26 @@ describe('Component: ContextMenuComponent', () => {
         ]);
         expect(overlayCreate).toHaveBeenCalledWith({
           positionStrategy,
-          panelClass: 'ngx-contextmenu',
+          panelClass: 'ngx-contextmenu-overlay',
           scrollStrategy: closeScrollStrategy,
         });
 
-        expect(contextMenuStackService.push).toHaveBeenCalledWith({
-          overlayRef,
-          contextMenuComponent: contextMenuContentRef.instance,
-        });
-      }); */
+        expect(contextMenuOverlaysService.push).toHaveBeenCalledWith(
+          overlayRef
+        );
+      });
 
       it('should get a position strategy with position RTL and create an overlay from it', () => {
-        const context: IContextMenuContext<unknown> = {
+        const context: ContextMenuOpenEvent<unknown> = {
           anchoredTo: 'position',
           x: 0,
           y: 0,
-          contextMenu:
-            TestBed.createComponent(ContextMenuComponent).componentInstance,
           value: {},
-          dir: 'rtl',
-          menuClass: '',
-          menuItemDirectives: [],
         };
-        component.openContextMenu(context);
+        component.dir = 'rtl';
+        component.menuClass = '';
+        component.visibleMenuItems = [];
+        component.show(context);
 
         expect(overlayPosition).toHaveBeenCalled();
         expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith({
@@ -590,55 +376,32 @@ describe('Component: ContextMenuComponent', () => {
         ]);
         expect(overlayCreate).toHaveBeenCalledWith({
           positionStrategy,
-          panelClass: 'ngx-contextmenu',
+          panelClass: 'ngx-contextmenu-overlay',
           scrollStrategy: closeScrollStrategy,
         });
 
-        expect(contextMenuStackService.push).toHaveBeenCalledWith({
-          overlayRef,
-          contextMenuContentComponent: contextMenuContentRef.instance,
-        });
+        expect(contextMenuOverlaysService.push).toHaveBeenCalledWith(
+          overlayRef
+        );
       });
     });
 
     describe('when open anchoredTo element', () => {
-      it('should close all sub menus', () => {
-        const context: IContextMenuContext<unknown> = {
-          anchoredTo: 'element',
-          anchorElement: document.createElement('div'),
-          contextMenu:
-            TestBed.createComponent(ContextMenuComponent).componentInstance,
-          parentContextMenu: TestBed.createComponent(
-            ContextMenuContentComponent
-          ).componentInstance,
-          value: {},
-          dir: 'rtl',
-          menuClass: '',
-          menuItemDirectives: [],
-        };
-        const subscriber = jasmine.createSpy('subscriber');
-        component.close.subscribe(subscriber);
-        component.openContextMenu(context);
-        expect(contextMenuStackService.destroySubMenus).toHaveBeenCalled();
-      });
-
       it('should get a position strategy with anchor Element and create an overlay from it', () => {
         const anchorElement = document.createElement('div');
-        const context: IContextMenuContext<unknown> = {
+        const context: ContextMenuOpenEvent<unknown> = {
           anchoredTo: 'element',
           anchorElement,
-          contextMenu:
-            TestBed.createComponent(ContextMenuComponent).componentInstance,
           parentContextMenu: TestBed.createComponent(
             ContextMenuContentComponent
           ).componentInstance,
           value: {},
-          dir: undefined,
-          menuClass: '',
-          menuItemDirectives: [],
         };
+        component.dir = undefined;
+        component.menuClass = '';
+        component.visibleMenuItems = [];
         context.parentContextMenu.dir = 'ltr';
-        component.openContextMenu(context);
+        component.show(context);
 
         expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith(
           jasmine.any(ElementRef)
@@ -676,33 +439,30 @@ describe('Component: ContextMenuComponent', () => {
         ]);
         expect(overlayCreate).toHaveBeenCalledWith({
           positionStrategy,
-          panelClass: 'ngx-contextmenu',
+          panelClass: 'ngx-contextmenu-overlay',
           scrollStrategy: closeScrollStrategy,
         });
 
-        expect(contextMenuStackService.push).toHaveBeenCalledWith({
-          overlayRef,
-          contextMenuContentComponent: contextMenuContentRef.instance,
-        });
+        expect(contextMenuOverlaysService.push).toHaveBeenCalledWith(
+          overlayRef
+        );
       });
 
       it('should get a position strategy with anchor Element RTL and create an overlay from it', () => {
         const anchorElement = document.createElement('div');
-        const context: IContextMenuContext<unknown> = {
+        const context: ContextMenuOpenEvent<unknown> = {
           anchoredTo: 'element',
           anchorElement,
-          contextMenu:
-            TestBed.createComponent(ContextMenuComponent).componentInstance,
           parentContextMenu: TestBed.createComponent(
             ContextMenuContentComponent
           ).componentInstance,
           value: {},
-          dir: undefined,
-          menuClass: '',
-          menuItemDirectives: [],
         };
+        component.dir = undefined;
+        component.menuClass = '';
+        component.visibleMenuItems = [];
         context.parentContextMenu.dir = 'rtl';
-        component.openContextMenu(context);
+        component.show(context);
 
         expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith(
           jasmine.any(ElementRef)
@@ -740,14 +500,13 @@ describe('Component: ContextMenuComponent', () => {
         ]);
         expect(overlayCreate).toHaveBeenCalledWith({
           positionStrategy,
-          panelClass: 'ngx-contextmenu',
+          panelClass: 'ngx-contextmenu-overlay',
           scrollStrategy: closeScrollStrategy,
         });
 
-        expect(contextMenuStackService.push).toHaveBeenCalledWith({
-          overlayRef,
-          contextMenuContentComponent: contextMenuContentRef.instance,
-        });
+        expect(contextMenuOverlaysService.push).toHaveBeenCalledWith(
+          overlayRef
+        );
       });
     });
 
@@ -756,7 +515,7 @@ describe('Component: ContextMenuComponent', () => {
       let b: ContextMenuItemDirective<unknown>;
       let c: ContextMenuItemDirective<unknown>;
       let d: ContextMenuItemDirective<unknown>;
-      let context: IContextMenuContext<unknown>;
+      let context: ContextMenuOpenEvent<unknown>;
       let value: unknown;
 
       beforeEach(() => {
@@ -783,82 +542,75 @@ describe('Component: ContextMenuComponent', () => {
           anchoredTo: 'position',
           x: 0,
           y: 0,
-          contextMenu:
-            TestBed.createComponent(ContextMenuComponent).componentInstance,
           value,
-          dir: 'rtl',
-          menuClass: 'menu-class',
-          menuItemDirectives: [a, b, c, d],
         };
+        component.dir = 'rtl';
+        component.menuClass = 'menu-class';
+        component.visibleMenuItems = [a, b, c, d];
       });
 
       it('should set contextMenuContentComponent properties', () => {
-        component.openContextMenu(context);
+        component.show(context);
         expect(contextMenuContentRef.instance.value).toEqual({ id: 'a' });
-        expect(contextMenuContentRef.instance.menuDirectives).toEqual([
-          a,
-          b,
-          c,
-          d,
-        ]);
-        expect(contextMenuContentRef.instance.overlayRef).toEqual(overlayRef);
-        expect(contextMenuContentRef.instance.isLeaf).toEqual(true);
+        expect(contextMenuContentRef.instance.menuDirectives).toEqual([b, d]);
         expect(contextMenuContentRef.instance.menuClass).toEqual('menu-class');
         expect(contextMenuContentRef.instance.dir).toEqual('rtl');
       });
 
       it('should close all context menu when instance execute', () => {
-        component.openContextMenu(context);
+        component.show(context);
         const event = {
           event: new MouseEvent('click'),
           item: { id: 'a' },
           menuDirective: a,
         };
         contextMenuContentRef.instance.execute.next(event);
-        expect(contextMenuStackService.closeAll).toHaveBeenCalled();
+        expect(overlayRef.detach).toHaveBeenCalledWith();
+        expect(overlayRef.dispose).toHaveBeenCalledWith();
       });
 
-      it('should close all context menu when instance closeAllMenus', () => {
-        component.openContextMenu(context);
-        contextMenuContentRef.instance.closeAllMenus.next();
-        expect(contextMenuStackService.closeAll).toHaveBeenCalled();
+      it('should dispose created component when emit on close', () => {
+        component.show(context);
+        contextMenuContentRef.instance.close.next();
+        expect(overlayRef.detach).toHaveBeenCalledWith();
+        expect(overlayRef.dispose).toHaveBeenCalledWith();
       });
 
-      it('should close leaf menus excluding root when instance closeLeafMenu', () => {
-        component.openContextMenu(context);
+      /*       it('should close leaf menus excluding root when instance closeLeafMenu', () => {
+        component.show(context);
         const event = {
           event: new MouseEvent('click'),
           excludeRootMenu: true,
         };
-        (contextMenuStackService.closeLeafMenu as jasmine.Spy).and.returnValue(
-          true
-        );
+        (
+          contextMenuOverlaysService.closeLeafMenu as jasmine.Spy
+        ).and.returnValue(true);
         contextMenuContentRef.instance.closeLeafMenu.next(event);
-        expect(contextMenuStackService.closeLeafMenu).toHaveBeenCalledWith(
+        expect(contextMenuOverlaysService.closeLeafMenu).toHaveBeenCalledWith(
           true
         );
-      });
+      }); */
 
-      it('should close leaf menus when instance closeLeafMenu', () => {
-        component.openContextMenu(context);
+      /*       it('should close leaf menus when instance closeLeafMenu', () => {
+        component.show(context);
         const event = {
           event: new MouseEvent('click'),
           excludeRootMenu: false,
         };
         const close = jasmine.createSpy('subscriber');
         component.close.subscribe(close);
-        (contextMenuStackService.closeLeafMenu as jasmine.Spy).and.returnValue(
+        (contextMenuOverlaysService.closeLeafMenu as jasmine.Spy).and.returnValue(
           false
         );
         contextMenuContentRef.instance.closeLeafMenu.next(event);
         expect(close).not.toHaveBeenCalled();
-        expect(contextMenuStackService.closeLeafMenu).toHaveBeenCalledWith(
+        expect(contextMenuOverlaysService.closeLeafMenu).toHaveBeenCalledWith(
           false
         );
-      });
-
+      }); */
+      /*
       it('should close sub menus when instance closeSubMenus', () => {
-        component.openContextMenu(context);
+        component.show(context);
         const event = {
           event: new MouseEvent('click'),
           excludeRootMenu: false,
@@ -866,49 +618,35 @@ describe('Component: ContextMenuComponent', () => {
         const close = jasmine.createSpy('subscriber');
         component.close.subscribe(close);
         (
-          contextMenuStackService.destroySubMenus as jasmine.Spy
+          contextMenuOverlaysService.destroySubMenus as jasmine.Spy
         ).and.returnValue(false);
-        contextMenuContentRef.instance.closeSubMenus.next();
+        contextMenuContentRef.instance.hideSubMenus();
         expect(close).not.toHaveBeenCalled();
-        expect(contextMenuStackService.destroySubMenus).toHaveBeenCalledWith(
-          contextMenuContentRef.instance
-        );
       });
 
       it('should open sub menu menus when instance emits openSubMenu, set its isLeaf property to false and show it', () => {
-        component.openContextMenu(context);
+        component.show(context);
         spyOn(contextMenuEventService, 'show');
         contextMenuContentRef.instance.openSubMenu.next(context);
-        expect(contextMenuStackService.destroySubMenus).toHaveBeenCalledWith(
+        expect(contextMenuOverlaysService.destroySubMenus).toHaveBeenCalledWith(
           contextMenuContentRef.instance
         );
-        expect(contextMenuContentRef.instance.isLeaf).toEqual(false);
         expect(contextMenuEventService.show).toHaveBeenCalledWith(context);
       });
 
       it('should not open sub menu menus when instance emits openSubMenu without menu and set its isLeaf property to true', () => {
-        component.openContextMenu(context);
+        component.show(context);
         spyOn(contextMenuEventService, 'show');
         delete (context as any).contextMenu;
         contextMenuContentRef.instance.openSubMenu.next(context);
-        expect(contextMenuStackService.destroySubMenus).toHaveBeenCalledWith(
+        expect(contextMenuOverlaysService.destroySubMenus).toHaveBeenCalledWith(
           contextMenuContentRef.instance
         );
-        expect(contextMenuContentRef.instance.isLeaf).toEqual(true);
         expect(contextMenuEventService.show).not.toHaveBeenCalled();
-      });
-
-      it('should inactive all menu items when instance is destroyed', () => {
-        component.openContextMenu(context);
-        (contextMenuContentRef.onDestroy as jasmine.Spy).calls.argsFor(0)[0]();
-        expect(a.isActive).toEqual(false);
-        expect(b.isActive).toEqual(false);
-        expect(c.isActive).toEqual(false);
-        expect(d.isActive).toEqual(false);
-      });
+      }); */
 
       it('should close all menu items when instance is destroyed', () => {
-        component.openContextMenu(context);
+        component.show(context);
         const close = jasmine.createSpy('subscriber');
         component.close.subscribe(close);
         (contextMenuContentRef.onDestroy as jasmine.Spy).calls.argsFor(0)[0]();
@@ -916,7 +654,7 @@ describe('Component: ContextMenuComponent', () => {
       });
 
       it('should detect changes on created instance', () => {
-        component.openContextMenu(context);
+        component.show(context);
         expect(
           contextMenuContentRef.changeDetectorRef.detectChanges
         ).toHaveBeenCalled();

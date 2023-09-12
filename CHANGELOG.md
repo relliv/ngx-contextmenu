@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [17.0.0-alpha.0] - 2023-09-12
+
 ### Changed
 
 - More complete ARIA support, tested with NVDA

@@ -1,6 +1,6 @@
 {
   "name": "@perfectmemory/ngx-contextmenu",
-  "version": "16.1.0-alpha.0",
+  "version": "17.0.0-alpha.0",
   "description": "A context menu component for Angular",
   "keywords": [
     "angular",
@@ -24,8 +24,8 @@
     "url": "git+ssh://git@github.com:PerfectMemory/ngx-contextmenu.git"
   },
   "peerDependencies": {
-    "@angular/common": "^16.2.0",
     "@angular/cdk": "^16.2.0",
+    "@angular/common": "^16.2.0",
     "@angular/core": "^16.2.0"
   },
   "dependencies": {

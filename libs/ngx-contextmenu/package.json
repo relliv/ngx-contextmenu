@@ -1,0 +1,35 @@
+{
+  "name": "@perfectmemory/ngx-contextmenu",
+  "version": "17.0.0-alpha.1",
+  "description": "A context menu component for Angular",
+  "keywords": [
+    "angular",
+    "ngx",
+    "ng2",
+    "contextmenu",
+    "ngx-contextmenu",
+    "right click",
+    "contextual",
+    "shortcut",
+    "pop-up",
+    "pop-up menu"
+  ],
+  "contributors": [
+    "Stephane Roucheray <stephane.roucheray@perfect-memory.com>",
+    "Isaac Mann <isaacplmann@gmail.com>"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:PerfectMemory/ngx-contextmenu.git"
+  },
+  "peerDependencies": {
+    "@angular/cdk": "^16.2.0",
+    "@angular/common": "^16.2.0",
+    "@angular/core": "^16.2.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

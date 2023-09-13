@@ -16,6 +16,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
       - run: yarn
       - run: yarn run build:lib
-      - run: yarn publish ./dist/ngx-contextmenu
+      - run: yarn publish ./dist/libs/ngx-contextmenu
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

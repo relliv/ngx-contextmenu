@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [17.0.0-alpha.1] - 2023-09-12
+
+## [17.0.0-alpha.0] - 2023-09-12
+
 ### Changed
 
 - More complete ARIA support, tested with NVDA
@@ -10,6 +14,10 @@
 
 - ARIA support involved HTML rework which could lead to custom styling issue
 - Remove `ContextMenuCloseEvent` deprecated API
+
+### Other
+
+- Migrate repo to NX
 
 ## [16.1.0-alpha.0] - 2023-09-08
 

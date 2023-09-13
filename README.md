@@ -17,3 +17,4 @@ Documentation and demos https://perfectmemory.github.io/ngx-contextmenu/
 - [x] Form (example checkboxes)
 - [x] Keyboard navigation
 - [x] Support direction `ltr` (left to right) and `rtl` (right to left)
+- [x] Accessibility with ARIA

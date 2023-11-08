@@ -2,7 +2,7 @@
   "name": "demo",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "prefix": "org",
+  "prefix": "demo-context-menu",
   "sourceRoot": "apps/demo/src",
   "tags": [],
   "targets": {

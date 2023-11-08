@@ -11,7 +11,7 @@ import {
 } from '@perfectmemory/ngx-contextmenu';
 
 @Component({
-  selector: 'ngx-context-menu-demo',
+  selector: 'demo-context-menu-demo',
   styles: [
     `
       .dashboardContainer {

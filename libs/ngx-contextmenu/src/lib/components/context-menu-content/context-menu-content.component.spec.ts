@@ -50,12 +50,14 @@ describe('Component: ContextMenuContentComponent', () => {
     } as unknown as FocusKeyManager<ContextMenuContentItemDirective<unknown>>);
   };
 
+  afterEach(() => {
+    fixture?.destroy();
+  });
+
   it('should create', () => {
     configureTestingModule();
     expect(component).toBeTruthy();
   });
-
-  describe('#ngOnInit', () => {});
 
   describe('#ngAfterViewInit', () => {
     it('should set item to each menu item property', () => {
@@ -677,11 +679,9 @@ describe('Component: ContextMenuContentComponent', () => {
       mouseEvent = new MouseEvent('click');
       const target = document.createElement('div');
       spyOnProperty(mouseEvent, 'target', 'get').and.returnValue(target);
-      spyOn(component._elementRef.nativeElement, 'contains').and.returnValue(
-        true
-      );
+      spyOn(fixture.elementRef.nativeElement, 'contains').and.returnValue(true);
       component.onClickOrRightClick(mouseEvent);
-      expect(component._elementRef.nativeElement.contains).toHaveBeenCalledWith(
+      expect(fixture.elementRef.nativeElement.contains).toHaveBeenCalledWith(
         target
       );
       expect(close).not.toHaveBeenCalled();
@@ -844,92 +844,6 @@ describe('Component: ContextMenuContentComponent', () => {
       component.onClickOrRightClick(event);
       expect(contextMenuOverlaysService.closeAll).toHaveBeenCalledWith();
     });
-  });
-
-  describe('#onOpenSubMenu', () => {
-    let openSubMenu: jasmine.Spy<jasmine.Func>;
-    let closeSubMenus: jasmine.Spy<jasmine.Func>;
-    let directive: ContextMenuContentItemDirective<unknown>;
-    let nativeElement: HTMLElement;
-
-    /*     beforeEach(() => {
-      (keyManager.activeItemIndex as any) = 0;
-      configureTestingModule();
-      component.ngAfterViewInit();
-      directive = new ContextMenuContentItemDirective(
-        undefined as unknown as ElementRef<HTMLElement>
-      );
-      nativeElement = document.createElement('li');
-      component.contextMenuContentItems = new QueryList<ElementRef>();
-      spyOn(component.contextMenuContentItems, 'toArray').and.returnValue([
-        new ElementRef(nativeElement),
-      ]);
-      directive.subMenu =
-        TestBed.createComponent(ContextMenuComponent).componentInstance;
-      component.value = { id: 'a' };
-      openSubMenu = jasmine.createSpy('openSubMenu');
-      component.openSubMenu.subscribe(openSubMenu);
-      closeSubMenus = jasmine.createSpy('closeSubMenus');
-      component.closeSubMenus.subscribe(closeSubMenus);
-    });
-
-    it('should not emit on openSubMenu if keyManager as no active element', () => {
-      (keyManager.activeItemIndex as any) = null;
-      component.openSubMenu(directive, new KeyboardEvent('keydown'));
-      expect(openSubMenu).not.toHaveBeenCalled();
-    });
-
-    it('should emit on openSubMenu anchored to element on keyboard event', () => {
-      component.openSubMenu(directive, new KeyboardEvent('keydown'));
-      expect(openSubMenu).toHaveBeenCalledWith({
-        anchoredTo: 'element',
-        anchorElement: nativeElement,
-        contextMenu: directive.subMenu,
-        value: component.value,
-        parentContextMenu: component,
-      });
-    }); */
-
-    /*     it('should emit on openSubMenu anchored to element on mouse event with currentTarget', () => {
-      const event = new MouseEvent('mousedown');
-      const currentTarget = document.createElement('div');
-      spyOnProperty(event, 'currentTarget', 'get').and.returnValue(
-        currentTarget
-      );
-      component.openSubMenu(directive, event);
-      expect(openSubMenu).toHaveBeenCalledWith({
-        anchoredTo: 'element',
-        anchorElement: currentTarget,
-        contextMenu: directive.subMenu,
-        value: component.value,
-        parentContextMenu: component,
-      });
-    }); */
-
-    /*     it('should emit on openSubMenu mouse position on mouse event without target', () => {
-      const event = new MouseEvent('mousedown', { clientX: 42, clientY: 58 });
-      component.openSubMenu(directive, event);
-      expect(openSubMenu).toHaveBeenCalledWith({
-        anchoredTo: 'position',
-        x: 42,
-        y: 58,
-        contextMenu: directive.subMenu,
-        value: component.value,
-      });
-    }); */
-
-    /*     it('should not emit on closeSubMenus if menu item has subMenu', () => {
-      (keyManager.activeItemIndex as any) = null;
-      component.openSubMenu(directive, new KeyboardEvent('keydown'));
-      expect(closeSubMenus).not.toHaveBeenCalled();
-    }); */
-
-    /*     it('should emit on closeSubMenus if menu item has not subMenu', () => {
-      (keyManager.activeItemIndex as any) = null;
-      delete directive.subMenu;
-      component.openSubMenu(directive, new KeyboardEvent('keydown'));
-      expect(closeSubMenus).toHaveBeenCalled();
-    }); */
   });
 
   describe('#onMenuItemSelect', () => {

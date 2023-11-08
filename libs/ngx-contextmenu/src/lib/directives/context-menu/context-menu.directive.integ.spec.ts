@@ -102,7 +102,6 @@ describe('Integ: ContextMenuDirective', () => {
     `,
         { hostProps: { item: { id: 'item-id' } } }
       );
-      console.log('A', document.activeElement);
       host.dispatchMouseEvent(host.debugElement, 'contextmenu');
       expect(
         host.query(
@@ -112,7 +111,6 @@ describe('Integ: ContextMenuDirective', () => {
           }
         )
       ).toEqual(document.activeElement);
-      console.log('B', document.activeElement);
       host.dispatchKeyboardEvent(
         document.activeElement as HTMLElement,
         'keydown',
@@ -121,7 +119,6 @@ describe('Integ: ContextMenuDirective', () => {
           keyCode: 40,
         }
       );
-      console.log('C', document.activeElement);
       expect(
         host.query(
           '.cdk-overlay-container .ngx-contextmenu-overlay context-menu-content > *:nth-child(1)',

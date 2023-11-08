@@ -116,13 +116,13 @@ export class ContextMenuContentComponent<T>
   @HostBinding('aria-orientation')
   public ariaOrientation = 'vertical';
 
-  private focusKeyManager!: FocusKeyManager<ContextMenuContentItemDirective<T>>;
+  private focusKeyManager?: FocusKeyManager<ContextMenuContentItemDirective<T>>;
   private subscription: Subscription = new Subscription();
   private activeElement?: HTMLElement | null;
 
   // TODO: should be private but issue in spec with NullInjectorError: No provider for ElementRef!
   constructor(
-    public _elementRef: ElementRef<HTMLElement>,
+    private elementRef: ElementRef<HTMLElement>,
     @Inject(DOCUMENT)
     public document: Document,
     private contextMenuOverlaysService: ContextMenuOverlaysService
@@ -134,7 +134,7 @@ export class ContextMenuContentComponent<T>
   public ngAfterViewInit() {
     this.setupDirectives();
     this.activeElement = this.document.activeElement as HTMLElement | null;
-    this._elementRef.nativeElement.focus();
+    this.elementRef.nativeElement.focus();
   }
 
   /**
@@ -143,7 +143,7 @@ export class ContextMenuContentComponent<T>
   public ngOnDestroy() {
     this.activeElement?.focus();
     this.subscription.unsubscribe();
-    this.focusKeyManager.destroy();
+    this.focusKeyManager?.destroy();
   }
 
   /**
@@ -152,7 +152,7 @@ export class ContextMenuContentComponent<T>
   @HostListener('keydown.ArrowDown', ['$event'])
   @HostListener('keydown.ArrowUp', ['$event'])
   public onKeyArrowDownOrUp(event: KeyboardEvent): void {
-    this.focusKeyManager.onKeydown(event);
+    this.focusKeyManager?.onKeydown(event);
   }
 
   /**
@@ -177,7 +177,7 @@ export class ContextMenuContentComponent<T>
   @HostListener('window:keydown.Enter', ['$event'])
   @HostListener('window:keydown.Space', ['$event'])
   public onKeyEnterOrSpace(event: KeyboardEvent): void {
-    if (!this.focusKeyManager.activeItem) {
+    if (!this.focusKeyManager?.activeItem) {
       return;
     }
 
@@ -193,7 +193,7 @@ export class ContextMenuContentComponent<T>
       return;
     }
 
-    if (this._elementRef.nativeElement.contains(event.target as Node)) {
+    if (this.elementRef.nativeElement.contains(event.target as Node)) {
       return;
     }
 
@@ -246,13 +246,13 @@ export class ContextMenuContentComponent<T>
       return;
     }
 
-    if (this.focusKeyManager.activeItemIndex === null || !subMenu) {
+    if (this.focusKeyManager?.activeItemIndex === null || !subMenu) {
       return;
     }
 
     const anchorContextMenuContentItem =
       this.contextMenuContentItems.toArray()[
-        this.focusKeyManager.activeItemIndex
+        this.focusKeyManager?.activeItemIndex ?? 0
       ];
     const anchorElement =
       anchorContextMenuContentItem &&
@@ -327,13 +327,13 @@ export class ContextMenuContentComponent<T>
   }
 
   private openActiveItemSubMenu(event: KeyboardEvent) {
-    if (this.focusKeyManager.activeItemIndex === null) {
+    if (this.focusKeyManager?.activeItemIndex === null) {
       return;
     }
 
     this.cancelEvent(event);
 
-    if (this.focusKeyManager.activeItem) {
+    if (this.focusKeyManager?.activeItem) {
       this.openSubMenu(
         this.focusKeyManager.activeItem?.contextMenuContentItem?.subMenu,
         event
@@ -342,7 +342,7 @@ export class ContextMenuContentComponent<T>
   }
 
   private closeActiveItemSubMenu(event: KeyboardEvent) {
-    if (this.focusKeyManager.activeItemIndex === null) {
+    if (this.focusKeyManager?.activeItemIndex === null) {
       return;
     }
 

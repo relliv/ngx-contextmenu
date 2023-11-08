@@ -24,7 +24,6 @@ export class ContextMenuContentItemDirective<T> implements FocusableOption {
    * @implements FocusableOption
    */
   public focus(origin?: FocusOrigin | undefined): void {
-    console.log('Focus', this.elementRef.nativeElement);
     this.elementRef.nativeElement.focus();
   }
 

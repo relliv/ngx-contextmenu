@@ -1,0 +1,112 @@
+@import './button-reset.scss';
+
+:root {
+  // Styling of the element where a context menu can appear
+  --ngx-contextmenu-focusable-border-bottom: 1px dotted #70757e;
+
+  // Styling of the context menu itself
+  --ngx-contextmenu-font-family: sans-serif;
+  --ngx-contextmenu-background-color: white;
+  --ngx-contextmenu-border-radius: 4px;
+  --ngx-contextmenu-border: 1px solid rgba(0, 0, 0, 0.18);
+  --ngx-contextmenu-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+  --ngx-contextmenu-font-size: 14px;
+  --ngx-contextmenu-margin: 2px 0 0;
+  --ngx-contextmenu-min-width: 160px;
+  --ngx-contextmenu-outline: 1px solid #70757e;
+  --ngx-contextmenu-padding: 5px 0;
+  --ngx-contextmenu-text-color: #70757e;
+  --ngx-contextmenu-text-disabled-color: #b5bec8;
+  --ngx-contextmenu-max-height: 100vh;
+
+  // Styling of context menu items
+  --ngx-contextmenu-item-arrow-left: '◀';
+  --ngx-contextmenu-item-arrow-right: '▶';
+  --ngx-contextmenu-item-background-hover-color: #f8f8f8;
+  --ngx-contextmenu-item-separator-color: #b5bec8;
+  --ngx-contextmenu-item-separator-padding: 10px;
+  --ngx-contextmenu-item-separator-width: 96%;
+  --ngx-contextmenu-item-padding: 6px 20px;
+  --ngx-contextmenu-item-text-hover-color: #5a6473;
+}
+
+.ngx-contextmenu {
+  background-clip: padding-box;
+  background-color: var(--ngx-contextmenu-background-color);
+  border-radius: var(--ngx-contextmenu-border-radius);
+  border: var(--ngx-contextmenu-border);
+  box-shadow: var(--ngx-contextmenu-box-shadow);
+  color: var(--ngx-contextmenu-text-color);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--ngx-contextmenu-font-family);
+  font-size: var(--ngx-contextmenu-font-size);
+  margin: var(--ngx-contextmenu-margin);
+  max-height: var(--ngx-contextmenu-max-height);
+  min-width: var(--ngx-contextmenu-min-width);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: var(--ngx-contextmenu-padding);
+  text-align: start;
+
+  &:focus-visible {
+    outline: var(--ngx-contextmenu-outline);
+  }
+
+  &:empty {
+    display: none;
+  }
+
+  .ngx-context-menu-item {
+    display: flex;
+
+    &.ngx-contextmenu--parent-menu:after {
+      content: var(--ngx-contextmenu-item-arrow-right);
+    }
+
+    &[role='separator'] {
+      border-width: 0 0 1px 0;
+      border-bottom: 1px solid var(--ngx-contextmenu-item-separator-color);
+      margin: var(--ngx-contextmenu-item-separator-padding) 2%;
+      width: var(--ngx-contextmenu-item-separator-width);
+    }
+
+    &[role='menuitem'] {
+      padding: var(--ngx-contextmenu-item-padding);
+    }
+
+    &[role='menuitem'] {
+      outline: none;
+      color: var(--ngx-contextmenu-text-color);
+      flex-direction: row;
+      justify-content: space-between;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    &:not(.disabled):not(:disabled):not(.ngx-contextmenu-item--passive) {
+      &:hover,
+      &:focus-visible {
+        text-decoration: none;
+        background-color: var(--ngx-contextmenu-item-background-hover-color);
+        color: var(--ngx-contextmenu-item-text-hover-color);
+      }
+    }
+
+    &.disabled,
+    &:disabled {
+      cursor: default;
+      &,
+      &:hover,
+      &.active {
+        color: var(--ngx-contextmenu-text-disabled-color);
+      }
+    }
+  }
+
+  &[dir='rtl'] {
+    .ngx-contextmenu--parent-menu:after {
+      content: var(--ngx-contextmenu-item-arrow-left);
+    }
+  }
+}

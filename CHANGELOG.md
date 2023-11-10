@@ -2,6 +2,33 @@
 
 ## [Unreleased]
 
+### BREAKING CHANGES
+
+- **Dependency**: Require Angular 17
+
+## [17.0.0-alpha.1] - 2023-09-12
+
+## [17.0.0-alpha.0] - 2023-09-12
+
+### Changed
+
+- More complete ARIA support, tested with NVDA
+
+### BREAKING CHANGES
+
+- ARIA support involved HTML rework which could lead to custom styling issue
+- Remove `ContextMenuCloseEvent` deprecated API
+
+### Other
+
+- Migrate repo to NX
+
+## [16.1.0-alpha.0] - 2023-09-08
+
+### Changed
+
+- Improved ARIA navigation support when opening a context menu, impact some HTML attributs, thus some styling
+
 ## [16.0.2] - 2023-08-29
 
 ### Fixed

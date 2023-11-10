@@ -1,0 +1,48 @@
+<ng-container *ngFor="let menuDirective of menuDirectives; let i = index">
+  <hr
+    [contextMenuContentItem]="menuDirective"
+    *ngIf="menuDirective.divider"
+    role="separator"
+    (mouseenter)="hideSubMenus()"
+  />
+  <button
+    #buttonContextMenuContentItem="contextMenuContentItem"
+    [contextMenuContentItem]="menuDirective"
+    *ngIf="!menuDirective.divider && !menuDirective.passive"
+    type="button"
+    role="menuitem"
+    [attr.aria-haspopup]="!!menuDirective.subMenu ? 'menu' : null"
+    [class.ngx-contextmenu--parent-menu]="!!menuDirective.subMenu"
+    [attr.disabled]="isMenuItemDisabled(menuDirective) ? 'disabled' : null"
+    (click)="onMenuItemSelect(buttonContextMenuContentItem, $event)"
+    (mouseenter)="
+      hideSubMenus();
+      openSubMenu(
+        buttonContextMenuContentItem.contextMenuContentItem?.subMenu,
+        $event
+      )
+    "
+  >
+    <ng-template
+      [ngTemplateOutlet]="menuDirective.template"
+      [ngTemplateOutletContext]="{ $implicit: value }"
+    ></ng-template>
+  </button>
+
+  <span
+    [contextMenuContentItem]="menuDirective"
+    *ngIf="!menuDirective.divider && menuDirective.passive"
+    class="ngx-contextmenu-item--passive"
+    role="menuitem"
+    [attr.aria-disabled]="isMenuItemDisabled(menuDirective)"
+    (click)="stopEvent($event)"
+    (contextmenu)="stopEvent($event)"
+    [class.disabled]="isMenuItemDisabled(menuDirective)"
+    (mouseenter)="isMenuItemDisabled(menuDirective) ? null : hideSubMenus()"
+  >
+    <ng-template
+      [ngTemplateOutlet]="menuDirective.template"
+      [ngTemplateOutletContext]="{ $implicit: value }"
+    ></ng-template>
+  </span>
+</ng-container>

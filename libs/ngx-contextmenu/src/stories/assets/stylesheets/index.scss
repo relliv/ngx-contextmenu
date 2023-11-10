@@ -1,0 +1,13 @@
+body {
+  font-family: sans-serif;
+}
+
+img[src*='logo'] {
+  vertical-align: middle;
+}
+
+context-menu-content.custom-theme-blue {
+  --ngx-contextmenu-text-color: white;
+  --ngx-contextmenu-text-disabled-color: rgba(white, 80%);
+  --ngx-contextmenu-background-color: #01579b;
+}

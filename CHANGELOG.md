@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [17.0.0] - 2023-11-10
+
 ### BREAKING CHANGES
 
 - **Dependency**: Require Angular 17

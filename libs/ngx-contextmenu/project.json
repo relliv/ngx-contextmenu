@@ -74,7 +74,12 @@
         "outputDir": "dist/storybook/@perfectmemory/ngx-contextmenu",
         "configDir": "libs/ngx-contextmenu/.storybook",
         "browserTarget": "@perfectmemory/ngx-contextmenu:build-storybook",
-        "compodoc": false
+        "compodoc": false,
+        "styles": [
+          "libs/ngx-contextmenu/src/stories/assets/stylesheets/index.scss",
+          "./node_modules/@angular/cdk/overlay-prebuilt.css",
+          "libs/ngx-contextmenu/src/assets/stylesheets/base.scss"
+        ]
       },
       "configurations": {
         "ci": {

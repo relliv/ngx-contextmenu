@@ -18,3 +18,16 @@ A `contextMenu` directive to apply to any HTML element where a right click shoul
 | `close()`  |                                 | Programmatically closes the context menu                                                                                           |
 
 > NB: `open` and `close` methods are for advanced use cases and are not necessary for usual right click
+
+```html
+<span #ngxContextMenu="ngxContextMenu" [contextMenu]="contextMenu" [contextMenuValue]="value">
+  When you right click on this text, a context menu will appear
+</span>
+
+<context-menu #contextMenu [menuClass]="menuClass" [disabled]="disabled" [dir]="dir">...</context-menu>
+
+<!-- Programmatically open  the context menu by calling content menu directive  -->
+<button class="button" (click)="ngxContextMenu?.open($event)">
+  Click here to show the context menu normally attached to the text above
+</button>
+```

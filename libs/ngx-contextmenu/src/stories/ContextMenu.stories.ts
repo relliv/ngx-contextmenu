@@ -27,7 +27,7 @@ export default {
       },
       control: { type: 'radio' },
     },
-    onMenuItemExecuted: {
+    menuItemExecuted: {
       action: 'From the context menu, you chose',
       table: {
         disable: true,
@@ -38,13 +38,13 @@ export default {
       options: ['none', 'custom-theme-blue'],
       control: { type: 'select' },
     },
-    onOpen: {
+    contextMenuOpened: {
       action: 'Context menu was opened',
       table: {
         disable: true,
       },
     },
-    onClose: {
+    contextMenuClosed: {
       action: 'Context menu was closed',
       table: {
         disable: true,

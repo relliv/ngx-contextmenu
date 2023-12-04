@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { ContextMenuOpenEvent } from '../../lib/components/context-menu/context-menu.component.interface';
 import { ContextMenuDirective } from '../../lib/directives/context-menu/context-menu.directive';
+import { ContextMenuService } from '../../lib/services/context-menu/context-menu.service';
 
 @Component({
   selector: 'storybook-context-menu',
@@ -24,7 +25,7 @@ export default class StorybookContextMenuComponent {
   public dir: 'ltr' | 'rtl' | undefined;
 
   @Input()
-  public value: unknown = 'a user defined item';
+  public value: string = 'a user defined item';
 
   @Input()
   public demoMode: 'simple' | 'form' = 'simple';
@@ -33,13 +34,13 @@ export default class StorybookContextMenuComponent {
   public programmaticOpen = false;
 
   @Output()
-  public onOpen = new EventEmitter<ContextMenuOpenEvent<unknown>>();
+  public contextMenuOpened = new EventEmitter<ContextMenuOpenEvent<unknown>>();
 
   @Output()
-  public onClose = new EventEmitter<'void'>();
+  public contextMenuClosed = new EventEmitter<'void'>();
 
   @Output()
-  public onMenuItemExecuted = new EventEmitter<string>();
+  public menuItemExecuted = new EventEmitter<string>();
 
   /**
    * @internal
@@ -47,25 +48,27 @@ export default class StorybookContextMenuComponent {
   @ViewChild(ContextMenuDirective)
   public contextMenuDirective?: ContextMenuDirective<void>;
 
+  constructor(public contextMenuService: ContextMenuService<unknown>) {}
+
   /**
    * @internal
    */
-  public execute(text: string, value: any) {
+  public execute(text: string, value: ContextMenuOpenEvent<string>) {
     console.log(value);
-    this.onMenuItemExecuted.next(`${text}: ${value.value}`);
+    this.menuItemExecuted.next(`${text}: ${value.value}`);
   }
 
   /**
    * @internal
    */
-  public open(value: ContextMenuOpenEvent<unknown>) {
-    this.onOpen.next(value);
+  public openContextMenu(value: ContextMenuOpenEvent<unknown>) {
+    this.contextMenuOpened.next(value);
   }
 
   /**
    * @internal
    */
-  public close() {
-    this.onClose.next('void');
+  public closeContextMenu() {
+    this.contextMenuClosed.next('void');
   }
 }

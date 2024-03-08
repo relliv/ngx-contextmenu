@@ -242,11 +242,11 @@ export class ContextMenuContentComponent<T>
     subMenu: ContextMenuComponent<T> | undefined,
     event: MouseEvent | KeyboardEvent
   ): void {
-    if (!subMenu || subMenu.isOpen) {
+    if (!subMenu) {
       return;
     }
 
-    if (this.focusKeyManager?.activeItemIndex === null || !subMenu) {
+    if (this.focusKeyManager?.activeItemIndex === null) {
       return;
     }
 
@@ -265,21 +265,31 @@ export class ContextMenuContentComponent<T>
         value: this.value,
         parentContextMenu: this,
       });
-    } else if (event.currentTarget) {
+
+      return;
+    }
+
+    if (subMenu.isOpen) {
+      return;
+    }
+
+    if (event.currentTarget) {
       subMenu.show({
         anchoredTo: 'element',
         anchorElement: event.currentTarget,
         value: this.value,
         parentContextMenu: this,
       });
-    } else {
-      subMenu.show({
-        anchoredTo: 'position',
-        x: (event as MouseEvent).clientX,
-        y: (event as MouseEvent).clientY,
-        value: this.value,
-      });
+
+      return;
     }
+
+    subMenu.show({
+      anchoredTo: 'position',
+      x: (event as MouseEvent).clientX,
+      y: (event as MouseEvent).clientY,
+      value: this.value,
+    });
   }
 
   /**
@@ -342,7 +352,8 @@ export class ContextMenuContentComponent<T>
   }
 
   private closeActiveItemSubMenu(event: KeyboardEvent) {
-    if (this.focusKeyManager?.activeItemIndex === null) {
+    this.hideSubMenus();
+    if (!this.focusKeyManager?.activeItemIndex) {
       return;
     }
 

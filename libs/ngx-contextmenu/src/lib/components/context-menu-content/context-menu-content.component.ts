@@ -242,7 +242,7 @@ export class ContextMenuContentComponent<T>
     subMenu: ContextMenuComponent<T> | undefined,
     event: MouseEvent | KeyboardEvent
   ): void {
-    if (!subMenu) {
+    if (!subMenu || subMenu.isOpen) {
       return;
     }
 

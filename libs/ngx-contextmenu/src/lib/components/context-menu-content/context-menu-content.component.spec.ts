@@ -903,4 +903,49 @@ describe('Component: ContextMenuContentComponent', () => {
       ).not.toHaveBeenCalled();
     });
   });
+
+  describe('#openSubMenu', () => {
+    beforeEach(() => {
+      configureTestingModule();
+      component.contextMenuContentItems = new QueryList();
+    });
+
+    it('should show subMenu', () => {
+      const subMenu =
+        TestBed.createComponent(ContextMenuComponent).componentInstance;
+      const event = new MouseEvent('click');
+
+      spyOn(subMenu, 'show');
+      component.openSubMenu(subMenu, event);
+
+      expect(subMenu.show).toHaveBeenCalledWith({
+        anchoredTo: 'position',
+        x: 0,
+        y: 0,
+        value: undefined,
+      });
+    });
+
+    it('should not show subMenu if already opened', () => {
+      const subMenu =
+        TestBed.createComponent(ContextMenuComponent).componentInstance;
+      const event = new MouseEvent('click');
+      spyOnProperty(subMenu, 'isOpen', 'get').and.returnValue(true);
+      spyOn(subMenu, 'show');
+      component.openSubMenu(subMenu, event);
+
+      expect(subMenu.show).not.toHaveBeenCalled();
+    });
+
+    it('should not throw if subMenu does not exist', () => {
+      const subMenu =
+        TestBed.createComponent(ContextMenuComponent).componentInstance;
+      const event = new MouseEvent('click');
+
+      spyOn(subMenu, 'show');
+      expect(() => {
+        component.openSubMenu(undefined, event);
+      }).not.toThrow();
+    });
+  });
 });

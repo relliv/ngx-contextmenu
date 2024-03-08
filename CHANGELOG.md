@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fix
+
+- Prevent several instances of a sub menu when opening with the mouse
+
 ## [17.0.0] - 2023-11-10
 
 ### BREAKING CHANGES

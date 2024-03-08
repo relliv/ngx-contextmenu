@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [17.0.1] - 2024-03-08
+
 ### Fix
 
 - Prevent several instances of a sub menu when opening with the mouse

@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [17.0.3] - 2024-05-30
+
 ### Fix
 
 - Close all instances of contextmenu when opening one

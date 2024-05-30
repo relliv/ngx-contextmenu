@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { ContextMenuContentComponent } from '../../components/context-menu-content/context-menu-content.component';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
 import { ContextMenuOverlaysService } from '../context-menu-overlays/context-menu-overlays.service';
 import { ContextMenuService } from './context-menu.service';
@@ -9,7 +10,7 @@ describe('Service: ContextMenuService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ContextMenuComponent],
+      declarations: [ContextMenuComponent, ContextMenuContentComponent],
     });
     service = TestBed.inject(ContextMenuService);
     contextMenuOverlaysService = TestBed.inject(ContextMenuOverlaysService);
@@ -23,7 +24,7 @@ describe('Service: ContextMenuService', () => {
     it('should emit a show event', () => {
       const component =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
-      spyOn(component, 'show');
+      jest.spyOn(component, 'show');
       service.show(component);
       expect(component.show).toHaveBeenCalledWith({
         anchoredTo: 'position',
@@ -36,7 +37,7 @@ describe('Service: ContextMenuService', () => {
     it('should emit a show event with options', () => {
       const component =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
-      spyOn(component, 'show');
+      jest.spyOn(component, 'show');
       service.show(component, { x: 42, y: 34, value: { any: 'thing' } });
       expect(component.show).toHaveBeenCalledWith({
         anchoredTo: 'position',
@@ -49,7 +50,7 @@ describe('Service: ContextMenuService', () => {
 
   describe('#closeAll', () => {
     it('should trigger closeAll', () => {
-      spyOn(contextMenuOverlaysService, 'closeAll');
+      jest.spyOn(contextMenuOverlaysService, 'closeAll');
       service.closeAll();
       expect(contextMenuOverlaysService.closeAll).toHaveBeenCalled();
     });
@@ -57,11 +58,11 @@ describe('Service: ContextMenuService', () => {
 
   describe('#hasOpenMenu', () => {
     it('should get information from overlays service', () => {
-      const spy = spyOn(contextMenuOverlaysService, 'isEmpty').and.returnValue(
-        true
-      );
+      const spy = jest
+        .spyOn(contextMenuOverlaysService, 'isEmpty')
+        .mockReturnValue(true);
       expect(service.hasOpenMenu()).toEqual(false);
-      spy.and.returnValue(false);
+      spy.mockReturnValue(false);
       expect(service.hasOpenMenu()).toEqual(true);
       expect(contextMenuOverlaysService.isEmpty).toHaveBeenCalledTimes(2);
     });

@@ -251,7 +251,7 @@ export class ContextMenuContentComponent<T>
     }
 
     const anchorContextMenuContentItem =
-      this.contextMenuContentItems.toArray()[
+      this.contextMenuContentItems?.toArray()[
         this.focusKeyManager?.activeItemIndex ?? 0
       ];
     const anchorElement =

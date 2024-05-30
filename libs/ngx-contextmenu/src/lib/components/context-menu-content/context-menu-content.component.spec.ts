@@ -43,10 +43,10 @@ describe('Component: ContextMenuContentComponent', () => {
 
   const mockFocusKeyManager = () => {
     focusKeyManager = new FocusKeyManager(new QueryList());
-    spyOn(focusKeyManager, 'onKeydown').and.callThrough();
+    jest.spyOn(focusKeyManager, 'onKeydown');
 
-    spyOn(TESTING_WRAPPER, 'FocusKeyManager').and.returnValue({
-      withWrap: jasmine.createSpy('withWrap').and.returnValue(focusKeyManager),
+    jest.spyOn(TESTING_WRAPPER, 'FocusKeyManager').mockReturnValue({
+      withWrap: jest.fn().mockReturnValue(focusKeyManager),
     } as unknown as FocusKeyManager<ContextMenuContentItemDirective<unknown>>);
   };
 
@@ -73,15 +73,15 @@ describe('Component: ContextMenuContentComponent', () => {
       component.ngAfterViewInit();
 
       expect(component.menuDirectives).toEqual([
-        jasmine.objectContaining({ value: component.value }),
-        jasmine.objectContaining({ value: component.value }),
-        jasmine.objectContaining({ value: component.value }),
+        expect.objectContaining({ value: component.value }),
+        expect.objectContaining({ value: component.value }),
+        expect.objectContaining({ value: component.value }),
       ]);
     });
 
     it('should bind menuItem execution to execute emitter', () => {
       configureTestingModule();
-      const execute = jasmine.createSpy('execute');
+      const execute = jest.fn();
       component.execute.subscribe(execute);
 
       const emitterA = new EventEmitter();
@@ -134,7 +134,8 @@ describe('Component: ContextMenuContentComponent', () => {
   describe('#stopEvent', () => {
     it('should stop event propagation', () => {
       configureTestingModule();
-      const event = jasmine.createSpyObj('event', ['stopPropagation']);
+      const event = new MouseEvent('click');
+      jest.spyOn(event, 'stopPropagation');
       component.stopEvent(event);
       expect(event.stopPropagation).toHaveBeenCalled();
     });
@@ -160,7 +161,7 @@ describe('Component: ContextMenuContentComponent', () => {
     it('should return true if the evaluation of the menu disabled property is true', () => {
       configureTestingModule();
       const menu: ContextMenuItemDirective<unknown> = {
-        disabled: (item: unknown) => true,
+        disabled: (_item: unknown) => true,
       } as unknown as ContextMenuItemDirective<unknown>;
       expect(component.isMenuItemDisabled(menu)).toBe(true);
     });
@@ -168,7 +169,7 @@ describe('Component: ContextMenuContentComponent', () => {
     it('should return false if the evaluation of the menu disabled property is false', () => {
       configureTestingModule();
       const menu: ContextMenuItemDirective<unknown> = {
-        disabled: (item: unknown) => false,
+        disabled: (_item: unknown) => false,
       } as unknown as ContextMenuItemDirective<unknown>;
       expect(component.isMenuItemDisabled(menu)).toBe(false);
     });
@@ -230,7 +231,7 @@ describe('Component: ContextMenuContentComponent', () => {
     describe('when ltr', () => {
       beforeEach(() => {
         configureTestingModule();
-        spyOn(component, 'openSubMenu');
+        jest.spyOn(component, 'openSubMenu');
       });
 
       it('should open active sub menu', () => {
@@ -238,9 +239,9 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
         component.onKeyArrowRight(event);
@@ -261,7 +262,7 @@ describe('Component: ContextMenuContentComponent', () => {
     describe('when rtl', () => {
       beforeEach(() => {
         configureTestingModule();
-        spyOn(component, 'openSubMenu');
+        jest.spyOn(component, 'openSubMenu');
         component.dir = 'rtl';
       });
 
@@ -270,9 +271,9 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
         component.onKeyArrowRight(event);
@@ -284,10 +285,10 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
-        const close = jasmine.createSpy('subscriber');
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
+        const close = jest.fn();
         component.close.subscribe(close);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown', { keyCode: 39 });
@@ -301,15 +302,13 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
-        spyOnProperty(
-          focusKeyManager,
-          'activeItemIndex',
-          'get'
-        ).and.returnValue(null);
-        const close = jasmine.createSpy('subscriber');
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
+        jest
+          .spyOn(focusKeyManager, 'activeItemIndex', 'get')
+          .mockReturnValue(null);
+        const close = jest.fn();
         component.close.subscribe(close);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown', { keyCode: 39 });
@@ -322,10 +321,10 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
-        const close = jasmine.createSpy('subscriber');
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
+        const close = jest.fn();
         component.close.subscribe(close);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown', { keyCode: 37 });
@@ -338,10 +337,10 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
-        const close = jasmine.createSpy('subscriber');
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
+        const close = jest.fn();
         component.close.subscribe(close);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
@@ -350,7 +349,7 @@ describe('Component: ContextMenuContentComponent', () => {
       });
 
       it('should not close active sub menu if there is no active item', () => {
-        const close = jasmine.createSpy('subscriber');
+        const close = jest.fn();
         component.close.subscribe(close);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
@@ -364,17 +363,17 @@ describe('Component: ContextMenuContentComponent', () => {
       const directive = new ContextMenuContentItemDirective(
         undefined as unknown as ElementRef<HTMLElement>
       );
-      spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-        directive
-      );
-      spyOn(component, 'openSubMenu');
+      jest
+        .spyOn(focusKeyManager, 'activeItem', 'get')
+        .mockReturnValue(directive);
+      jest.spyOn(component, 'openSubMenu');
       component.ngAfterViewInit();
       const event = new KeyboardEvent('mousedown');
-      spyOnProperty(event, 'target', 'get').and.returnValue(
-        document.createElement('div')
-      );
-      spyOn(event, 'preventDefault');
-      spyOn(event, 'stopPropagation');
+      jest
+        .spyOn(event, 'target', 'get')
+        .mockReturnValue(document.createElement('div'));
+      jest.spyOn(event, 'preventDefault');
+      jest.spyOn(event, 'stopPropagation');
       component.onKeyArrowRight(event);
       expect(event.preventDefault).toHaveBeenCalledWith();
       expect(event.stopPropagation).toHaveBeenCalledWith();
@@ -387,17 +386,17 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
-        spyOn(component, 'openSubMenu');
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
+        jest.spyOn(component, 'openSubMenu');
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
-        spyOnProperty(event, 'target', 'get').and.returnValue(
-          document.createElement(tagName)
-        );
-        spyOn(event, 'preventDefault');
-        spyOn(event, 'stopPropagation');
+        jest
+          .spyOn(event, 'target', 'get')
+          .mockReturnValue(document.createElement(tagName));
+        jest.spyOn(event, 'preventDefault');
+        jest.spyOn(event, 'stopPropagation');
         component.onKeyArrowRight(event);
         expect(event.preventDefault).not.toHaveBeenCalledWith();
         expect(event.stopPropagation).not.toHaveBeenCalledWith();
@@ -409,7 +408,7 @@ describe('Component: ContextMenuContentComponent', () => {
     describe('when rtl', () => {
       beforeEach(() => {
         configureTestingModule();
-        spyOn(component, 'openSubMenu');
+        jest.spyOn(component, 'openSubMenu');
         component.dir = 'rtl';
       });
 
@@ -418,9 +417,9 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
         component.onKeyArrowLeft(event);
@@ -435,10 +434,10 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
-        const close = jasmine.createSpy('subscriber');
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
+        const close = jest.fn();
         component.close.subscribe(close);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
@@ -457,7 +456,7 @@ describe('Component: ContextMenuContentComponent', () => {
     describe('when ltr', () => {
       beforeEach(() => {
         configureTestingModule();
-        spyOn(component, 'openSubMenu');
+        jest.spyOn(component, 'openSubMenu');
       });
 
       it('should not open active sub menu', () => {
@@ -465,9 +464,9 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
         component.onKeyArrowLeft(event);
@@ -479,10 +478,10 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
-        const close = jasmine.createSpy('subscriber');
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
+        const close = jest.fn();
         component.close.subscribe(close);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown', { keyCode: 37 });
@@ -495,10 +494,10 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
-        const close = jasmine.createSpy('subscriber');
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
+        const close = jest.fn();
         component.close.subscribe(close);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown', { keyCode: 39 });
@@ -511,10 +510,10 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
-        const close = jasmine.createSpy('subscriber');
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
+        const close = jest.fn();
         component.close.subscribe(close);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
@@ -523,7 +522,7 @@ describe('Component: ContextMenuContentComponent', () => {
       });
 
       it('should not close active sub menu if there is no active item', () => {
-        const close = jasmine.createSpy('subscriber');
+        const close = jest.fn();
         component.close.subscribe(close);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
@@ -538,17 +537,17 @@ describe('Component: ContextMenuContentComponent', () => {
         undefined as unknown as ElementRef<HTMLElement>
       );
 
-      spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-        directive
-      );
-      spyOn(component, 'openSubMenu');
+      jest
+        .spyOn(focusKeyManager, 'activeItem', 'get')
+        .mockReturnValue(directive);
+      jest.spyOn(component, 'openSubMenu');
       component.ngAfterViewInit();
       const event = new KeyboardEvent('mousedown');
-      spyOnProperty(event, 'target', 'get').and.returnValue(
-        document.createElement('div')
-      );
-      spyOn(event, 'preventDefault');
-      spyOn(event, 'stopPropagation');
+      jest
+        .spyOn(event, 'target', 'get')
+        .mockReturnValue(document.createElement('div'));
+      jest.spyOn(event, 'preventDefault');
+      jest.spyOn(event, 'stopPropagation');
       component.onKeyArrowLeft(event);
       expect(event.preventDefault).toHaveBeenCalledWith();
       expect(event.stopPropagation).toHaveBeenCalledWith();
@@ -561,17 +560,17 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
-        spyOn(component, 'openSubMenu');
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
+        jest.spyOn(component, 'openSubMenu');
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
-        spyOnProperty(event, 'target', 'get').and.returnValue(
-          document.createElement(tagName)
-        );
-        spyOn(event, 'preventDefault');
-        spyOn(event, 'stopPropagation');
+        jest
+          .spyOn(event, 'target', 'get')
+          .mockReturnValue(document.createElement(tagName));
+        jest.spyOn(event, 'preventDefault');
+        jest.spyOn(event, 'stopPropagation');
         component.onKeyArrowLeft(event);
         expect(event.preventDefault).not.toHaveBeenCalledWith();
         expect(event.stopPropagation).not.toHaveBeenCalledWith();
@@ -582,7 +581,7 @@ describe('Component: ContextMenuContentComponent', () => {
   describe('#onKeyEnterOrSpace', () => {
     beforeEach(() => {
       configureTestingModule();
-      spyOn(component, 'openSubMenu');
+      jest.spyOn(component, 'openSubMenu');
     });
 
     it('should open active sub menu', () => {
@@ -590,9 +589,9 @@ describe('Component: ContextMenuContentComponent', () => {
         undefined as unknown as ElementRef<HTMLElement>
       );
 
-      spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-        directive
-      );
+      jest
+        .spyOn(focusKeyManager, 'activeItem', 'get')
+        .mockReturnValue(directive);
       component.ngAfterViewInit();
       const event = new KeyboardEvent('mousedown');
       component.onKeyEnterOrSpace(event);
@@ -614,16 +613,16 @@ describe('Component: ContextMenuContentComponent', () => {
         undefined as unknown as ElementRef<HTMLElement>
       );
 
-      spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-        directive
-      );
+      jest
+        .spyOn(focusKeyManager, 'activeItem', 'get')
+        .mockReturnValue(directive);
       component.ngAfterViewInit();
       const event = new KeyboardEvent('mousedown');
-      spyOnProperty(event, 'target', 'get').and.returnValue(
-        document.createElement('div')
-      );
-      spyOn(event, 'preventDefault');
-      spyOn(event, 'stopPropagation');
+      jest
+        .spyOn(event, 'target', 'get')
+        .mockReturnValue(document.createElement('div'));
+      jest.spyOn(event, 'preventDefault');
+      jest.spyOn(event, 'stopPropagation');
       component.onKeyEnterOrSpace(event);
       expect(event.preventDefault).toHaveBeenCalledWith();
       expect(event.stopPropagation).toHaveBeenCalledWith();
@@ -635,16 +634,16 @@ describe('Component: ContextMenuContentComponent', () => {
           undefined as unknown as ElementRef<HTMLElement>
         );
 
-        spyOnProperty(focusKeyManager, 'activeItem', 'get').and.returnValue(
-          directive
-        );
+        jest
+          .spyOn(focusKeyManager, 'activeItem', 'get')
+          .mockReturnValue(directive);
         component.ngAfterViewInit();
         const event = new KeyboardEvent('mousedown');
-        spyOnProperty(event, 'target', 'get').and.returnValue(
-          document.createElement(tagName)
-        );
-        spyOn(event, 'preventDefault');
-        spyOn(event, 'stopPropagation');
+        jest
+          .spyOn(event, 'target', 'get')
+          .mockReturnValue(document.createElement(tagName));
+        jest.spyOn(event, 'preventDefault');
+        jest.spyOn(event, 'stopPropagation');
         component.onKeyEnterOrSpace(event);
         expect(event.preventDefault).not.toHaveBeenCalledWith();
         expect(event.stopPropagation).not.toHaveBeenCalledWith();
@@ -654,13 +653,13 @@ describe('Component: ContextMenuContentComponent', () => {
 
   describe('#onClickOrRightClick', () => {
     let mouseEvent: MouseEvent;
-    let close: jasmine.Spy<jasmine.Func>;
+    let close: jest.Mock;
 
     beforeEach(() => {
       configureTestingModule();
-      close = jasmine.createSpy('subscriber');
+      close = jest.fn();
       component.close.subscribe(close);
-      spyOn(contextMenuOverlaysService, 'closeAll');
+      jest.spyOn(contextMenuOverlaysService, 'closeAll');
     });
 
     it('should close all menus', () => {
@@ -678,8 +677,10 @@ describe('Component: ContextMenuContentComponent', () => {
     it('should not close all menus if the event is within the current contextmenu', () => {
       mouseEvent = new MouseEvent('click');
       const target = document.createElement('div');
-      spyOnProperty(mouseEvent, 'target', 'get').and.returnValue(target);
-      spyOn(fixture.elementRef.nativeElement, 'contains').and.returnValue(true);
+      jest.spyOn(mouseEvent, 'target', 'get').mockReturnValue(target);
+      jest
+        .spyOn(fixture.elementRef.nativeElement, 'contains')
+        .mockReturnValue(true);
       component.onClickOrRightClick(mouseEvent);
       expect(fixture.elementRef.nativeElement.contains).toHaveBeenCalledWith(
         target
@@ -690,21 +691,21 @@ describe('Component: ContextMenuContentComponent', () => {
 
   describe('#onCloseLeafMenu', () => {
     let event: KeyboardEvent;
-    let close: jasmine.Spy<jasmine.Func>;
+    let close: jest.Mock;
 
     beforeEach(() => {
       configureTestingModule();
 
       component.ngAfterViewInit();
 
-      close = jasmine.createSpy('subscriber');
+      close = jest.fn();
       component.close.subscribe(close);
     });
 
     it('should close', () => {
       event = {
-        stopPropagation: jasmine.createSpy('stopPropagation'),
-        preventDefault: jasmine.createSpy('preventDefault'),
+        stopPropagation: jest.fn(),
+        preventDefault: jest.fn(),
         target: document.createElement('div'),
       } as unknown as KeyboardEvent;
       component.onKeyArrowLeft(event);
@@ -713,8 +714,8 @@ describe('Component: ContextMenuContentComponent', () => {
 
     it('should close when key press is arrow left', () => {
       event = {
-        stopPropagation: jasmine.createSpy('stopPropagation'),
-        preventDefault: jasmine.createSpy('preventDefault'),
+        stopPropagation: jest.fn(),
+        preventDefault: jest.fn(),
         target: document.createElement('div'),
         keyCode: 37,
       } as unknown as KeyboardEvent;
@@ -725,8 +726,8 @@ describe('Component: ContextMenuContentComponent', () => {
     describe('when event target is an arbitrary html element', () => {
       it('should stop event propagation', () => {
         event = {
-          stopPropagation: jasmine.createSpy('stopPropagation'),
-          preventDefault: jasmine.createSpy('preventDefault'),
+          stopPropagation: jest.fn(),
+          preventDefault: jest.fn(),
           target: document.createElement('div'),
         } as unknown as KeyboardEvent;
         component.onKeyArrowLeft(event);
@@ -735,8 +736,8 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should prevent default event', () => {
         event = {
-          stopPropagation: jasmine.createSpy('stopPropagation'),
-          preventDefault: jasmine.createSpy('preventDefault'),
+          stopPropagation: jest.fn(),
+          preventDefault: jest.fn(),
           target: document.createElement('div'),
         } as unknown as KeyboardEvent;
         component.onKeyArrowLeft(event);
@@ -746,8 +747,8 @@ describe('Component: ContextMenuContentComponent', () => {
     describe('when event target is not an arbitrary html element', () => {
       it('should not stop event propagation if event target is undefined', () => {
         event = {
-          stopPropagation: jasmine.createSpy('stopPropagation'),
-          preventDefault: jasmine.createSpy('preventDefault'),
+          stopPropagation: jest.fn(),
+          preventDefault: jest.fn(),
           target: undefined,
         } as unknown as KeyboardEvent;
         component.onKeyArrowLeft(event);
@@ -756,8 +757,8 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not prevent default event if event target is undefined', () => {
         event = {
-          stopPropagation: jasmine.createSpy('stopPropagation'),
-          preventDefault: jasmine.createSpy('preventDefault'),
+          stopPropagation: jest.fn(),
+          preventDefault: jest.fn(),
           target: undefined,
         } as unknown as KeyboardEvent;
         component.onKeyArrowLeft(event);
@@ -766,10 +767,11 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not stop event propagation if event target is contentEditable', () => {
         const div = document.createElement('div');
-        div.contentEditable = 'true';
+        // jest.spyOn(div, 'isContentEditable', 'get').mockReturnValue(true);
+        (div as any).isContentEditable = true;
         event = {
-          stopPropagation: jasmine.createSpy('stopPropagation'),
-          preventDefault: jasmine.createSpy('preventDefault'),
+          stopPropagation: jest.fn(),
+          preventDefault: jest.fn(),
           target: div,
         } as unknown as KeyboardEvent;
         component.onKeyArrowLeft(event);
@@ -778,10 +780,11 @@ describe('Component: ContextMenuContentComponent', () => {
 
       it('should not prevent default event if event target is contentEditable', () => {
         const div = document.createElement('div');
-        div.contentEditable = 'true';
+        // jest.spyOn(div, 'isContentEditable', 'get').mockReturnValue(true);
+        (div as any).isContentEditable = true;
         event = {
-          stopPropagation: jasmine.createSpy('stopPropagation'),
-          preventDefault: jasmine.createSpy('preventDefault'),
+          stopPropagation: jest.fn(),
+          preventDefault: jest.fn(),
           target: div,
         } as unknown as KeyboardEvent;
         component.onKeyArrowLeft(event);
@@ -791,8 +794,8 @@ describe('Component: ContextMenuContentComponent', () => {
       ['input', 'textarea', 'select'].forEach((tag) => {
         it(`should not stop event propagation if event target is an <${tag}>`, () => {
           event = {
-            stopPropagation: jasmine.createSpy('stopPropagation'),
-            preventDefault: jasmine.createSpy('preventDefault'),
+            stopPropagation: jest.fn(),
+            preventDefault: jest.fn(),
             target: document.createElement(tag),
           } as unknown as KeyboardEvent;
           component.onKeyArrowLeft(event);
@@ -801,8 +804,8 @@ describe('Component: ContextMenuContentComponent', () => {
 
         it(`should not prevent default event if event target is is an <${tag}>`, () => {
           event = {
-            stopPropagation: jasmine.createSpy('stopPropagation'),
-            preventDefault: jasmine.createSpy('preventDefault'),
+            stopPropagation: jest.fn(),
+            preventDefault: jest.fn(),
             target: document.createElement(tag),
           } as unknown as KeyboardEvent;
           component.onKeyArrowLeft(event);
@@ -813,8 +816,8 @@ describe('Component: ContextMenuContentComponent', () => {
 
     it('should not stop event propagation if is not isLeaf', () => {
       event = {
-        stopPropagation: jasmine.createSpy('stopPropagation'),
-        preventDefault: jasmine.createSpy('preventDefault'),
+        stopPropagation: jest.fn(),
+        preventDefault: jest.fn(),
       } as unknown as KeyboardEvent;
       component.onKeyArrowLeft(event);
       expect(event.stopPropagation).not.toHaveBeenCalled();
@@ -824,7 +827,7 @@ describe('Component: ContextMenuContentComponent', () => {
   describe('#closeMenu', () => {
     beforeEach(() => {
       configureTestingModule();
-      spyOn(contextMenuOverlaysService, 'closeAll');
+      jest.spyOn(contextMenuOverlaysService, 'closeAll');
     });
 
     it('should not close all if it is a right click', () => {
@@ -859,15 +862,15 @@ describe('Component: ContextMenuContentComponent', () => {
       menuContentItem.contextMenuContentItem.subMenu =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
 
-      spyOn(menuContentItem.contextMenuContentItem, 'triggerExecute');
-      spyOn(component, 'openSubMenu');
+      jest.spyOn(menuContentItem.contextMenuContentItem, 'triggerExecute');
+      jest.spyOn(component, 'openSubMenu');
       component.value = { id: 'a' };
       event = new MouseEvent('click');
-      spyOn(event, 'stopPropagation');
-      spyOn(event, 'preventDefault');
-      spyOnProperty(event, 'target', 'get').and.returnValue(
-        document.createElement('div')
-      );
+      jest.spyOn(event, 'stopPropagation');
+      jest.spyOn(event, 'preventDefault');
+      jest
+        .spyOn(event, 'target', 'get')
+        .mockReturnValue(document.createElement('div'));
     });
 
     it('should stop event propagation', () => {
@@ -915,7 +918,7 @@ describe('Component: ContextMenuContentComponent', () => {
         TestBed.createComponent(ContextMenuComponent).componentInstance;
       const event = new MouseEvent('click');
 
-      spyOn(subMenu, 'show');
+      jest.spyOn(subMenu, 'show');
       component.openSubMenu(subMenu, event);
 
       expect(subMenu.show).toHaveBeenCalledWith({
@@ -930,8 +933,8 @@ describe('Component: ContextMenuContentComponent', () => {
       const subMenu =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
       const event = new MouseEvent('click');
-      spyOnProperty(subMenu, 'isOpen', 'get').and.returnValue(true);
-      spyOn(subMenu, 'show');
+      jest.spyOn(subMenu, 'isOpen', 'get').mockReturnValue(true);
+      jest.spyOn(subMenu, 'show');
       component.openSubMenu(subMenu, event);
 
       expect(subMenu.show).not.toHaveBeenCalled();
@@ -942,7 +945,7 @@ describe('Component: ContextMenuContentComponent', () => {
         TestBed.createComponent(ContextMenuComponent).componentInstance;
       const event = new MouseEvent('click');
 
-      spyOn(subMenu, 'show');
+      jest.spyOn(subMenu, 'show');
       expect(() => {
         component.openSubMenu(undefined, event);
       }).not.toThrow();

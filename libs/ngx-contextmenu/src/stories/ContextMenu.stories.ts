@@ -1,4 +1,4 @@
-import { Meta, moduleMetadata, Story } from '@storybook/angular';
+import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 import { ContextMenuModule } from '../lib/ngx-contextmenu.module';
 import ContextMenuComponent from './ngx-contextmenu/ngx-contextmenu.component';
 
@@ -86,9 +86,11 @@ export default {
   },
 } as Meta;
 
-const Template: Story<ContextMenuComponent> = (args: ContextMenuComponent) => ({
-  styles: ['./assets/stylesheets/index.scss'],
-  props: args,
-});
+type Story = StoryObj<ContextMenuComponent>;
 
-export const Demo = Template.bind({});
+export const Demo: Story = {
+  args: {
+    menuClass: '',
+    disabled: false,
+  },
+};

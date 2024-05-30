@@ -1,6 +1,6 @@
 {
   "extends": ["../../.eslintrc.json"],
-  "ignorePatterns": ["!**/*"],
+  "ignorePatterns": ["!**/*", "storybook-static"],
   "overrides": [
     {
       "files": ["*.ts"],
@@ -13,7 +13,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "contextMenu",
+            "prefix": "context-menu",
             "style": "camelCase"
           }
         ],
@@ -21,14 +21,8 @@
           "error",
           {
             "type": "element",
-            "prefix": ["context-menu", "storybook-context-menu"],
+            "prefix": "context-menu",
             "style": "kebab-case"
-          }
-        ],
-        "@angular-eslint/no-host-metadata-property": [
-          "error",
-          {
-            "allowStatic": true
           }
         ]
       }

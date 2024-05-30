@@ -1,5 +1,5 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { createHostFactory, SpectatorHost } from '@ngneat/spectator';
+import { createHostFactory, SpectatorHost } from '@ngneat/spectator/jest';
 import { ContextMenuContentComponent } from '../../components/context-menu-content/context-menu-content.component';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
 import { ContextMenuItemDirective } from '../../directives/context-menu-item/context-menu-item.directive';

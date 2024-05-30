@@ -63,10 +63,10 @@ describe('Directive: ContextMenuItemDirective', () => {
   });
 
   describe('#triggerExecute', () => {
-    let subscriber: jasmine.Spy<jasmine.Func>;
+    let subscriber: jest.Mock;
 
     beforeEach(() => {
-      subscriber = jasmine.createSpy('subscriber');
+      subscriber = jest.fn();
       directive.execute.subscribe(subscriber);
     });
 

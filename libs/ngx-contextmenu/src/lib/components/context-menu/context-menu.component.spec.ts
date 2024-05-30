@@ -18,14 +18,14 @@ import { ContextMenuOpenEvent } from './context-menu.component.interface';
 describe('Component: ContextMenuComponent', () => {
   let component: ContextMenuComponent<unknown>;
   let fixture: ComponentFixture<ContextMenuComponent<unknown>>;
-  let scrollStrategyClose: jasmine.Spy<jasmine.Func>;
-  let overlayPosition: jasmine.Spy<jasmine.Func>;
-  let overlayFlexibleConnectedTo: jasmine.Spy<jasmine.Func>;
-  let overlayWithPositions: jasmine.Spy<jasmine.Func>;
-  let overlayCreate: jasmine.Spy<jasmine.Func>;
-  let overlayRefAttach: jasmine.Spy<jasmine.Func>;
-  let overlayRefDetach: jasmine.Spy<jasmine.Func>;
-  let overlayRefDispose: jasmine.Spy<jasmine.Func>;
+  let scrollStrategyClose: jest.Mock;
+  let overlayPosition: jest.Mock;
+  let overlayFlexibleConnectedTo: jest.Mock;
+  let overlayWithPositions: jest.Mock;
+  let overlayCreate: jest.Mock;
+  let overlayRefAttach: jest.Mock;
+  let overlayRefDetach: jest.Mock;
+  let overlayRefDispose: jest.Mock;
   let positionStrategy: FlexibleConnectedPositionStrategy;
   let overlayRef: OverlayRef;
   let contextMenuContentRef: ComponentRef<ContextMenuContentComponent<unknown>>;
@@ -44,16 +44,14 @@ describe('Component: ContextMenuComponent', () => {
         openSubMenu: new Subject(),
         closeSubMenus: new Subject(),
       },
-      onDestroy: jasmine.createSpy('onDestroy'),
+      onDestroy: jest.fn(),
       changeDetectorRef: {
-        detectChanges: jasmine.createSpy('detectChanges'),
+        detectChanges: jest.fn(),
       },
     } as unknown as ComponentRef<ContextMenuContentComponent<unknown>>;
-    overlayRefAttach = jasmine
-      .createSpy('attach')
-      .and.returnValue(contextMenuContentRef);
-    overlayRefDetach = jasmine.createSpy('detach');
-    overlayRefDispose = jasmine.createSpy('dispose');
+    overlayRefAttach = jest.fn().mockReturnValue(contextMenuContentRef);
+    overlayRefDetach = jest.fn();
+    overlayRefDispose = jest.fn();
     positionStrategy = {
       id: 'position-strategy',
     } as unknown as FlexibleConnectedPositionStrategy;
@@ -63,22 +61,18 @@ describe('Component: ContextMenuComponent', () => {
       detach: overlayRefDetach,
       dispose: overlayRefDispose,
     } as unknown as OverlayRef;
-    overlayWithPositions = jasmine
-      .createSpy('withPositions')
-      .and.returnValue(positionStrategy);
-    overlayCreate = jasmine.createSpy('create').and.returnValue(overlayRef);
-    overlayFlexibleConnectedTo = jasmine
-      .createSpy('flexibleConnectedTo')
-      .and.returnValue({ withPositions: overlayWithPositions });
-    overlayPosition = jasmine
-      .createSpy('position')
-      .and.returnValue({ flexibleConnectedTo: overlayFlexibleConnectedTo });
+    overlayWithPositions = jest.fn().mockReturnValue(positionStrategy);
+    overlayCreate = jest.fn().mockReturnValue(overlayRef);
+    overlayFlexibleConnectedTo = jest
+      .fn()
+      .mockReturnValue({ withPositions: overlayWithPositions });
+    overlayPosition = jest
+      .fn()
+      .mockReturnValue({ flexibleConnectedTo: overlayFlexibleConnectedTo });
     closeScrollStrategy = {
       id: 'closeScrollStrategy',
     } as unknown as CloseScrollStrategy;
-    scrollStrategyClose = jasmine
-      .createSpy('strategyClose')
-      .and.returnValue(closeScrollStrategy);
+    scrollStrategyClose = jest.fn().mockReturnValue(closeScrollStrategy);
     TestBed.configureTestingModule({
       imports: [OverlayModule],
       providers: [
@@ -101,8 +95,8 @@ describe('Component: ContextMenuComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     contextMenuOverlaysService = TestBed.inject(ContextMenuOverlaysService);
-    spyOn(contextMenuOverlaysService, 'push').and.callThrough();
-    spyOn(contextMenuOverlaysService, 'closeAll').and.callThrough();
+    jest.spyOn(contextMenuOverlaysService, 'push');
+    jest.spyOn(contextMenuOverlaysService, 'closeAll');
   });
 
   it('should create', () => {
@@ -404,13 +398,11 @@ describe('Component: ContextMenuComponent', () => {
         component.show(context);
 
         expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith(
-          jasmine.any(ElementRef)
+          expect.any(ElementRef)
         );
-        expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            nativeElement: anchorElement,
-          })
-        );
+        expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith({
+          nativeElement: anchorElement,
+        });
         expect(overlayWithPositions).toHaveBeenCalledWith([
           {
             originX: 'end',
@@ -465,13 +457,11 @@ describe('Component: ContextMenuComponent', () => {
         component.show(context);
 
         expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith(
-          jasmine.any(ElementRef)
+          expect.any(ElementRef)
         );
-        expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith(
-          jasmine.objectContaining({
-            nativeElement: anchorElement,
-          })
-        );
+        expect(overlayFlexibleConnectedTo).toHaveBeenCalledWith({
+          nativeElement: anchorElement,
+        });
         expect(overlayWithPositions).toHaveBeenCalledWith([
           {
             originX: 'start',
@@ -526,10 +516,10 @@ describe('Component: ContextMenuComponent', () => {
           visible: true,
         } as ContextMenuItemDirective<unknown>;
         c = {
-          visible: (item: unknown) => false,
+          visible: (_item: unknown) => false,
         } as ContextMenuItemDirective<unknown>;
         d = {
-          visible: (item: unknown) => true,
+          visible: (_item: unknown) => true,
         } as ContextMenuItemDirective<unknown>;
 
         value = { id: 'a' };
@@ -578,9 +568,9 @@ describe('Component: ContextMenuComponent', () => {
 
       it('should close all menu items when instance is destroyed', () => {
         component.show(context);
-        const close = jasmine.createSpy('subscriber');
+        const close = jest.fn();
         component.close.subscribe(close);
-        (contextMenuContentRef.onDestroy as jasmine.Spy).calls.argsFor(0)[0]();
+        (contextMenuContentRef.onDestroy as jest.Mock).mock.calls.at(0)[0]();
         expect(close).toHaveBeenCalled();
       });
 

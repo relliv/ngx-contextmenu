@@ -1,6 +1,6 @@
-import { addons } from '@storybook/addons';
+import { addons } from '@storybook/manager-api';
 import { create } from '@storybook/theming';
-// @ts-ignore
+// @ts-expect-error TS2307
 import logo from './theme/assets/logo.jpg';
 
 addons.setConfig({

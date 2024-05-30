@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### BREAKING CHANGES
+
+- **Dependency**: Require Angular 18
+
 ## [17.0.3] - 2024-05-30
 
 ### Fix

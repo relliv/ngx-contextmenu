@@ -2,9 +2,10 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { ContextMenuContentComponent } from '../../components/context-menu-content/context-menu-content.component';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
-import { ContextMenuDirective } from './context-menu.directive';
 import { ContextMenuOverlaysService } from '../../services/context-menu-overlays/context-menu-overlays.service';
+import { ContextMenuDirective } from './context-menu.directive';
 
 @Component({
   template: '<div contextMenu></div>',
@@ -19,7 +20,11 @@ describe('Directive: ContextMenuDirective', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [OverlayModule],
-      declarations: [ContextMenuDirective, TestHostComponent],
+      declarations: [
+        ContextMenuDirective,
+        ContextMenuContentComponent,
+        TestHostComponent,
+      ],
     });
 
     fixture = TestBed.createComponent(TestHostComponent);
@@ -45,7 +50,7 @@ describe('Directive: ContextMenuDirective', () => {
       contextMenu =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
 
-      spyOn(contextMenu, 'show');
+      jest.spyOn(contextMenu, 'show');
     });
 
     it('should close all context menus', () => {
@@ -53,7 +58,7 @@ describe('Directive: ContextMenuDirective', () => {
         ContextMenuOverlaysService
       );
 
-      spyOn(contextMenuOverlaysService, 'closeAll');
+      jest.spyOn(contextMenuOverlaysService, 'closeAll');
       directive.contextMenuValue = { id: 'a' };
       const event = new MouseEvent('contextmenu');
       directive.onContextMenu(event);
@@ -77,8 +82,8 @@ describe('Directive: ContextMenuDirective', () => {
       directive.contextMenu = contextMenu;
       directive.contextMenuValue = { id: 'a' };
       const event = new MouseEvent('contextmenu', { clientX: 42, clientY: 34 });
-      spyOn(event, 'preventDefault');
-      spyOn(event, 'stopPropagation');
+      jest.spyOn(event, 'preventDefault');
+      jest.spyOn(event, 'stopPropagation');
       directive.onContextMenu(event);
       expect(event.preventDefault).toHaveBeenCalledWith();
       expect(event.stopPropagation).toHaveBeenCalledWith();
@@ -108,7 +113,7 @@ describe('Directive: ContextMenuDirective', () => {
         contextMenu =
           TestBed.createComponent(ContextMenuComponent).componentInstance;
 
-        spyOn(contextMenu, 'show');
+        jest.spyOn(contextMenu, 'show');
       });
 
       it('should show attached context menu', () => {
@@ -150,19 +155,21 @@ describe('Directive: ContextMenuDirective', () => {
         contextMenu =
           TestBed.createComponent(ContextMenuComponent).componentInstance;
 
-        spyOn(contextMenu, 'show');
+        jest.spyOn(contextMenu, 'show');
       });
 
       it('should show attached context menu', () => {
         directive.contextMenu = contextMenu;
-        spyOn(
-          directiveEl.nativeElement as HTMLElement,
-          'getBoundingClientRect'
-        ).and.returnValue({
-          x: 100,
-          y: 200,
-          height: 20,
-        } as DOMRect);
+        jest
+          .spyOn(
+            directiveEl.nativeElement as HTMLElement,
+            'getBoundingClientRect'
+          )
+          .mockReturnValue({
+            x: 100,
+            y: 200,
+            height: 20,
+          } as DOMRect);
         directive.contextMenuValue = { id: 'a' };
         directive.open();
         expect(contextMenu.show).toHaveBeenCalledWith({
@@ -193,7 +200,7 @@ describe('Directive: ContextMenuDirective', () => {
     it('should close all context menu', () => {
       directive.contextMenu =
         TestBed.createComponent(ContextMenuComponent).componentInstance;
-      spyOn(directive.contextMenu, 'hide');
+      jest.spyOn(directive.contextMenu, 'hide');
       directive.close();
       expect(directive.contextMenu.hide).toHaveBeenCalledWith();
     });

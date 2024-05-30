@@ -54,7 +54,7 @@ describe('Directive: ContextMenuContentItemDirective', () => {
 
   describe('#focus', () => {
     it('should focus nativeElement', () => {
-      spyOn(directiveDebugElement.nativeElement, 'focus');
+      jest.spyOn(directiveDebugElement.nativeElement, 'focus');
 
       directive.focus();
 

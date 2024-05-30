@@ -60,7 +60,7 @@ describe('Service: ContextMenuOverlaysService', () => {
     });
 
     it('should emit on allClosed', () => {
-      const subscriber = jasmine.createSpy('subscriber');
+      const subscriber = jest.fn();
       service.allClosed.subscribe(subscriber);
       service.closeAll();
       expect(subscriber).toHaveBeenCalledWith(undefined);

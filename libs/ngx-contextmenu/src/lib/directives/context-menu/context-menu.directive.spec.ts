@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
 import { ContextMenuDirective } from './context-menu.directive';
+import { ContextMenuOverlaysService } from '../../services/context-menu-overlays/context-menu-overlays.service';
 
 @Component({
   template: '<div contextMenu></div>',
@@ -45,6 +46,18 @@ describe('Directive: ContextMenuDirective', () => {
         TestBed.createComponent(ContextMenuComponent).componentInstance;
 
       spyOn(contextMenu, 'show');
+    });
+
+    it('should close all context menus', () => {
+      const contextMenuOverlaysService = TestBed.inject(
+        ContextMenuOverlaysService
+      );
+
+      spyOn(contextMenuOverlaysService, 'closeAll');
+      directive.contextMenuValue = { id: 'a' };
+      const event = new MouseEvent('contextmenu');
+      directive.onContextMenu(event);
+      expect(contextMenuOverlaysService.closeAll).not.toHaveBeenCalled();
     });
 
     it('should show attached context menu', () => {

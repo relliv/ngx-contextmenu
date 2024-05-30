@@ -6,6 +6,7 @@ import {
   Input,
 } from '@angular/core';
 import type { ContextMenuComponent } from '../../components/context-menu/context-menu.component';
+import { ContextMenuOverlaysService } from '../../services/context-menu-overlays/context-menu-overlays.service';
 
 @Directive({
   selector: '[contextMenu]',
@@ -43,7 +44,10 @@ export class ContextMenuDirective<T> {
     return this.contextMenu?.isOpen ?? false;
   }
 
-  constructor(private elementRef: ElementRef<HTMLElement>) {}
+  constructor(
+    private elementRef: ElementRef<HTMLElement>,
+    private contextMenuOverlaysService: ContextMenuOverlaysService
+  ) {}
 
   /**
    * @internal
@@ -54,7 +58,7 @@ export class ContextMenuDirective<T> {
       return;
     }
 
-    this.close();
+    this.closeAll();
 
     this.contextMenu?.show({
       anchoredTo: 'position',
@@ -105,6 +109,10 @@ export class ContextMenuDirective<T> {
    */
   public close(): void {
     this.contextMenu?.hide();
+  }
+
+  private closeAll(): void {
+    this.contextMenuOverlaysService.closeAll();
   }
 
   private canOpen(): boolean {

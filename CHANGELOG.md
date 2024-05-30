@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [18.0.0] - 2024-05-30
+
 ### BREAKING CHANGES
 
 - **Dependency**: Require Angular 18

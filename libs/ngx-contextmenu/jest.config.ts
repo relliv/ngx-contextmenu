@@ -1,9 +1,11 @@
-/* eslint-disable */
-export default {
+import type { Config } from 'jest';
+
+const config: Config = {
   displayName: '@perfectmemory/ngx-contextmenu',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/ngx-contextmenu',
+  coverageDirectory: '../../coverage/@perfectmemory/ngx-contextmenu',
+  coverageReporters: ['lcov'],
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
@@ -20,3 +22,5 @@ export default {
     'jest-preset-angular/build/serializers/html-comment',
   ],
 };
+
+export default config;

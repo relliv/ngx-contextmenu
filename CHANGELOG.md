@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [19.0.0] - 2024-12-11
+
 ### BREAKING CHANGES
 
 - **Dependency**: Require Angular 19

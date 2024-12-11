@@ -10,9 +10,10 @@ import { ContextMenuDirective } from '../../lib/directives/context-menu/context-
 import { ContextMenuService } from '../../lib/services/context-menu/context-menu.service';
 
 @Component({
-  selector: 'storybook-context-menu',
-  templateUrl: 'ngx-contextmenu.component.html',
-  styleUrls: ['./ngx-contextmenu.component.scss'],
+    selector: 'storybook-context-menu',
+    templateUrl: 'ngx-contextmenu.component.html',
+    styleUrls: ['./ngx-contextmenu.component.scss'],
+    standalone: false
 })
 export default class StorybookContextMenuComponent {
   @Input()

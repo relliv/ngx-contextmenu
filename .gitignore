@@ -4,6 +4,7 @@
 dist
 tmp
 /out-tsc
+storybook-static
 
 # dependencies
 node_modules
@@ -41,3 +42,4 @@ Thumbs.db
 .angular
 
 .nx/cache
+.nx/workspace-data

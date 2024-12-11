@@ -30,14 +30,15 @@ export const TESTING_WRAPPER = {
 };
 
 @Component({
-  selector: 'context-menu-content',
-  templateUrl: './context-menu-content.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    tabindex: '0',
-    role: 'dialog',
-    class: 'ngx-contextmenu',
-  },
+    selector: 'context-menu-content',
+    templateUrl: './context-menu-content.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        tabindex: '0',
+        role: 'dialog',
+        class: 'ngx-contextmenu',
+    },
+    standalone: false
 })
 export class ContextMenuContentComponent<T>
   implements OnDestroy, AfterViewInit

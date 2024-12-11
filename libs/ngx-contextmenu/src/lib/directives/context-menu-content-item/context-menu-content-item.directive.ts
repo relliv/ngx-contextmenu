@@ -4,11 +4,12 @@ import { evaluateIfFunction } from '../../helper/evaluate';
 import { ContextMenuItemDirective } from '../context-menu-item/context-menu-item.directive';
 
 @Directive({
-  selector: '[contextMenuContentItem]',
-  exportAs: 'contextMenuContentItem',
-  host: {
-    class: 'ngx-context-menu-item',
-  },
+    selector: '[contextMenuContentItem]',
+    exportAs: 'contextMenuContentItem',
+    host: {
+        class: 'ngx-context-menu-item',
+    },
+    standalone: false
 })
 export class ContextMenuContentItemDirective<T> implements FocusableOption {
   @Input()

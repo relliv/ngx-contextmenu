@@ -5,6 +5,7 @@ import { ContextMenuItemDirective } from './context-menu-item.directive';
 
 @Component({
   template: '<div contextMenuItem></div>',
+  standalone: false,
 })
 class TestHostComponent {}
 

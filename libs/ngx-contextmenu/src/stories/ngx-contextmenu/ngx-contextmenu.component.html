@@ -1,30 +1,26 @@
+@if (!disabled) {
 <span
-  *ngIf="!disabled; else disabledTemplate"
   class="ngx-context-menu-focusable"
   #ngxContextMenu="ngxContextMenu"
   [contextMenu]="contextMenu"
   [contextMenuValue]="value"
 >
-  <ng-container *ngIf="demoMode === 'simple'">
-    When you right click on this text, a context menu will appear
-  </ng-container>
-  <ng-container *ngIf="demoMode === 'form'">
-    When you right click on this text, a context menu with form inputs will
-    appear
-  </ng-container>
-  <span *ngIf="dir === 'rtl'"> in the right to left direction</span>
+  @if (demoMode === 'simple') { When you right click on this text, a context
+  menu will appear } @if (demoMode === 'form') { When you right click on this
+  text, a context menu with form inputs will appear } @if (dir === 'rtl') {
+  <span> in the right to left direction</span>
+  }
 </span>
-
-<ng-template #disabledTemplate>
-  <span
-    class="ngx-context-menu-focusable"
-    [contextMenu]="contextMenu"
-    [contextMenuValue]="value"
-  >
-    When you right click on this text, no context menu will appear because it is
-    disabled
-  </span>
-</ng-template>
+} @else {
+<span
+  class="ngx-context-menu-focusable"
+  [contextMenu]="contextMenu"
+  [contextMenuValue]="value"
+>
+  When you right click on this text, no context menu will appear because it is
+  disabled
+</span>
+}
 
 <context-menu
   #contextMenu
@@ -37,72 +33,65 @@
   <ng-template contextMenuItem passive="true"
     ><span class="menu-item-title">Context menu title</span></ng-template
   >
-  <ng-template
-    *ngIf="demoMode === 'simple'"
-    contextMenuItem
-    (execute)="execute('Cut', $event)"
-    let-value
+  @if (demoMode === 'simple'; as value) {
+  <ng-template contextMenuItem (execute)="execute('Cut', $event)" let-value
     >Cut "{{ value }}"</ng-template
   >
-  <ng-template
-    *ngIf="demoMode === 'simple'"
-    contextMenuItem
-    (execute)="execute('Copy', $event)"
-    let-value
+  } @if (demoMode === 'simple'; as value) {
+  <ng-template contextMenuItem (execute)="execute('Copy', $event)" let-value
     >Copy "{{ value }}"</ng-template
   >
-  <ng-template
-    *ngIf="demoMode === 'simple'"
-    contextMenuItem
-    (execute)="execute('Paste', $event)"
-    let-value
+  } @if (demoMode === 'simple'; as value) {
+  <ng-template contextMenuItem (execute)="execute('Paste', $event)" let-value
     >Paste "{{ value }}"</ng-template
   >
-  <ng-template *ngIf="demoMode === 'simple'" contextMenuItem [disabled]="true"
+  } @if (demoMode === 'simple') {
+  <ng-template contextMenuItem [disabled]="true"
     >Disabled menu item</ng-template
   >
-  <ng-template
-    *ngIf="demoMode === 'simple'"
-    contextMenuItem
-    divider="true"
-  ></ng-template>
-  <ng-template
-    *ngIf="demoMode === 'simple'"
-    contextMenuItem
-    [subMenu]="specialPast"
+  } @if (demoMode === 'simple') {
+  <ng-template contextMenuItem divider="true"></ng-template>
+  } @if (demoMode === 'simple') {
+  <ng-template contextMenuItem [subMenu]="specialPast"
     >Special pastes...</ng-template
   >
-
-  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+  } @if (demoMode === 'form') {
+  <ng-template contextMenuItem passive="true"
     ><label
       ><input type="checkbox" value="Choice A" /> <span>Choice A</span></label
     ></ng-template
   >
-  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+  } @if (demoMode === 'form') {
+  <ng-template contextMenuItem passive="true"
     ><label
       ><input type="checkbox" value="Choice B" /> <span>Choice B</span></label
     ></ng-template
   >
-  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+  } @if (demoMode === 'form') {
+  <ng-template contextMenuItem passive="true"
     ><label
       ><input type="checkbox" value="Choice C" /> <span>Choice C</span></label
     ></ng-template
   >
-  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+  } @if (demoMode === 'form') {
+  <ng-template contextMenuItem passive="true"
     ><label
       ><input type="checkbox" value="Choice D" /> <span>Choice D</span></label
     ></ng-template
   >
-  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+  } @if (demoMode === 'form') {
+  <ng-template contextMenuItem passive="true"
     ><label
       ><input type="checkbox" value="Choice E" /> <span>Choice E</span></label
     ></ng-template
   >
-  <ng-template *ngIf="demoMode === 'form'" contextMenuItem passive="true"
+  } @if (demoMode === 'form') {
+  <ng-template contextMenuItem passive="true"
     ><label
       ><input type="checkbox" value="Choice E" /> <span>Choice E</span></label
     ></ng-template
   >
+  }
 </context-menu>
 <context-menu #specialPast>
   <ng-template contextMenuItem (execute)="execute('Paste as HTML', $event)"
@@ -116,22 +105,25 @@
 <br />
 <br />
 <br />
+@if (programmaticOpen) {
 <button
   class="button"
-  *ngIf="programmaticOpen"
   (click)="contextMenuService.closeAll(); contextMenuDirective?.open($event)"
 >
   Programmatically open context menu using
   <code>ContextMenuDirective#open</code> method
 </button>
+} @if (programmaticOpen) {
 <button
   class="button"
-  *ngIf="programmaticOpen"
   (click)="
     $event.stopImmediatePropagation();
     contextMenuService.closeAll();
-    contextMenuService.show(contextMenu, {x: 32, y: 42})
+    contextMenuService.show(contextMenu, { x: 32, y: 42 })
   "
 >
-  Programmatically open context menu using <code>ContextMenuService#show</code> method with <code>&#123; x: 32, y: 42 &#125;</code> parameter
+  Programmatically open context menu using
+  <code>ContextMenuService#show</code> method with
+  <code>&#123; x: 32, y: 42 &#125;</code> parameter
 </button>
+}

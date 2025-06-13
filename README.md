@@ -9,6 +9,7 @@ A context menu component for Angular.
 Documentation and demos https://perfectmemory.github.io/ngx-contextmenu/
 
 [![Contextmenu Screenshot](./libs/ngx-contextmenu/src/stories/assets/contextmenu.png)](https://perfectmemory.github.io/ngx-contextmenu/)
+
 ## Features
 
 - [x] Context menu triggered by right click or keyboard context menu key

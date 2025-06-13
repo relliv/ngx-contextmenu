@@ -10,8 +10,8 @@ import type { ContextMenuComponent } from '../../components/context-menu/context
 import { evaluateIfFunction } from '../../helper/evaluate';
 
 @Directive({
-    selector: '[contextMenuItem]',
-    standalone: false
+  selector: '[contextMenuItem]',
+  standalone: false,
 })
 export class ContextMenuItemDirective<T> {
   /**

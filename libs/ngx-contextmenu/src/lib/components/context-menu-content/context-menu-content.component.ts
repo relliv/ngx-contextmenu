@@ -1,5 +1,5 @@
 import { FocusKeyManager } from '@angular/cdk/a11y';
-import { DOCUMENT } from '@angular/common';
+
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -14,6 +14,7 @@ import {
   Output,
   QueryList,
   ViewChildren,
+  DOCUMENT,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ContextMenuContentItemDirective } from '../../directives/context-menu-content-item/context-menu-content-item.directive';
@@ -30,15 +31,15 @@ export const TESTING_WRAPPER = {
 };
 
 @Component({
-    selector: 'context-menu-content',
-    templateUrl: './context-menu-content.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        tabindex: '0',
-        role: 'dialog',
-        class: 'ngx-contextmenu',
-    },
-    standalone: false
+  selector: 'context-menu-content',
+  templateUrl: './context-menu-content.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    tabindex: '0',
+    role: 'dialog',
+    class: 'ngx-contextmenu',
+  },
+  standalone: false,
 })
 export class ContextMenuContentComponent<T>
   implements OnDestroy, AfterViewInit

@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta title="Context Menu/Documentation/[contextMenuItem]" />
 
@@ -6,13 +6,13 @@ import { Meta } from '@storybook/blocks';
 
 A `contextMenuItem` directive to apply to a `<ng-template>` inside the `<context-menu>` component
 
-| `Input()`    | Type                                                          | Description                                                            |
-| :----------- | :------------------------------------------------------------ | :--------------------------------------------------------------------- |
-| `[subMenu]`  | `ContextMenuComponent`                                        | The component holding the sub menu item directive templates            |
-| `[divider]`  | `boolean` <br />(default: `false`)                            | Is this menu item a divider (no action is executed)                    |
-| `[disabled]` | `boolean` | `(item?: T) => boolean` <br />(default: `false`) | Is this menu item disabled (no action is executed)                     |
-| `[passive]`  | `boolean` <br />(default: `false`)                            | Is this menu item passive (for title, or forms, no action is executed) |
-| `[visible]`  | `boolean` | `(item?: T) => boolean` <br />(default: `false`) | Is this menu item visible                                              |
+| `Input()`    | Type                               | Description                                                            |
+| :----------- | :--------------------------------- | :--------------------------------------------------------------------- | -------------------------------------------------- |
+| `[subMenu]`  | `ContextMenuComponent`             | The component holding the sub menu item directive templates            |
+| `[divider]`  | `boolean` <br />(default: `false`) | Is this menu item a divider (no action is executed)                    |
+| `[disabled]` | `boolean`                          | `(item?: T) => boolean` <br />(default: `false`)                       | Is this menu item disabled (no action is executed) |
+| `[passive]`  | `boolean` <br />(default: `false`) | Is this menu item passive (for title, or forms, no action is executed) |
+| `[visible]`  | `boolean`                          | `(item?: T) => boolean` <br />(default: `false`)                       | Is this menu item visible                          |
 
 | `Output()`  | Type                                           | Description                   |
 | :---------- | :--------------------------------------------- | :---------------------------- |

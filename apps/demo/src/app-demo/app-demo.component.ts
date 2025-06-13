@@ -11,9 +11,9 @@ import {
 } from '@perfectmemory/ngx-contextmenu';
 
 @Component({
-    selector: 'app-demo-context-menu',
-    styles: [
-        `
+  selector: 'app-demo-context-menu',
+  styles: [
+    `
       .dashboardContainer {
         width: 100%;
         height: 100%;
@@ -32,9 +32,9 @@ import {
         position: absolute;
       }
     `,
-    ],
-    templateUrl: './app-demo.component.html',
-    standalone: false
+  ],
+  templateUrl: './app-demo.component.html',
+  standalone: false,
 })
 export class AppDemoComponent {
   @Input()

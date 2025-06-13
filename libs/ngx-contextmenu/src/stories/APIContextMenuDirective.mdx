@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/blocks';
+import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta title="Context Menu/Documentation/[contextMenu]" />
 
@@ -20,11 +20,21 @@ A `contextMenu` directive to apply to any HTML element where a right click shoul
 > NB: `open` and `close` methods are for advanced use cases and are not necessary for usual right click
 
 ```html
-<span #ngxContextMenu="ngxContextMenu" [contextMenu]="contextMenu" [contextMenuValue]="value">
+<span
+  #ngxContextMenu="ngxContextMenu"
+  [contextMenu]="contextMenu"
+  [contextMenuValue]="value"
+>
   When you right click on this text, a context menu will appear
 </span>
 
-<context-menu #contextMenu [menuClass]="menuClass" [disabled]="disabled" [dir]="dir">...</context-menu>
+<context-menu
+  #contextMenu
+  [menuClass]="menuClass"
+  [disabled]="disabled"
+  [dir]="dir"
+  >...</context-menu
+>
 
 <!-- Programmatically open  the context menu by calling content menu directive  -->
 <button class="button" (click)="ngxContextMenu?.open($event)">

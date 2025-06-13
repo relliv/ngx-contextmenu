@@ -32,10 +32,10 @@ import {
 } from './context-menu.component.interface';
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
-    selector: 'context-menu',
-    template: '',
-    standalone: false
+  encapsulation: ViewEncapsulation.None,
+  selector: 'context-menu',
+  template: '',
+  standalone: false,
 })
 export class ContextMenuComponent<T> implements OnInit, OnDestroy {
   /**

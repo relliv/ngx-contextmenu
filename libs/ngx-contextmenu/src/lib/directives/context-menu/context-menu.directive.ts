@@ -9,13 +9,13 @@ import type { ContextMenuComponent } from '../../components/context-menu/context
 import { ContextMenuOverlaysService } from '../../services/context-menu-overlays/context-menu-overlays.service';
 
 @Directive({
-    selector: '[contextMenu]',
-    exportAs: 'ngxContextMenu',
-    host: {
-        role: 'button',
-        'attr.aria-haspopup': 'menu',
-    },
-    standalone: false
+  selector: '[contextMenu]',
+  exportAs: 'ngxContextMenu',
+  host: {
+    role: 'button',
+    'attr.aria-haspopup': 'menu',
+  },
+  standalone: false,
 })
 export class ContextMenuDirective<T> {
   /**

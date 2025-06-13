@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [20.0.0] - 2025-06-13
+
 ### BREAKING CHANGES
 
 - **Dependency**: Require Angular 20

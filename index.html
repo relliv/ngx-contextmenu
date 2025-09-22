@@ -1,16 +1,161 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>Angular2 Context Menu Demo</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">-->
+    <meta charset="utf-8" />
+
+    <title>@storybook/angular - Storybook</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+    
     <style>
-      .ngx-contextmenu li {
-        display: list-item;
+      @font-face {
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('./sb-common-assets/nunito-sans-regular.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Nunito Sans';
+        font-style: italic;
+        font-weight: 400;
+        font-display: swap;
+        src: url('./sb-common-assets/nunito-sans-italic.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url('./sb-common-assets/nunito-sans-bold.woff2') format('woff2');
+      }
+
+      @font-face {
+        font-family: 'Nunito Sans';
+        font-style: italic;
+        font-weight: 700;
+        font-display: swap;
+        src: url('./sb-common-assets/nunito-sans-bold-italic.woff2') format('woff2');
       }
     </style>
-    <base href="/ngx-contextmenu/">  </head>
+
+    <link href="./sb-manager/runtime.js" rel="modulepreload" />
+
+    
+    <link href="./sb-addons/storybook-core-server-presets-0/common-manager-bundle.js" rel="modulepreload" />
+    
+    <link href="./sb-addons/docs-1/manager-bundle.js" rel="modulepreload" />
+    
+    <link href="./sb-addons/libs-ngx-contextmenu-storybook-2/manager-bundle.js" rel="modulepreload" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png" />
+<link rel="icon" type="image/png" sizes="256x256" href="/favicon-256x256.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
+<link rel="icon" type="image/png" sizes="180x180" href="/favicon-180x180.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#122134" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<title>@perfectmemory/ngx-contextmenu</title>
+ 
+
+    <style>
+      #storybook-root[hidden] {
+        display: none !important;
+      }
+    </style>
+
+    
+  </head>
   <body>
-    <ngx-context-menu-demo>Loading...</ngx-context-menu-demo>
-  <script src="runtime-es2015.js" type="module"></script><script src="runtime-es5.js" nomodule defer></script><script src="polyfills-es5.js" nomodule defer></script><script src="polyfills-es2015.js" type="module"></script><script src="styles-es2015.js" type="module"></script><script src="styles-es5.js" nomodule defer></script><script src="vendor-es2015.js" type="module"></script><script src="vendor-es5.js" nomodule defer></script><script src="main-es2015.js" type="module"></script><script src="main-es5.js" nomodule defer></script></body>
+    <div id="root"></div>
+
+    
+    <script>
+      
+        
+          window['FEATURES'] = {
+  "argTypeTargetsV7": true,
+  "legacyDecoratorFileOrder": false,
+  "disallowImplicitActionsInRenderV8": true,
+  "viewport": true,
+  "highlight": true,
+  "controls": true,
+  "interactions": true,
+  "actions": true,
+  "backgrounds": true,
+  "outline": true,
+  "measure": true
+};
+        
+      
+        
+          window['REFS'] = {};
+        
+      
+        
+          window['LOGLEVEL'] = "info";
+        
+      
+        
+          window['DOCS_OPTIONS'] = {
+  "defaultName": "Docs"
+};
+        
+      
+        
+          window['CONFIG_TYPE'] = "PRODUCTION";
+        
+      
+        
+      
+        
+      
+        
+          window['TAGS_OPTIONS'] = {
+  "dev-only": {
+    "excludeFromDocsStories": true
+  },
+  "docs-only": {
+    "excludeFromSidebar": true
+  },
+  "test-only": {
+    "excludeFromSidebar": true,
+    "excludeFromDocsStories": true
+  }
+};
+        
+      
+        
+          window['STORYBOOK_RENDERER'] = "angular";
+        
+      
+        
+          window['STORYBOOK_BUILDER'] = "@storybook/builder-webpack5";
+        
+      
+        
+          window['STORYBOOK_FRAMEWORK'] = "@storybook/angular";
+        
+      
+    </script>
+    
+
+    <script type="module">
+      import './sb-manager/globals-runtime.js';
+
+      
+        import './sb-addons/storybook-core-server-presets-0/common-manager-bundle.js';
+      
+        import './sb-addons/docs-1/manager-bundle.js';
+      
+        import './sb-addons/libs-ngx-contextmenu-storybook-2/manager-bundle.js';
+      
+
+      import './sb-manager/runtime.js';
+    </script>
+  </body>
 </html>
